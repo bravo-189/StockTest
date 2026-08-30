@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>StockTest · 状态筛选预览</title>
+    <style>
+      :root { color-scheme: dark; --bg: #0b1723; --surface: #122232; --surface-2: #162a3b; --line: #274052; --line-strong: #39566b; --text: #d9e7f0; --muted: #9db3c3; --muted-2: #7890a2; --blue: #67b9f3; --green: #4cd09b; --green-soft: rgba(31,154,108,.16); --red: #f08484; --red-soft: rgba(190,76,76,.16); --amber: #f0ba65; --amber-soft: rgba(184,117,26,.16); --mono: "IBM Plex Mono", Consolas, monospace; --sans: "Noto Sans SC", Inter, system-ui, sans-serif; }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-width: 320px; padding: 34px; background: var(--bg); color: var(--text); font: 14px/1.55 var(--sans); }
+      .preview { max-width: 980px; margin: 0 auto; }
+      .eyebrow { color: var(--blue); font: 11px var(--mono); letter-spacing: .12em; }
+      h1 { margin: 8px 0 4px; font-size: 26px; letter-spacing: -.04em; }
+      .intro { margin: 0 0 18px; color: var(--muted); font-size: 12px; }
+      .table-shell { height: 390px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+      table { width: 100%; min-width: 700px; border-collapse: separate; border-spacing: 0; }
+      th, td { padding: 13px 16px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+      th { position: sticky; top: 0; z-index: 4; background: var(--surface); color: var(--muted-2); font: 11px var(--mono); }
+      tbody tr:last-child td { border-bottom: 0; }
+      tbody tr.is-pinned { position: sticky; top: 42px; z-index: 3; }
+      tbody tr.is-pinned td { background: color-mix(in srgb, var(--blue) 11%, var(--surface)); box-shadow: 0 1px 0 var(--line-strong); }
+      .rank, .ticker, .number { font-family: var(--mono); }
+      .rank { width: 56px; color: var(--muted-2); }
+      .ticker { color: var(--blue); }
+      .sub { display: block; margin-top: 2px; color: var(--muted-2); font: 10px var(--sans); }
+      .positive { color: var(--green); } .negative { color: var(--red); } .neutral { color: var(--amber); }
+      .status-head { display: inline-flex; align-items: center; gap: 10px; }
+      .status-filter { min-width: 92px; padding: 6px 26px 6px 9px; border: 1px solid var(--line-strong); border-radius: 7px; background: var(--surface-2); color: var(--text); font: 11px var(--sans); cursor: pointer; }
+      .status-filter:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+      .status-label { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px; border-radius: 999px; font-size: 11px; }
+      .status-label::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+      .status-label.positive { background: var(--green-soft); } .status-label.negative { background: var(--red-soft); } .status-label.neutral { background: var(--amber-soft); }
+      .filter-note { margin-top: 10px; color: var(--muted-2); font-size: 11px; }
+      @media (max-width: 640px) { body { padding: 20px 14px; } .table-shell { height: 360px; } th, td { padding: 12px 13px; } }
+    </style>
+  </head>
+  <body>
+    <main class="preview">
+      <div class="eyebrow">COMPONENT PREVIEW · STATUS FILTER</div>
+      <h1>状态筛选小样式</h1>
+      <p class="intro">下拉菜单位于状态表头；SPY 固定首行，其他板块按选择状态筛选。</p>
+      <div class="table-shell">
+        <table>
+          <thead><tr><th>排名</th><th>板块 ETF</th><th>RSI14</th><th>Δ5</th><th><span class="status-head"><span>状态</span><select class="status-filter" id="status-filter" aria-label="按状态筛选"><option value="all">全部状态</option><option value="改善">改善</option><option value="盘整">盘整</option><option value="转弱">转弱</option></select></span></th></tr></thead>
+          <tbody id="preview-body"></tbody>
+        </table>
+      </div>
+      <p class="filter-note" id="filter-note">SPY 为固定比较基准，不参与状态筛选。</p>
+    </main>
+    <script>
+      const rows = [
+        ["SPY", "标普 500", 52, 0.0, "盘整"], ["XLV", "医疗保健", 64, 1.4, "改善"], ["XLP", "必需消费", 62, 1.2, "改善"], ["XLU", "公用事业", 61, 0.8, "改善"], ["XLF", "金融", 57, 0.3, "盘整"], ["XLI", "工业", 55, 0.2, "盘整"], ["XLE", "能源", 54, -0.4, "转弱"], ["XLB", "材料", 53, -0.6, "转弱"], ["XLY", "可选消费", 49, 0.0, "盘整"], ["XLK", "科技", 47, -1.4, "转弱"], ["XLC", "通信服务", 48, 0.1, "盘整"], ["XLRE", "房地产", 51, -0.2, "盘整"], ["ARKK", "创新科技", 46, -1.8, "转弱"], ["IBIT", "加密货币", 58, 0.7, "改善"], ["QQQ", "纳斯达克 100", 60, 1.1, "改善"], ["IWM", "小盘股", 50, -0.5, "转弱"]
+      ];
+      const body = document.querySelector("#preview-body"); const filter = document.querySelector("#status-filter"); const note = document.querySelector("#filter-note");
+      function render() { const selected = filter.value; const visible = rows.filter((row) => row[0] === "SPY" || selected === "all" || row[4] === selected); body.innerHTML = visible.map((row, index) => { const tone = row[4] === "改善" ? "positive" : row[4] === "转弱" ? "negative" : "neutral"; return `<tr class="${row[0] === "SPY" ? "is-pinned" : ""}"><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><span class="ticker">${row[0]}</span><span class="sub">${row[1]}${row[0] === "SPY" ? " · 锁定" : ""}</span></td><td class="number">${row[2].toFixed(1)}</td><td class="number ${row[3] > 0 ? "positive" : row[3] < 0 ? "negative" : "neutral"}">${row[3] > 0 ? "+" : ""}${row[3].toFixed(1)}%</td><td><span class="status-label ${tone}">${row[4]}</span></td></tr>`; }).join(""); note.textContent = selected === "all" ? "SPY 为固定比较基准，其他板块显示全部状态。" : `已筛选“${selected}”；SPY 仍保留为固定比较基准。`; }
+      filter.addEventListener("change", render); render();
+    </script>
+  </body>
+</html>

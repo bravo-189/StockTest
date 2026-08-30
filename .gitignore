@@ -1,0 +1,35 @@
+# Local runtime and browser QA profiles
+.runtime/
+.qa-*/
+
+# Python caches and local environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Local secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Logs, temporary files, and OS metadata
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+
+# Generated market snapshots (refreshed locally)
+data/market_snapshot.json
+data/market_snapshot_quality.json
+data/stockbee.json
+data/refresh_status.json
+data/fundamentals.json

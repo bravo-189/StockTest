@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "version": "0.1.0",
+    "asOf": "2026-08-27",
+    "sourceStatus": "sample",
+    "method": "backend AI research ranking contract",
+    "agentPrompt": "对冲基金经理主题研究：结合最新热点、催化剂、成分股基本面与叙事，为 60 个行业 ETF 归纳并排序 20 个主题；每项结论必须带来源和日期。",
+    "sourceUrls": ["https://stockbee.blogspot.com/p/mm.html", "https://www.sec.gov/edgar/sec-api-documentation"],
+    "notes": "本目录定义 AI 研究的候选输入集合；当前分析状态为 pending，不代表已完成的投资排名。"
+  },
+  "industryUniverse": [
+    ["COPX", "铜矿", "材料"], ["LIT", "锂电池", "材料"], ["XME", "金属采矿", "材料"], ["GDX", "黄金矿业", "材料"],
+    ["QTUM", "量子计算", "科技"], ["SOXX", "半导体", "科技"], ["ARKQ", "自动驾驶", "创新科技"], ["AIQ", "人工智能", "科技"],
+    ["DTCR", "数据中心", "科技"], ["CHAT", "生成式 AI", "科技"], ["XOP", "油气勘探", "能源"], ["NLR", "核能", "能源"],
+    ["KBWB", "银行", "金融"], ["OIH", "油服", "能源"], ["ITA", "航空航天", "工业"], ["MAGS", "大型科技", "科技"],
+    ["ARKX", "太空经济", "创新科技"], ["QQQ", "纳斯达克 100", "科技"], ["XBI", "生物科技", "医疗保健"], ["ARKK", "颠覆创新", "创新科技"], ["SPY", "大盘股", "标普 500"],
+    ["IWV", "全市场", "标普 500"], ["MTUM", "动量因子", "标普 500"], ["ARKW", "互联网", "创新科技"], ["DIA", "道琼斯", "标普 500"],
+    ["IDRV", "电动车", "可选消费"], ["XTL", "电信", "通信服务"], ["PRNT", "3D 打印", "工业"], ["IGV", "软件", "科技"],
+    ["USO", "原油", "能源"], ["IWM", "小盘股", "标普 500"], ["KWEB", "中国互联网", "通信服务"], ["TAN", "太阳能", "公用事业"],
+    ["SLX", "钢铁", "材料"], ["SKYY", "云计算", "科技"], ["ARKG", "基因组学", "医疗保健"], ["BLOK", "区块链", "金融"],
+    ["IYT", "运输", "工业"], ["CIBR", "网络安全", "科技"], ["IBUY", "线上零售", "可选消费"], ["KIE", "保险", "金融"],
+    ["CLOU", "云基础设施", "科技"], ["BOTZ", "机器人", "工业"], ["PAVE", "基础设施", "工业"], ["KBE", "银行", "金融"],
+    ["XRT", "零售", "可选消费"], ["HERO", "游戏", "通信服务"], ["ARKF", "金融科技", "金融"], ["VNQ", "房地产", "房地产"],
+    ["KRE", "区域银行", "金融"], ["IEUR", "欧洲股票", "全球市场"], ["IAI", "券商", "金融"], ["MJ", "大麻产业", "医疗保健"],
+    ["IYH", "医疗服务", "医疗保健"], ["FINX", "数字支付", "金融"], ["XHB", "住宅建筑", "可选消费"], ["IBIT", "比特币", "金融"],
+    ["JETS", "航空运输", "工业"], ["IHI", "医疗器械", "医疗保健"], ["IPAY", "支付网络", "金融"]
+  ],
+  "themes": [
+    {"id": "theme-ai-infrastructure", "name": "AI 算力与数据中心", "memberEtfs": ["AIQ", "CHAT", "DTCR"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]},
+    {"id": "theme-semiconductor-quantum", "name": "半导体与量子计算", "memberEtfs": ["SOXX", "QTUM"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]},
+    {"id": "theme-cloud-internet", "name": "云软件与互联网", "memberEtfs": ["IGV", "SKYY", "CLOU", "ARKW"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]},
+    {"id": "theme-cybersecurity", "name": "网络安全", "memberEtfs": ["CIBR"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]},
+    {"id": "theme-robotics-automation", "name": "机器人与自动化", "memberEtfs": ["BOTZ", "ARKQ", "PRNT", "ARKK"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]},
+    {"id": "theme-aerospace-defense", "name": "航天、国防与航空", "memberEtfs": ["ITA", "ARKX", "JETS"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]},
+    {"id": "theme-metals-materials", "name": "铜矿、金属与钢铁", "memberEtfs": ["COPX", "XME", "SLX"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]},
+    {"id": "theme-battery-ev", "name": "电池与电动车", "memberEtfs": ["LIT", "IDRV"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]},
+    {"id": "theme-nuclear-transition", "name": "核能与能源转型", "memberEtfs": ["NLR", "TAN"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]},
+    {"id": "theme-oil-energy-services", "name": "油气与能源服务", "memberEtfs": ["XOP", "USO", "OIH"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]},
+    {"id": "theme-banks-insurance", "name": "银行与保险", "memberEtfs": ["KBWB", "KBE", "KRE", "KIE"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]},
+    {"id": "theme-fintech-payments", "name": "金融科技、支付与券商", "memberEtfs": ["ARKF", "FINX", "IPAY", "IAI"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]},
+    {"id": "theme-digital-assets", "name": "数字资产与区块链", "memberEtfs": ["IBIT", "BLOK"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]},
+    {"id": "theme-gold-safe-haven", "name": "黄金与避险", "memberEtfs": ["GDX"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]},
+    {"id": "theme-biotech-genomics", "name": "生物科技与基因组", "memberEtfs": ["XBI", "ARKG"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]},
+    {"id": "theme-medtech-services", "name": "医疗器械与服务", "memberEtfs": ["IHI", "IYH"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]},
+    {"id": "theme-consumer-housing", "name": "消费、零售与住房", "memberEtfs": ["IBUY", "XRT", "XHB"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]},
+    {"id": "theme-real-estate-infrastructure", "name": "房地产、运输与基础设施", "memberEtfs": ["VNQ", "IYT", "PAVE"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]},
+    {"id": "theme-us-market-factors", "name": "美国大盘与动量因子", "memberEtfs": ["SPY", "IWV", "MTUM", "DIA", "IWM", "MAGS", "QQQ"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]},
+    {"id": "theme-global-communication", "name": "全球市场、通信与新消费", "memberEtfs": ["KWEB", "IEUR", "XTL", "HERO", "MJ"], "analysisStatus": "pending", "researchInputs": ["momentum", "breadth", "catalysts", "fundamentals", "narrative"]}
+  ]
+}
