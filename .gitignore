@@ -1,6 +1,8 @@
 # Local runtime and browser QA profiles
 .runtime/
 .qa-*/
+.worktrees/
+.superpowers/
 
 # Python caches and local environments
 __pycache__/
