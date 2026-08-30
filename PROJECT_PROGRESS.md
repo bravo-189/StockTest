@@ -92,6 +92,17 @@
 
 当前判断：P0、P1、P2 均通过；主题 AI 排名仍保持暂停。下一阶段数据工程入口为“美股 ETF 备用源适配”，但候选源需要账号密钥或存在单一交易所口径限制。
 
+### GitHub 版本基线：已完成
+
+- 已安装并验证 GitHub 官方 CLI `2.98.0`，账号为 `bravo-189`。
+- 已将 `StockTest/` 初始化为 `main` 分支并创建私有仓库：`https://github.com/bravo-189/StockTest`。
+- 基线提交为 `51586daf504b082c6fef6f831646e3422de53263`，提交说明为 `chore: establish StockTest project baseline`。
+- `.gitignore` 排除了 `.runtime/`、`.qa-*/`、Python 缓存、日志、环境密钥文件和每小时更新的本地数据快照；动态数据仍保留在本机，不进入 GitHub 历史。
+- 上传前大文件检查无超过 10 MB 的待提交文件，敏感模式扫描无命中。
+- 基线前重新运行 50 项 Python 测试与 JavaScript 语法检查，全部通过。
+- GitHub CLI/API 已验证远程仓库为 `PRIVATE`、默认分支为 `main`，远程提交 SHA 与本地一致。
+- 当前 GitHub 连接器尚未列出这个新建私有仓库；后续若要直接用连接器操作 PR/Issue，需要在 GitHub App 设置中授予该仓库访问权限。现有 GitHub CLI 推送不受影响。
+
 ### 本次涉及文件
 
 - `index.html`：市场宽度图表标题、最新读数和原始数据滚动控件。

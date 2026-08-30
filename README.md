@@ -87,6 +87,23 @@ python StockTest/data_pipeline/validate_fundamentals.py StockTest/data/fundament
 
 当前试点已通过结构、来源、期间、重复代码、缺失字段和基本数值范围检查。它只准备基本面事实输入，尚未让 AI agent 自动改变主题排名。
 
+## 版本管理
+
+项目使用私有 GitHub 仓库管理版本：`https://github.com/bravo-189/StockTest`，默认分支为 `main`。
+
+`.runtime/`、浏览器 QA 配置目录、Python 缓存、日志、环境密钥文件以及每小时更新的行情和 Stockbee 快照不会进入 Git 历史。代码、测试、设计文档、正式 QA 截图和静态配置均纳入版本管理。
+
+常用命令：
+
+```text
+git status
+git add <files>
+git commit -m "type: concise description"
+git push origin main
+```
+
+功能开发应先通过现有测试和 JavaScript 语法检查，再提交和推送。不要把本地生成的数据快照或账号凭据强制加入仓库。
+
 ## 第二阶段待办
 
 小程序页面暂不启动。网页原型验收后，再复用 `DashboardData` 接口单独设计移动端体验。
