@@ -2,10 +2,10 @@
 
 > 这是更换对话窗口时的唯一交接入口。新窗口先阅读本文件，再按链接读取完整上下文和最近进度；后续只更新本文件与 `PROJECT_PROGRESS.md`，不要重复生成同类交接/进度文档。
 
-**最后更新：** 2026-08-30  
+**最后更新：** 2026-08-31  
 **项目目录：** `C:\Users\i023j\.codex\.chatgpt-projects\g-p-6a914fbe15f881918f3b80c224c6d0e9\StockTest`  
 **运行方式：** 本地静态网页，默认 `http://127.0.0.1:8765/index.html`  
-**当前阶段：** 网页原型、本地数据质量、异常状态与一键常驻刷新均已完成；主题 AI 排名和小程序暂缓。
+**当前阶段：** 网页原型、本地数据质量、异常状态与一键常驻刷新均已完成；本地市场分析 Task 1–3 已完成并审查通过，Task 4 已实现但待独立复审；主题 AI 排名、小程序和 GitHub 上线暂缓。
 
 ## 新窗口启动顺序
 
@@ -93,6 +93,16 @@ P0 数据质量、P1 异常状态与备用源评估、P2 本地一键常驻运�
 
 在用户确认前，不要恢复主题 AI 排名、不接入小程序、不发布 GitHub Pages，也不要重做已有页面交互。
 
+## 2026-08-31 本地执行交接
+
+- GitHub 远程仓库、推送、PR、Pages 发布与线上授权操作已按用户要求暂停；不要主动恢复。
+- 当前本地特性分支：`.worktrees/market-analysis-evidence/StockTest`，分支名 `feature/market-analysis-evidence`。
+- Task 1–3 已完成并通过独立审查：来源/证据契约、五因子评分与日期对齐、证据化结论与置信度。
+- Task 4 已实现：刷新成功后生成/复用 `market_analysis.json`，失败保留旧分析；但还未完成独立复审。
+- Task 5：首页市场状态卡与证据抽屉尚未开始；Task 6：端到端 QA 和最终本地交付尚未开始。
+- 最新本地实现分支提交：`6d315f6`；不要将其视为已合并到 `main` 或已上线。
+- 详细证据、提交、测试数量和暂停项见 [PROJECT_PROGRESS.md](./PROJECT_PROGRESS.md) 的 `2026-08-31 本地执行状态（GitHub 暂停后）`。
+
 ## 防重复规则
 
 - 先读本文件和 `PROJECT_PROGRESS.md`，再动手。
@@ -105,5 +115,5 @@ P0 数据质量、P1 异常状态与备用源评估、P2 本地一键常驻运�
 ## 可直接粘贴到新窗口的启动语句
 
 ```text
-请先阅读 StockTest/PROJECT_HANDOFF.md、PROJECT_CONTEXT.md 和 PROJECT_PROGRESS.md，严格遵守其中的不可回退口径和防重复规则。当前 P0/P1/P2 均已完成：76/76 标的、Stockbee 20 行、日期日历模型、异常状态和本地一键每小时刷新均已接入。先运行 status-local.cmd 与现有测试，不要重复启动服务器或制作已有页面和文档；等待我确认是否进入美股 ETF 备用源适配。
+请只在本机继续 StockTest，不进行任何 GitHub 推送、PR、Pages 发布或授权操作。先阅读 StockTest/PROJECT_HANDOFF.md、PROJECT_CONTEXT.md 和 PROJECT_PROGRESS.md 最近的 2026-08-31 记录；当前本地特性分支 .worktrees/market-analysis-evidence/StockTest 已完成 Task 1–3，Task 4 已实现但待独立复审，Task 5/6 尚未开始。运行现有 data_pipeline 测试和 app.js 语法检查，不重复制作已有页面、数据契约或进度文档；然后等待我的新本地需求。主题 AI、小程序、新闻热度、基本面 UI 与线上部署继续暂停。
 ```

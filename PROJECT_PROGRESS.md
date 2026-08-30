@@ -200,3 +200,56 @@
 - 只在需求直接相关的文件中做精准修改，不顺手重构无关模块。
 - 任何“已完成”结论都必须附测试或浏览器证据；没有证据时标记为“待验证”。
 - 真实数据、来源、抓取时间和缺失状态必须与数据一起保存；不把示例值描述成实时行情。
+
+## 2026-08-31 本地执行状态（GitHub 暂停后）
+
+### 当前结论
+
+项目已经从“网页 UI 原型 + 本地行情刷新”进入“本地可审计市场分析管线”阶段。GitHub 远程仓库、推送、PR、Pages 发布和线上授权操作全部暂停；本地代码、分支和运行方式保留。
+
+### 本地分支与版本
+
+- 主工作区：`StockTest/`，`main` 当前为 `5423708`，仅比 `origin/main` 多 1 个本地忽略规则提交；没有继续推送。
+- 隔离开发区：`.worktrees/market-analysis-evidence/StockTest/`，本地分支 `feature/market-analysis-evidence`，当前最新为 `6d315f6`。
+- 特性分支尚未合并回 `main`，也没有远程跟踪分支；新的本地需求应优先在该隔离分支继续，避免覆盖主工作区。
+- `sources/` 未修改，继续保持只读。
+
+### 已完成的本地分析能力
+
+1. **来源与证据契约（Task 1，已审查通过）**
+   - `data/source_registry.json` 登记一期允许来源：Yahoo Chart、Binance 公共 K 线、Stockbee、质量报告；后续 SEC/Fed/BLS/BEA/Treasury/ETF 官网来源保持禁用。
+   - `data_pipeline/market_analysis.py` 拒绝重复 ID、禁用来源、无证据 claim、lead 驱动评分和空评分证据，并支持原子写入。
+   - 任务提交：`a144187`、`e333c67`、`281eeed`；最终定向/完整测试为 59 项通过。
+
+2. **五因子确定性评分（Task 2，已审查通过）**
+   - 已实现趋势、宽度、动量、轮动、风险偏好五因子；使用 Wilder RSI、固定阈值、缺失即 `unavailable`。
+   - BTC 只有在存在与美股 `asOf` 同日有效 K 线时才进入正式风险偏好评分；周末 BTC 仍可作为页面最新行情展示，但不会倒灌周五结论。
+   - Python 与浏览器 RSI 已统一为 Wilder 口径；动量评分固定为 12 个板块/风格 + 60 项行业目录中排除 IBIT 后的 59 个合格观测，共 71 个。
+   - IBIT 只参与风险偏好，不参与动量；ARKK 的双业务角色保留，但证据引用稳定去重。
+   - 任务提交：`ca81ca1`、`6a75faa`、`5086dc8`；最终完整数据管线测试为 70 项通过。
+
+3. **证据化结论与置信度（Task 3，已审查通过）**
+   - 已实现 `build_market_analysis`、evidence materialize、claim/briefing/watchNext 引用校验、置信度和本地 CLI。
+   - 质量报告会影响置信度但不改变因子分数：high 每项扣 0.15（上限 0.30），medium 每项扣 0.05（上限 0.15），low 只展示不扣分。
+   - provider 使用封闭映射；`binance-spot` 会规范为 `binance-public-klines`，未知或禁用 provider 直接失败。
+   - 当前真实复制快照已生成并回读通过：`asOf=2026-08-28`、状态“震荡”、总分 `-1`、置信度 `1.00`、163 条 evidence、10 条 claims。
+   - 任务提交：`ba16585`、`9b91b93`；最终完整数据管线测试为 80 项通过。
+
+4. **刷新流程接入（Task 4，实现已完成，独立复审待做）**
+   - `refresh_local_data.py` 已在快照写入成功后生成分析，并将分析状态、`asOf`、置信度、生成时间写入刷新状态。
+   - 同一 `asOf` 且输入指纹、canonical registry 和现有分析均有效时复用，不重复构建；快照、质量报告、逻辑刷新状态或 registry 改变时重建。
+   - builder/writer 失败不会覆盖上一份有效 analysis；刷新状态标记为 `partial`，保留失败原因和最近完整成功时间。
+   - 任务提交：`0cd2bcf`；本地定向 7 项、完整数据管线 83 项通过，离线 copied-snapshot smoke 成功。
+   - 待办：按 SDD 流程完成 Task 4 独立规格/质量复审；同时清理不应进入版本历史的临时 SDD 报告提交。
+
+### 当前未完成与明确暂停
+
+- **未完成：** Task 4 独立复审；Task 5 首页市场结论卡和证据抽屉；Task 6 端到端浏览器 QA、文档收口和本地交付验收。
+- **暂停：** GitHub 推送/上线、GitHub Pages、主题 Top 20 AI 排名、小程序、新闻热度、独立基本面 UI、真实行情 API 直连浏览器。
+- **本地服务：** 继续使用 `start-local.cmd`、`status-local.cmd`、`stop-local.cmd`；不要为隔离分支重复启动 8765 端口，若要验证特性分支请使用单独本地端口。
+
+### 新对话启动入口
+
+新窗口必须先阅读 `PROJECT_HANDOFF.md`、`PROJECT_CONTEXT.md` 和本文件最近这一节，然后运行本地测试。建议从以下上下文开始：
+
+> 请只在本机继续 StockTest，不进行任何 GitHub 推送、PR、Pages 发布或授权操作。先阅读 `StockTest/PROJECT_HANDOFF.md`、`PROJECT_CONTEXT.md`、`PROJECT_PROGRESS.md` 最近一节；当前本地特性分支 `.worktrees/market-analysis-evidence/StockTest` 已完成 Task 1–3，Task 4 已实现但待独立复审，Task 5/6 尚未开始。不要重复制作已有页面、数据契约或进度文档；先运行现有 data_pipeline 测试和 `app.js` 语法检查，再等待我提出新的本地需求。主题 AI、小程序、新闻热度、基本面 UI 与线上部署继续暂停。
