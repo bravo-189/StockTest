@@ -2,11 +2,19 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
-from StockTest.data_pipeline.refresh_local_data import refresh_once, run_refresh_attempt
+from StockTest.data_pipeline.refresh_local_data import _write_json, refresh_once, run_refresh_attempt
 
 
 class RefreshLocalDataTests(unittest.TestCase):
+
+    def test_write_json_replaces_snapshot_atomically(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "snapshot.json"
+            _write_json(target, {"version": 2, "rows": [1, 2, 3]})
+            self.assertEqual(json.loads(target.read_text(encoding="utf-8")), {"version": 2, "rows": [1, 2, 3]})
+            self.assertEqual(list(Path(directory).glob("*.tmp")), [])
     def test_refresh_once_writes_market_and_stockbee_snapshots(self):
         with tempfile.TemporaryDirectory() as directory:
             output_dir = Path(directory)
@@ -27,7 +35,7 @@ class RefreshLocalDataTests(unittest.TestCase):
             self.assertTrue((output_dir / "market_snapshot.json").exists())
             self.assertTrue((output_dir / "stockbee.json").exists())
             stockbee = json.loads((output_dir / "stockbee.json").read_text(encoding="utf-8"))
-            self.assertEqual(stockbee["metadata"]["rowCount"], 20)
+            self.assertEqual(stockbee["metadata"]["rowCount"], 21)
             self.assertEqual(stockbee["metadata"]["latestDate"], "2026-08-28")
 
     def test_successful_attempt_writes_refresh_status(self):
@@ -72,6 +80,38 @@ class RefreshLocalDataTests(unittest.TestCase):
             self.assertEqual(status["status"], "partial")
             self.assertEqual(status["sources"]["market"]["missingCount"], 1)
             self.assertIsNone(status["lastFullSuccessAt"])
+
+    def test_partial_market_refresh_retains_previous_valid_instruments(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output_dir = Path(directory)
+            previous = {"metadata": {"sourceStatus": "loaded", "loadedCount": 2, "requiredCount": 2, "missing": []}, "instruments": {"SPY": {"bars": [1]}, "COPX": {"bars": [2]}}}
+            (output_dir / "market_snapshot.json").write_text(json.dumps(previous), encoding="utf-8")
+            market = {"metadata": {"sourceStatus": "partial", "loadedCount": 1, "requiredCount": 2, "missing": [{"symbol": "COPX"}]}, "instruments": {"SPY": {"bars": [3]}}}
+            csv_text = "Date,Number of stocks up 4% plus today,Number of stocks down 4% plus today,5 day ratio,10 day ratio,T2108,S&P\n08/28/2026,84,382,0.98,1.09,41.91,7711.23\n"
+
+            result = refresh_once(output_dir, market_builder=lambda: market, stockbee_csv=csv_text, fetched_at="2026-08-30T01:00:00Z")
+
+            self.assertEqual(result["market"]["metadata"]["sourceStatus"], "loaded")
+            self.assertEqual(result["market"]["metadata"]["retainedSymbols"], ["COPX"])
+            self.assertEqual(result["market"]["instruments"]["COPX"]["bars"], [2])
+
+    def test_btc_only_refresh_replaces_btc_and_retains_daily_snapshots(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output_dir = Path(directory)
+            previous_market = {
+                "metadata": {"sourceStatus": "loaded", "dailyRefreshDate": "2026-09-01"},
+                "instruments": {"SPY": {"latestDate": "2026-09-01"}, "BTC": {"latestDate": "2026-09-01"}},
+            }
+            (output_dir / "market_snapshot.json").write_text(json.dumps(previous_market), encoding="utf-8")
+            (output_dir / "stockbee.json").write_text(json.dumps({"metadata": {"latestDate": "2026-09-01"}}), encoding="utf-8")
+            (output_dir / "stockbee_momentum.json").write_text(json.dumps({"metadata": {"latestDate": "2026-09-01"}}), encoding="utf-8")
+            btc = {"metadata": {"latestDate": "2026-09-02", "intraday": {"sourceStatus": "loaded"}}, "instruments": {"BTC": {"latestDate": "2026-09-02"}}}
+            with patch("StockTest.data_pipeline.refresh_local_data._build_live_btc_snapshot", return_value=btc):
+                result = refresh_once(output_dir, fetched_at="2026-09-02T01:00:00Z", btc_only=True)
+            saved = json.loads((output_dir / "market_snapshot.json").read_text(encoding="utf-8"))
+            self.assertEqual(saved["instruments"]["SPY"]["latestDate"], "2026-09-01")
+            self.assertEqual(saved["instruments"]["BTC"]["latestDate"], "2026-09-02")
+            self.assertEqual(result["stockbee"]["metadata"]["latestDate"], "2026-09-01")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="StockTest 长期投资研究页面" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <title>StockTest · 长期投资</title>
+    <link rel="stylesheet" href="styles.css?v=20260830-breadth-redesign3" />
+  </head>
+  <body>
+    <a class="skip-link" href="#long-term-main">跳到主要内容</a>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="主导航">
+        <div class="brand-block">
+          <div class="brand-mark" aria-hidden="true">ST</div>
+          <div><div class="brand-name">StockTest</div><div class="brand-subtitle">长期投资研究</div></div>
+        </div>
+        <div class="product-switcher" aria-label="产品空间">
+          <a class="product-switcher-item" href="index.html"><span class="product-switcher-mark">01</span><span><strong>美股盘后雷达</strong><small>盘后市场研究</small></span></a>
+          <a class="product-switcher-item is-active" href="long-term.html" aria-current="page"><span class="product-switcher-mark">02</span><span><strong>长期投资</strong><small>长期研究空间</small></span></a>
+        </div>
+        <div class="sidebar-footer">
+          <div class="source-state"><span class="state-dot is-live"></span><span>研究空间</span></div>
+          <div class="sidebar-note">长期投资模块<br />内容待规划</div>
+        </div>
+      </aside>
+
+      <main class="main-content" id="long-term-main">
+        <header class="topbar">
+          <div class="mobile-brand"><span class="brand-name">StockTest</span><span class="brand-subtitle">长期投资研究</span></div>
+          <div class="topbar-context">长期投资 <span class="topbar-separator">/</span> 研究空间</div>
+          <div class="topbar-actions">
+            <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换深色模式" aria-pressed="false"><span class="theme-label">深色模式</span><span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span></button>
+            <a class="topbar-button topbar-link" href="index.html">返回盘后雷达</a>
+          </div>
+        </header>
+
+        <div class="content-wrap">
+          <section class="page-placeholder section-surface" aria-labelledby="long-term-title">
+            <div class="section-kicker">LONG-TERM INVESTING</div>
+            <h1 id="long-term-title">长期投资</h1>
+            <p>这是长期投资研究的独立入口。内容模块将在盘后雷达网页原型稳定后逐步规划。</p>
+            <div class="placeholder-rule" aria-hidden="true"></div>
+            <p class="placeholder-note">当前为空白占位页 · 暂不加载行情或投资结论</p>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      (() => {
+        const key = "stocktest-theme";
+        const root = document.documentElement;
+        const button = document.querySelector("#theme-toggle");
+        const apply = (theme) => {
+          const dark = theme === "dark";
+          root.dataset.theme = dark ? "dark" : "light";
+          button.querySelector(".theme-label").textContent = dark ? "浅色模式" : "深色模式";
+          button.classList.toggle("is-on", dark);
+          button.setAttribute("aria-pressed", String(dark));
+          button.setAttribute("aria-label", dark ? "切换浅色模式" : "切换深色模式");
+          try { localStorage.setItem(key, root.dataset.theme); } catch (_) {}
+        };
+        let saved = "light";
+        try { saved = localStorage.getItem(key) || "light"; } catch (_) {}
+        apply(saved);
+        button.addEventListener("click", () => apply(root.dataset.theme === "dark" ? "light" : "dark"));
+      })();
+    </script>
+  </body>
+</html>

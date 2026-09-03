@@ -26,18 +26,28 @@ StockTest 是面向个人美股研究者的盘后市场雷达网页：用户打�
 ### 页面结构
 
 - “板块 ETF”和“权重股”属于同一个页面研究模块；
+- 产品切换与页面导航位于页面最顶部并横向排列；顶栏不再提供搜索框或“查找 ETF”按钮；
 - 侧边栏使用“板块与权重股”，不再提供独立的“权重股”导航；
 - 板块区域内展示 14 个板块 ETF（含 IBIT 加密货币），SPY 固定首行，下面嵌入 12 个 ETF 权重股入口；
 - 主要市场区域展示 SPX、NDX、DJI、RUT 四大指数以及 BTC 卡片，共 5 个主要市场基准；
-- 主要市场卡片迷你 K 线使用近 1 个月约 21 个交易日；ETF 详情抽屉继续展示 60 日走势；
+- 主要市场卡片默认显示当日预览：SPX/NDX/DJI/RUT 使用 Yahoo 原生 5 分钟折线面积图（最多 79 点，含收盘时刻记录），BTC 使用 2 小时 K 线（最多 12 根覆盖 24H）；悬停或键盘聚焦时显示最多 640px 的近 1 个月日线气泡并展示价格；ETF 详情抽屉继续展示 60 日走势；
 - RSI14、Δ5、Δ20 表头支持升降序排序，状态列使用紧凑表头筛选菜单与只读标签，SPY 状态锁定；
+- RS1M、RS3M、RS6M、RS12M 曾完成过计算验证，但当前按用户确认暂不展示；未经再次确认不要恢复 RS 列；
 - 行业区域展示强势 15 和全部 60；
-- 行业表删除“动能”数据列，RSI14、Δ5、20日支持升降序排序；每行提供前十大权重股入口；
+- 行业动能榜新增“趋势（MA150）”列：最新已确认收盘价高于 SMA150 显示“上涨”，否则显示“下降”；日线不足 150 根显示“数据不足”。
+- 板块 ETF 表已移除收盘价，改为同口径“趋势（MA150）”列；两张榜单的数字列保持固定网格对齐。
+- 行业 ETF 名称直接跳转对应 TradingView 图表；“前十大”按钮继续打开本地详情抽屉。
+- 行业表删除“动能”数据列，RSI14、Δ5、20日支持升降序排序，并新增按 Δ5 映射的状态列；每行提供前十大权重股入口；
 - 板块与行业表均使用独立内部滚动容器，表头和首行 SPY sticky 固定，便于逐行对照；
+- 板块与行业表下方均有默认收起的“每日 RSI · 近 2 个月”面板，可从选择器切换 ETF，显示最近 42 个美股交易日的 RSI14 和区间标签；
+- SPY 固定行下方使用滚动时动态计算的遮挡层，覆盖被固定行压住的半行内容，避免滚动时漏字或出现空隙；
+- SPY 固定行已改为读取表头实际高度定位；原动态遮挡层保持 0 高度，滚动时不再制造空白或漏字。
+- 两个每日 RSI 面板已合并为独立“每日 RSI 对比”区块，桌面端两列等宽、展开后行高与日期轴一致；≤780px 自动单列。
 - 20 个主题模块当前暂停，不出现在主动导航和页面中；其目录与 AI 契约保留备用；
 - 市场宽度区域直接使用 Stockbee 原始列绘制折线图，不放左侧解释卡；
 - 折线指标包括 4% 上涨、4% 下跌、5 日比率、10 日比率、T2108、S&P 500；
-- 原始 Stockbee 20 日数据默认折叠，用户主动展开查看；展开后使用独立横向滚动条，日期列固定，键盘方向键支持移动。
+- 原始 Stockbee 半年数据默认折叠，用户主动展开查看；展开后使用独立横向滚动条，日期列固定，键盘方向键支持移动。
+- 新增独立长期投资入口 `long-term.html`，当前只提供空白占位页、主题切换和返回盘后雷达，不加载投资内容或行情数据。
 
 ### 数据与范围
 
@@ -60,7 +70,9 @@ StockTest 是面向个人美股研究者的盘后市场雷达网页：用户打�
 - 12 个板块 ETF 权重股入口统一放在板块模块内；
 - 行业“强势 15 / 全部 60”真正切换可见行数，排序状态保持在当前页面；
 - 行业切换：强势 15、全部 60；
-- Stockbee 公开 Google Sheet CSV 导入和 20 日本地快照；
+- 板块与行业每日 RSI 历史表：选择器、展开/收起、42 个交易日回算和空数据提示；
+- SPY 固定行滚动遮挡修正：整行 sticky 与动态覆盖层已加入两个榜单；
+- Stockbee 公开 Google Sheet CSV 导入和最近半年本地快照（约 126 个交易日）；
 - 20 个主题候选目录已覆盖 60 个唯一 ETF，并作为后续恢复时的输入资产保存；
 - 后台 AI 研究请求/结果校验契约；
 - 新闻热度和独立基本面 UI 已移除；
@@ -69,13 +81,16 @@ StockTest 是面向个人美股研究者的盘后市场雷达网页：用户打�
 - 本地行情快照已扩展：4 个指数、14 个板块 ETF（含 IBIT）、60 个行业 ETF 和 BTC，共 76 个唯一标的；网页从 `data/market_snapshot.json` hydration，不在浏览器直连供应商。
 - Yahoo 尚未收盘的最新日线保存在 `pendingBars`，网页显示“未收盘日线”提示，但收盘价、RSI 和多周期收益只使用完整日线。
 - `data_pipeline/refresh_local_data.py` 支持一次刷新或每小时循环刷新行情与 Stockbee；网页每小时重新读取本地快照。
+- 日内层已接入同一快照：SPX/NDX/DJI/RUT 直接使用 Yahoo 原生 5M（最多 79 根美股时段数据，含 16:00 收盘记录），不再做本地 5→10 分钟聚合；BTC 使用 Binance 原生 2H（UTC 24×7）；日内字段失败时前端回退到确定性预览。
+- 行情刷新对 Yahoo query1/query2 和 Binance 公共备用域名均有短重试；Yahoo 当前日临时柱保留为 `pendingBar`，局部失败时沿用上一次有效标的并在元数据记录 `retainedSymbols`，避免网络抖动让真实 ETF 从页面消失。
 
 ### 当前仍是占位或样例
 
 - 主题模块当前暂停；目录是“候选输入集合”，不是最终 AI 排名；
 - 主题卡片的动能数值仍是原型示例数据；
-- 60 个行业 ETF 已接入真实行情快照；下一步需要做跨源核对和异常监控；
+- 60 个行业 ETF 已接入真实行情快照；日线与日内质量检查均已纳入报告，下一步继续做浏览器端回归与异常监控；
 - Yahoo Chart 是免密钥的非官方接口，未来仍需备用适配器；已评估 Alpaca、Alpha Vantage 与 CoinGecko，当前仅 CoinGecko 适合作为 BTC 的低频免密钥备用，美股备用源尚未接入；Binance K 线是公开只读接口；
+- ETF 前十大持仓已接入公开来源；普通股票 ETF 使用 StockAnalysis（页面列出的源为 Finnhub），IBIT 使用 iShares 官方 holdings CSV，USO 使用 USCF 官方 holdings API；当前 71 个板块/行业 ETF 全部有来源记录。IBIT 的有效持仓是 BTC/现金，USO 的有效持仓是期货/国债/掉期，不按股票 ETF 的十家公司标准误判为缺失。持仓缓存 24 小时，小时行情刷新不重复抓取。
 - AI agent 尚未基于最新网络资料生成可引用的最终 20 主题排名；
 - SEC 基本面试点文件保留作后台输入备用，未接入网页展示。
 
@@ -84,6 +99,7 @@ StockTest 是面向个人美股研究者的盘后市场雷达网页：用户打�
 ```text
 StockTest/
 ├─ index.html                         网页结构和页面区块
+├─ long-term.html                     长期投资空白占位页（后续填充）
 ├─ styles.css                         主题、布局、响应式和组件样式
 ├─ app.js                             交互、示例数据、JSON hydration、Canvas 折线图
 ├─ start-local.cmd                    一键启动网页与每小时刷新进程
@@ -97,7 +113,8 @@ StockTest/
 ├─ .codex/skills/awesome-design-md/   项目内设计技能（源自 awesome-design-md）
 ├─ data/
 │  ├─ market_snapshot.json             指数、板块 ETF、行业 ETF、BTC 本地行情快照
-│  ├─ stockbee.json                   Stockbee 20 日本地快照
+│  ├─ stockbee.json                   Stockbee 半年本地快照
+│  ├─ stockbee_momentum.json          Stockbee 50 股票代码快照（含来源新鲜度）
 │  ├─ refresh_status.json              最近一次本地刷新结果、来源状态和成功时间
 │  ├─ theme_catalog.json              60 ETF → 20 主题候选输入目录
 │  ├─ fundamentals.json               SEC 基本面试点（后台备用，不展示）
@@ -110,6 +127,7 @@ StockTest/
    ├─ validate_market_snapshot.py       行情快照质量分析与报告生成
    ├─ stockbee.py                     Stockbee CSV 解析与校验
    ├─ fetch_stockbee.py               Stockbee 抓取和 JSON 快照
+   ├─ fetch_stockbee_momentum.py      Stockbee 50 股票名单抓取与解析
    ├─ theme_catalog.py                20/60 覆盖、唯一性和输入契约校验
    ├─ theme_agent.py                  AI 研究请求与结果校验
    ├─ sec_fundamentals.py             SEC Company Facts 规范化
@@ -126,6 +144,7 @@ StockTest/
 
 ```text
 instrument: symbol, provider, calendar, bars[], latest, latestDate, pendingBar?
+         intradayBars[], intraday{provider, providerUrl, interval, timezone, latestDate}?
 metadata: latestDate, comparisonDate, calendarLatestDates, calendars,
           requiredCount, loadedCount, pendingCount, missing
 ```
@@ -134,6 +153,7 @@ metadata: latestDate, comparisonDate, calendarLatestDates, calendars,
 - `comparisonDate` 为各日历已确认最新日期的共同基准，当前为 `2026-08-27`。
 - BTC 保留原生最新日期 `2026-08-29`，不补造美股周末 K 线；页面同时显示美股收盘日和 BTC 最新日。
 - Yahoo 未收盘记录继续进入 `pendingBars`，不参与收盘价、RSI 或多周期收益计算。
+- 日内层不参与收盘指标：美股 `intraday.interval=5m` 来自 Yahoo 原始 5M，BTC `intraday.interval=2h` 来自 Binance；当前未收盘日内根保留 `status=incomplete`，供页面显示最新盘中走势。
 
 ### Stockbee 快照
 
@@ -156,6 +176,12 @@ rows[]: date, up, down, ratio5, ratio10,
 `https://stockbee.blogspot.com/p/mm.html`
 
 浏览器只读取本地 `data/stockbee.json`，不直接访问 Stockbee。
+
+`data/stockbee_momentum.json` 是独立的 Stockbee 50 代码名单快照，来源为用户指定的公开工作表：
+
+`https://docs.google.com/spreadsheets/d/1xjbe9SF0HsxwY_Uy3NC2tT92BqK0nhArUaYU16Q0p9M/export?format=csv&gid=1499398020`
+
+该表按日期列排列代码，解析器兼容带说明行和无说明行两种导出布局；页面只展示排名、代码与 TradingView 跳转，并依据 `metadata.latestDate` 和 `isStale` 标注来源新鲜度。
 
 ### 本地刷新状态
 

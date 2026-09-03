@@ -2,7 +2,7 @@
 
 import argparse
 import json
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
 
@@ -14,6 +14,7 @@ except ImportError:  # pragma: no cover - supports direct CLI execution
 
 DEFAULT_URL = "https://docs.google.com/spreadsheets/d/0Am_cU8NLIU20dEhiQnVHN3Nnc3B1S3J6eGhKZFo0N3c/export?format=csv"
 SOURCE_PAGE_URL = "https://stockbee.blogspot.com/p/mm.html"
+STOCKBEE_LOOKBACK_DAYS = 183
 
 
 def fetch_csv(url, timeout=20):
@@ -22,14 +23,26 @@ def fetch_csv(url, timeout=20):
         return response.read().decode("utf-8-sig")
 
 
+def trim_stockbee_rows(rows, lookback_days=STOCKBEE_LOOKBACK_DAYS):
+    """Keep the latest six calendar months anchored to the source latest date."""
+    ordered = sorted(rows, key=lambda row: row["date"], reverse=True)
+    if not ordered:
+        return []
+    latest = date.fromisoformat(ordered[0]["date"])
+    cutoff = latest - timedelta(days=lookback_days)
+    return [row for row in ordered if date.fromisoformat(row["date"]) >= cutoff]
+
+
 def build_snapshot(csv_text, source_url, fetched_at):
-    rows = sorted(normalize_stockbee_rows(parse_stockbee_csv(csv_text)), key=lambda row: row["date"], reverse=True)
+    rows = trim_stockbee_rows(normalize_stockbee_rows(parse_stockbee_csv(csv_text)))
     return {
         "metadata": {
             "rowCount": len(rows),
             "latestDate": rows[0]["date"] if rows else None,
             "sourceStatus": "loaded",
             "fetchedAt": fetched_at,
+            "historyWindow": "6mo",
+            "lookbackDays": STOCKBEE_LOOKBACK_DAYS,
         },
         "source": {"name": "Stockbee Market Monitor", "pageUrl": SOURCE_PAGE_URL, "url": source_url, "format": "csv"},
         "schema": STOCKBEE_SCHEMA,

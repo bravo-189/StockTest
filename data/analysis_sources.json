@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0",
+  "policy": {
+    "browserDirectAccess": false,
+    "aiEnabled": false,
+    "newsEnabled": false,
+    "requireSourceDate": true,
+    "requireEvidenceForClaims": true
+  },
+  "sources": [
+    {"id": "sec-edgar", "name": "SEC EDGAR", "tier": 1, "category": "regulatory", "enabled": false, "url": "https://www.sec.gov/edgar"},
+    {"id": "federal-reserve", "name": "Federal Reserve", "tier": 1, "category": "official-macro", "enabled": false, "url": "https://www.federalreserve.gov/"},
+    {"id": "issuer-filings", "name": "Company and ETF issuer filings", "tier": 1, "category": "issuer", "enabled": false, "url": null},
+    {"id": "reuters", "name": "Reuters", "tier": 2, "category": "financial-media", "enabled": false, "url": "https://www.reuters.com/markets/us/"},
+    {"id": "yahoo-finance-news", "name": "Yahoo Finance News", "tier": 2, "category": "financial-media", "enabled": false, "url": "https://finance.yahoo.com/news/"},
+    {"id": "x-official-accounts", "name": "X verified official accounts", "tier": 3, "category": "social", "enabled": false, "url": "https://x.com/", "allowlist": []}
+  ]
+}

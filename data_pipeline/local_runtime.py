@@ -41,14 +41,17 @@ def command_line(pid):
             f"$p = Get-CimInstance Win32_Process -Filter 'ProcessId = {pid}' -ErrorAction SilentlyContinue; "
             "if ($p) { $p.CommandLine }"
         )
-        completed = subprocess.run(
-            ["powershell.exe", "-NoProfile", "-Command", script],
-            capture_output=True,
-            text=True,
-            timeout=5,
-            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
-        )
-        return completed.stdout.strip()
+        try:
+            completed = subprocess.run(
+                ["powershell.exe", "-NoProfile", "-Command", script],
+                capture_output=True,
+                text=True,
+                timeout=5,
+                creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+            )
+            return completed.stdout.strip()
+        except (OSError, subprocess.TimeoutExpired):
+            return None
     try:
         return Path(f"/proc/{pid}/cmdline").read_bytes().replace(b"\0", b" ").decode(errors="replace")
     except OSError:
@@ -58,7 +61,14 @@ def command_line(pid):
 def service_running(service):
     if not isinstance(service, dict):
         return False
-    line = command_line(service.get("pid")).casefold()
+    line = command_line(service.get("pid"))
+    if line is None or line == "":
+        try:
+            os.kill(int(service.get("pid")), 0)
+            return True
+        except (OSError, TypeError, ValueError):
+            return False
+    line = line.casefold()
     markers = [str(item).casefold() for item in service.get("markers", []) if item]
     return bool(line and markers and all(marker in line for marker in markers))
 

@@ -6,7 +6,7 @@
     <meta name="description" content="StockTest 美股盘后市场雷达网页原型" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <title>StockTest · 美股盘后雷达</title>
-    <link rel="stylesheet" href="styles.css?v=20260830-breadth-redesign3" />
+    <link rel="stylesheet" href="styles.css?v=20260902-index-tv-links" />
   </head>
   <body>
     <a class="skip-link" href="#overview">跳到主要内容</a>
@@ -19,11 +19,18 @@
             <div class="brand-subtitle">美股盘后雷达</div>
           </div>
         </div>
-        <nav class="nav-list">
-          <button class="nav-item is-active" type="button" data-target="overview"><span class="nav-index">01</span><span>总览</span></button>
-          <button class="nav-item" type="button" data-target="sectors"><span class="nav-index">02</span><span>板块与权重股</span></button>
-          <button class="nav-item" type="button" data-target="industries"><span class="nav-index">03</span><span>行业动能</span></button>
-          <button class="nav-item" type="button" data-target="breadth"><span class="nav-index">04</span><span>市场宽度</span></button>
+        <div class="product-switcher" aria-label="产品空间">
+          <a class="product-switcher-item is-active" href="index.html" aria-current="page"><span class="product-switcher-mark">01</span><span><strong>美股盘后雷达</strong><small>盘后市场研究</small></span></a>
+          <a class="product-switcher-item" href="long-term.html"><span class="product-switcher-mark">02</span><span><strong>长期投资</strong><small>长期研究空间</small></span></a>
+        </div>
+        <nav class="nav-list" aria-label="页面区块导航">
+          <button class="nav-item is-active" type="button" data-target="overview" aria-current="location"><span class="nav-index">01</span><span>总览</span></button>
+          <button class="nav-item" type="button" data-target="indices"><span class="nav-index">02</span><span>关键市场</span></button>
+          <button class="nav-item" type="button" data-target="sectors"><span class="nav-index">03</span><span>板块与权重股</span></button>
+          <button class="nav-item" type="button" data-target="industries"><span class="nav-index">04</span><span>行业动能</span></button>
+          <button class="nav-item" type="button" data-target="stockbee-momentum"><span class="nav-index">05</span><span>Stockbee 股票</span></button>
+          <button class="nav-item" type="button" data-target="rsi-history"><span class="nav-index">06</span><span>每日 RSI</span></button>
+          <button class="nav-item" type="button" data-target="breadth"><span class="nav-index">07</span><span>市场宽度</span></button>
         </nav>
         <div class="sidebar-footer">
           <div class="source-state"><span class="state-dot is-live"></span><span>盘后数据</span></div>
@@ -35,15 +42,9 @@
       <main class="main-content">
         <header class="topbar">
           <div class="mobile-brand"><span class="brand-name">StockTest</span><span class="brand-subtitle">美股盘后雷达</span></div>
-          <div class="topbar-context">盘后研究简报 <span class="topbar-separator">/</span> 美股市场</div>
+          <div class="topbar-context">盘后研究简报 <span class="topbar-separator">/</span> 美股市场 <span class="topbar-clocks" aria-label="实时市场时间"><span class="clock-chip"><span class="clock-label">美东</span><time id="us-date" datetime="">----/--/--</time><time id="us-clock" datetime="">--:--:--</time></span><span class="clock-chip"><span class="clock-label">北京</span><time id="cn-clock" datetime="">--:--:--</time></span></span></div>
           <div class="topbar-actions">
-            <label class="search-box">
-              <span class="search-label">搜索</span>
-              <input id="global-search" type="search" placeholder="代码、名称或 ETF" autocomplete="off" />
-              <kbd>⌘ K</kbd>
-            </label>
             <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换深色模式" aria-pressed="false"><span class="theme-label">深色模式</span><span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span></button>
-            <button class="topbar-button" id="focus-search" type="button">查找 ETF</button>
           </div>
         </header>
 
@@ -73,6 +74,7 @@
                 <span class="data-badge is-loaded"><i></i>已加载</span>
                 <span class="data-badge is-stale"><i></i>数据过期 · 1 项</span>
                 <span class="data-badge is-refresh" id="refresh-status-badge" hidden><i></i>等待刷新状态</span>
+                <button class="evidence-open-button" id="evidence-open" type="button">查看全部依据</button>
               </div>
             </div>
             <aside class="briefing-panel section-surface" aria-labelledby="briefing-title">
@@ -93,7 +95,7 @@
             </aside>
           </section>
 
-          <section class="indices-section" aria-labelledby="indices-title">
+          <section class="indices-section" id="indices" aria-labelledby="indices-title">
             <div class="section-heading compact-heading">
               <div><div class="section-kicker">KEY MARKETS</div><h2 id="indices-title">四大指数 + BTC</h2></div>
               <span class="section-meta">4 指数 + 加密资产 · 近 1 个月交易日</span>
@@ -112,12 +114,14 @@
             </div>
             <div class="table-shell sector-table-scroll">
               <table class="data-table sector-table">
-                  <thead><tr><th scope="col">排名</th><th scope="col">板块 ETF</th><th scope="col">收盘价</th><th scope="col"><button class="table-sort" type="button" data-sector-sort="rsi" aria-sort="none">RSI14 <span class="sort-glyph" aria-hidden="true">↕</span></button></th><th scope="col"><button class="table-sort" type="button" data-sector-sort="d1" aria-sort="descending">Δ1 <span class="sort-glyph" aria-hidden="true">↓</span></button></th><th scope="col"><button class="table-sort" type="button" data-sector-sort="d5" aria-sort="none">Δ5 <span class="sort-glyph" aria-hidden="true">↕</span></button></th><th scope="col"><button class="table-sort" type="button" data-sector-sort="d20" aria-sort="none">Δ20 <span class="sort-glyph" aria-hidden="true">↕</span></button></th><th scope="col"><span class="status-head"><span>状态</span><select id="sector-status-filter" class="status-filter" aria-label="按状态筛选"><option value="all">全部</option><option value="改善">改善</option><option value="盘整">盘整</option><option value="转弱">转弱</option></select></span></th></tr></thead>
+                <colgroup><col class="col-rank"><col class="col-etf"><col class="col-trend"><col class="col-rsi"><col class="col-delta"><col class="col-delta"><col class="col-delta"><col class="col-status"></colgroup>
+                  <thead><tr><th scope="col">排名</th><th scope="col">板块 ETF</th><th scope="col">趋势（MA150）</th><th scope="col"><button class="table-sort" type="button" data-sector-sort="rsi" aria-sort="none">RSI14 <span class="sort-glyph" aria-hidden="true">↕</span></button></th><th scope="col"><button class="table-sort" type="button" data-sector-sort="d1" aria-sort="descending">Δ1 <span class="sort-glyph" aria-hidden="true">↓</span></button></th><th scope="col"><button class="table-sort" type="button" data-sector-sort="d5" aria-sort="none">Δ5 <span class="sort-glyph" aria-hidden="true">↕</span></button></th><th scope="col"><button class="table-sort" type="button" data-sector-sort="d20" aria-sort="none">Δ20 <span class="sort-glyph" aria-hidden="true">↕</span></button></th><th scope="col"><span class="status-head"><span>状态</span><select id="sector-status-filter" class="status-filter" aria-label="按状态筛选"><option value="all">全部</option><option value="改善">改善</option><option value="盘整">盘整</option><option value="转弱">转弱</option></select></span></th></tr></thead>
                 <tbody id="sector-table-body"></tbody>
               </table>
+              <div class="pinned-row-cover" aria-hidden="true"></div>
             </div>
             <div class="sector-holdings-block">
-              <div class="subsection-heading"><div><div class="section-kicker">ETF CONSTITUENTS</div><h3 id="holdings-title">板块前十大权重股</h3><p>板块 ETF 与权重股属于同一研究模块，点击下方 ETF 查看详细持仓。</p></div><span class="section-meta">持仓日期 · 2026-08-27</span></div>
+              <div class="subsection-heading"><div><div class="section-kicker">ETF CONSTITUENTS</div><h3 id="holdings-title">板块前十大权重股</h3><p>板块 ETF 与权重股属于同一研究模块，点击下方 ETF 查看详细持仓。</p></div><span class="section-meta" id="holdings-meta">持仓数据待接入</span></div>
               <div class="holdings-strip" id="holdings-strip"></div>
             </div>
           </section>
@@ -131,29 +135,56 @@
             <div class="industry-layout">
               <div class="industry-leaderboard table-shell industry-table-scroll">
                 <table class="data-table industry-table">
-                  <thead><tr><th scope="col">#</th><th scope="col">ETF</th><th scope="col">行业</th><th scope="col"><button class="table-sort" type="button" data-industry-sort="rsi" aria-sort="descending">RSI14 <span class="sort-glyph" aria-hidden="true">↓</span></button></th><th scope="col"><button class="table-sort" type="button" data-industry-sort="d5" aria-sort="none">Δ5 <span class="sort-glyph" aria-hidden="true">↕</span></button></th><th scope="col"><button class="table-sort" type="button" data-industry-sort="d20" aria-sort="none">20日 <span class="sort-glyph" aria-hidden="true">↕</span></button></th><th scope="col">权重股</th></tr></thead>
+                  <colgroup><col class="col-rank"><col class="col-etf"><col class="col-industry"><col class="col-trend"><col class="col-rsi"><col class="col-delta"><col class="col-delta"><col class="col-holdings"><col class="col-status"></colgroup>
+                  <thead><tr><th scope="col">#</th><th scope="col">ETF</th><th scope="col">行业</th><th scope="col">趋势（MA150）</th><th scope="col"><button class="table-sort" type="button" data-industry-sort="rsi" aria-sort="descending">RSI14 <span class="sort-glyph" aria-hidden="true">↓</span></button></th><th scope="col"><button class="table-sort" type="button" data-industry-sort="d5" aria-sort="none">Δ5 <span class="sort-glyph" aria-hidden="true">↕</span></button></th><th scope="col"><button class="table-sort" type="button" data-industry-sort="d20" aria-sort="none">20日 <span class="sort-glyph" aria-hidden="true">↕</span></button></th><th scope="col">权重股</th><th scope="col">状态</th></tr></thead>
                   <tbody id="industry-table-body"></tbody>
                 </table>
+                <div class="pinned-row-cover" aria-hidden="true"></div>
               </div>
-              <aside class="industry-callout section-surface">
-                <div class="section-kicker">SIGNAL NOTE</div>
-                <div class="callout-value">RSI <span>≥ 60</span></div>
-                <p>当前强势榜以 RSI14 排序，Δ5 为并列时的第二排序依据。指标只描述价格动能，不代表买卖建议。</p>
-                <div class="callout-bar"><span style="width: 72%"></span></div>
-                <div class="callout-scale"><span>弱</span><span>中性 50</span><span>强</span></div>
-              </aside>
             </div>
             <div class="industry-matrix" id="industry-matrix" aria-label="全部行业 ETF 矩阵"></div>
           </section>
 
+          <section class="stockbee-momentum-section" id="stockbee-momentum" aria-labelledby="stockbee-momentum-title">
+            <div class="section-heading">
+              <div><div class="section-kicker">STOCKBEE 50</div><h2 id="stockbee-momentum-title">Stockbee 动能股票</h2><p>展示 Stockbee 公开名单中的股票代码、板块和行业，点击代码打开对应 TradingView 图表。</p></div>
+              <span class="section-meta stockbee-momentum-meta" id="stockbee-momentum-meta">等待名单快照</span>
+            </div>
+            <div class="table-shell stockbee-momentum-table-scroll">
+              <table class="data-table stockbee-momentum-table">
+                <colgroup><col class="col-rank"><col class="col-stock"><col class="col-sector"><col class="col-industry"></colgroup>
+                <thead><tr><th scope="col">排名</th><th scope="col">股票代码 · TradingView</th><th scope="col">板块</th><th scope="col">行业</th></tr></thead>
+                <tbody id="stockbee-momentum-body"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="rsi-history-comparison" id="rsi-history" aria-labelledby="rsi-history-comparison-title">
+            <div class="comparison-heading"><div><div class="section-kicker">DAILY RSI COMPARISON</div><h2 id="rsi-history-comparison-title">每日 RSI 对比</h2><p>板块与行业 ETF 使用同一交易日轴，展开后可逐行比较。</p></div></div>
+            <div class="rsi-history-panel" id="sector-rsi-history-panel">
+              <div class="rsi-history-toolbar">
+                <div class="rsi-history-heading"><div class="section-kicker">SECTOR ETF</div><strong>板块 · RSI14 近 2 个月</strong><span>最近 42 个美股交易日</span></div>
+                <div class="rsi-history-actions"><label for="sector-rsi-symbol">板块 ETF</label><select id="sector-rsi-symbol" class="rsi-history-select" aria-label="选择板块 ETF 查看 RSI 历史"></select><button id="sector-rsi-toggle" class="outline-button compact-button" type="button" aria-expanded="false" aria-controls="sector-rsi-history">展开</button></div>
+              </div>
+              <div class="rsi-history-table-shell" id="sector-rsi-history" hidden><table class="data-table rsi-history-table"><thead><tr><th scope="col">日期</th><th scope="col">RSI14</th><th scope="col">区间</th></tr></thead><tbody id="sector-rsi-history-body"></tbody></table></div>
+            </div>
+            <div class="rsi-history-panel" id="industry-rsi-history-panel">
+              <div class="rsi-history-toolbar">
+                <div class="rsi-history-heading"><div class="section-kicker">INDUSTRY ETF</div><strong>行业 · RSI14 近 2 个月</strong><span>最近 42 个美股交易日</span></div>
+                <div class="rsi-history-actions"><label for="industry-rsi-symbol">行业 ETF</label><select id="industry-rsi-symbol" class="rsi-history-select" aria-label="选择行业 ETF 查看 RSI 历史"></select><button id="industry-rsi-toggle" class="outline-button compact-button" type="button" aria-expanded="false" aria-controls="industry-rsi-history">展开</button></div>
+              </div>
+              <div class="rsi-history-table-shell" id="industry-rsi-history" hidden><table class="data-table rsi-history-table"><thead><tr><th scope="col">日期</th><th scope="col">RSI14</th><th scope="col">区间</th></tr></thead><tbody id="industry-rsi-history-body"></tbody></table></div>
+            </div>
+          </section>
+
           <section class="breadth-section" id="breadth" aria-labelledby="breadth-title">
             <div class="section-heading">
-              <div><div class="section-kicker">STOCKBEE MARKET MONITOR</div><h2 id="breadth-title">市场宽度</h2><p>直接使用 Stockbee 最近 20 个交易日的原始列绘制趋势。</p></div>
-              <button type="button" class="outline-button" id="breadth-toggle" aria-expanded="false">展开 20 日数据</button>
+              <div><div class="section-kicker">STOCKBEE MARKET MONITOR</div><h2 id="breadth-title">市场宽度</h2><p>直接使用 Stockbee 最近半年的原始列绘制趋势。</p></div>
+              <button type="button" class="outline-button" id="breadth-toggle" aria-expanded="false">展开半年数据</button>
             </div>
             <div class="breadth-chart-shell section-surface">
-              <div class="breadth-chart-heading"><div><span class="section-kicker">LINE SERIES</span><h3>Stockbee 原始指标走势</h3><p>同一份 20 日快照，选择任意列查看趋势。</p></div><div class="breadth-latest-readout"><span>最新观察</span><strong id="breadth-latest-value">0.98</strong><small id="breadth-latest-date">2026-08-28</small></div></div>
-              <div class="breadth-chart-toolbar"><div class="breadth-chart-selection"><span>当前指标</span><strong id="breadth-metric-label">5 日上涨／下跌比</strong></div><div class="breadth-metric-switch" role="group" aria-label="Stockbee 折线指标"><button type="button" data-breadth-metric="up" aria-pressed="false">4%上涨</button><button type="button" data-breadth-metric="down" aria-pressed="false">4%下跌</button><button type="button" class="is-active" data-breadth-metric="ratio5" aria-pressed="true">5日比率</button><button type="button" data-breadth-metric="ratio10" aria-pressed="false">10日比率</button><button type="button" data-breadth-metric="up25Quarter" aria-pressed="false">25%上涨·季</button><button type="button" data-breadth-metric="down25Quarter" aria-pressed="false">25%下跌·季</button><button type="button" data-breadth-metric="up25Month" aria-pressed="false">25%上涨·月</button><button type="button" data-breadth-metric="down25Month" aria-pressed="false">25%下跌·月</button><button type="button" data-breadth-metric="up50Month" aria-pressed="false">50%上涨·月</button><button type="button" data-breadth-metric="down50Month" aria-pressed="false">50%下跌·月</button><button type="button" data-breadth-metric="up13_34d" aria-pressed="false">13%上涨·34日</button><button type="button" data-breadth-metric="down13_34d" aria-pressed="false">13%下跌·34日</button><button type="button" data-breadth-metric="wordenUniverse" aria-pressed="false">Worden</button><button type="button" data-breadth-metric="t2108" aria-pressed="false">T2108</button><button type="button" data-breadth-metric="sp500" aria-pressed="false">S&amp;P 500</button></div></div>
+              <div class="breadth-chart-heading"><div><span class="section-kicker">LINE SERIES</span><h3>Stockbee 原始指标走势</h3><p>同一份半年快照，选择任意列查看趋势。</p></div><div class="breadth-latest-readout"><span>最新观察</span><strong id="breadth-latest-value">0.98</strong><small id="breadth-latest-date">2026-08-28</small></div></div>
+              <div class="breadth-chart-toolbar"><div class="breadth-chart-selection"><span>当前指标</span><strong id="breadth-metric-label">5 日上涨／下跌比</strong></div><div class="breadth-metric-switch" role="group" aria-label="Stockbee 折线指标"><div class="breadth-metric-group breadth-group-up"><span class="breadth-group-label">上涨指标</span><div class="breadth-group-buttons"><button type="button" data-breadth-metric="up" aria-pressed="false">4%上涨</button><button type="button" data-breadth-metric="up25Quarter" aria-pressed="false">25%上涨·季</button><button type="button" data-breadth-metric="up25Month" aria-pressed="false">25%上涨·月</button><button type="button" data-breadth-metric="up50Month" aria-pressed="false">50%上涨·月</button><button type="button" data-breadth-metric="up13_34d" aria-pressed="false">13%上涨·34日</button></div></div><div class="breadth-metric-group breadth-group-down"><span class="breadth-group-label">下跌指标</span><div class="breadth-group-buttons"><button type="button" data-breadth-metric="down" aria-pressed="false">4%下跌</button><button type="button" data-breadth-metric="down25Quarter" aria-pressed="false">25%下跌·季</button><button type="button" data-breadth-metric="down25Month" aria-pressed="false">25%下跌·月</button><button type="button" data-breadth-metric="down50Month" aria-pressed="false">50%下跌·月</button><button type="button" data-breadth-metric="down13_34d" aria-pressed="false">13%下跌·34日</button></div></div><div class="breadth-metric-group breadth-group-context"><span class="breadth-group-label">其他指标</span><div class="breadth-group-buttons"><button type="button" class="is-active" data-breadth-metric="ratio5" aria-pressed="true">5日比率</button><button type="button" data-breadth-metric="ratio10" aria-pressed="false">10日比率</button><button type="button" data-breadth-metric="wordenUniverse" aria-pressed="false">Worden</button><button type="button" data-breadth-metric="t2108" aria-pressed="false">T2108</button><button type="button" data-breadth-metric="sp500" aria-pressed="false">S&amp;P 500</button></div></div></div></div>
               <div class="breadth-chart-wrap"><canvas id="breadth-chart" width="760" height="240" aria-label="Stockbee 市场宽度指标折线图"></canvas></div>
               <div class="breadth-chart-foot"><span>数据源 · Stockbee Market Monitor</span><span id="breadth-chart-range">2026-08-08 — 2026-08-27</span></div>
             </div>
@@ -165,7 +196,7 @@
                 <tbody id="breadth-table-body"></tbody>
               </table>
               </div>
-              <p class="breadth-scroll-hint">横向滚动条固定在数据卡片顶部，日期列会保持固定。</p>
+              <p class="breadth-scroll-hint">横向滚动条固定在数据卡片顶部，日期列会保持固定；半年数据可纵向滚动查看。</p>
             </div>
           </section>
 
@@ -180,7 +211,12 @@
       <div id="drawer-content"></div>
     </aside>
 
+    <aside class="evidence-drawer" id="evidence-drawer" aria-labelledby="evidence-title" aria-hidden="true">
+      <div class="drawer-header"><div><div class="section-kicker">DATA EVIDENCE</div><h2 id="evidence-title">数据依据</h2><p id="evidence-subtitle">本地快照来源与日期</p></div><button class="close-button" id="evidence-close" type="button" aria-label="关闭数据依据">关闭</button></div>
+      <div id="evidence-content"></div>
+    </aside>
+
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="app.js?v=20260830-refresh-status1"></script>
+    <script src="app.js?v=20260902-index-tv-links"></script>
   </body>
 </html>

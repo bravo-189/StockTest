@@ -56,6 +56,42 @@ class MarketSnapshotQualityTests(unittest.TestCase):
         self.assertEqual(checks["duplicate_bar_dates"]["severity"], "high")
         self.assertEqual(checks["invalid_ohlc_bounds"]["severity"], "high")
 
+    def test_reports_intraday_coverage_without_flagging_expected_partial_btc_bar(self):
+        snapshot = {
+            "metadata": {"requiredCount": 1, "loadedCount": 1, "missing": [], "pendingCount": 0},
+            "instruments": {
+                "BTC": {
+                    "symbol": "BTC",
+                    "provider": "binance-spot",
+                    "latestDate": "2026-08-03",
+                    "bars": _bars("2026-08-01", 3),
+                    "intraday": {"interval": "1h", "latestDate": "2026-08-31"},
+                    "intradayBars": [
+                        {"timestamp": "2026-08-31T08:00:00Z", "open": 100, "high": 101, "low": 99, "close": 100.5, "volume": 10, "status": "incomplete"}
+                    ],
+                }
+            },
+            "pendingBars": [],
+        }
+        report = analyze_snapshot(snapshot, min_bars=3)
+        self.assertEqual(report["intraday"]["BTC"]["interval"], "1h")
+        self.assertEqual(report["intraday"]["BTC"]["incompleteCount"], 1)
+        self.assertEqual(report["findings"], [])
+
+    def test_flags_holdings_source_gap(self):
+        snapshot = {
+            "metadata": {
+                "requiredCount": 1, "loadedCount": 1, "missing": [], "pendingCount": 0,
+                "holdings": {"requestedCount": 2, "loadedCount": 1, "missing": ["USO"]},
+            },
+            "instruments": {"SPY": {"symbol": "SPY", "provider": "yahoo-chart", "latestDate": "2026-08-03", "bars": _bars()}},
+            "holdings": {"IBIT": {"coverageStatus": "partial"}},
+            "pendingBars": [],
+        }
+        checks = {item["check"] for item in analyze_snapshot(snapshot, min_bars=3)["findings"]}
+        self.assertIn("holdings_coverage", checks)
+        self.assertIn("holdings_source_coverage", checks)
+
 
 if __name__ == "__main__":
     unittest.main()

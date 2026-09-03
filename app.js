@@ -1,10 +1,29 @@
 (function () {
   "use strict";
 
+  function redirectFilePreview() {
+    if (window.location.protocol !== "file:") return;
+    const localUrl = `http://127.0.0.1:8765/index.html${window.location.search || ""}`;
+    const probe = new Image();
+    probe.onload = () => window.location.replace(localUrl);
+    probe.onerror = () => {
+      const notice = document.createElement("div");
+      notice.className = "file-runtime-notice";
+      notice.innerHTML = `当前是文件预览模式，无法读取真实快照。请先启动本地服务，再打开 <a href="${localUrl}">${localUrl}</a>。`;
+      document.addEventListener("DOMContentLoaded", () => document.body.prepend(notice), { once: true });
+    };
+    probe.src = "http://127.0.0.1:8765/favicon.svg?probe=" + Date.now();
+  }
+  redirectFilePreview();
+
   const SNAPSHOT_DATE = "2026-08-27";
   const INDEX_TRADING_DAYS = 21;
+  const MONTH_TRADING_DAYS = 21;
+  const US_INTRADAY_BARS = 79;
+  const BTC_INTRADAY_BARS = 12;
   const DETAIL_TRADING_DAYS = 60;
-  const REFRESH_INTERVAL_MS = 60 * 60 * 1000;
+  const RSI_HISTORY_DAYS = 42;
+  const BTC_REFRESH_INTERVAL_MS = 60 * 60 * 1000;
   const STALE_AFTER_MS = 90 * 60 * 1000;
   const STORAGE_KEY = "stocktest-theme";
   const sectorDefs = [
@@ -23,17 +42,36 @@
   const indexDefs = [
     ["SPX", "标普 500", "5,982.72", 0.34], ["NDX", "纳斯达克 100", "21,582.91", 0.61], ["DJI", "道琼斯工业", "43,908.14", -0.18], ["RUT", "罗素 2000", "2,154.83", 0.42], ["BTC", "Bitcoin", "77,655.00", -2.44]
   ];
+  // Yahoo identifies the primary listings as NGM (Nasdaq), PCX (NYSE Arca)
+  // and BTS (Cboe). TradingView uses its public venue names instead.
+  const tradingViewExchanges = { DTCR: "NASDAQ", QTUM: "NASDAQ", IBIT: "NASDAQ", QQQ: "NASDAQ", SOXX: "NASDAQ", ARKK: "CBOE" };
+  const tradingViewIndexSymbols = { SPX: "SP:SPX", NDX: "NASDAQ:NDX", DJI: "DJ:DJI", RUT: "TVC:RUT", BTC: "COINBASE:BTCUSD" };
+  const sectorLabelsZh = {
+    "Communication Services": "通信服务", Currency: "货币", Energy: "能源", Equity: "股票",
+    Financials: "金融", Healthcare: "医疗保健", Industrials: "工业", Materials: "材料", Technology: "科技"
+  };
+  const industryLabelsZh = {
+    "Advertising Agencies": "广告代理", "Asset Management": "资产管理", Biotechnology: "生物科技",
+    Broadcasting: "广播", "Capital Markets": "资本市场", "Coking Coal": "炼焦煤", "Computer Hardware": "计算机硬件",
+    "Derivative Income": "衍生品收益", "Digital Assets": "数字资产", "Electrical Equipment & Parts": "电气设备及零部件",
+    Entertainment: "娱乐", "Health Information Services": "医疗信息服务", "Information Technology Services": "信息技术服务",
+    "Marine Shipping": "海运", "Medical Devices": "医疗器械", "Other Precious Metals & Mining": "其他贵金属与采矿",
+    "Software - Application": "应用软件", "Software - Infrastructure": "基础设施软件", "Trading--Leveraged Equity": "杠杆股票交易",
+    "Trading--Miscellaneous": "其他交易策略", Uranium: "铀矿"
+  };
   const companyNames = [
     ["MSFT", "Microsoft"], ["NVDA", "NVIDIA"], ["AAPL", "Apple"], ["AMZN", "Amazon"], ["META", "Meta Platforms"], ["GOOGL", "Alphabet"], ["AVGO", "Broadcom"], ["LLY", "Eli Lilly"], ["JPM", "JPMorgan Chase"], ["XOM", "Exxon Mobil"], ["V", "Visa"], ["UNH", "UnitedHealth"], ["COST", "Costco"], ["CAT", "Caterpillar"], ["NEE", "NextEra Energy"], ["GE", "GE Aerospace"], ["RTX", "RTX Corp"], ["CRM", "Salesforce"], ["ORCL", "Oracle"], ["AMD", "AMD"], ["LIN", "Linde"], ["WMT", "Walmart"], ["PG", "Procter & Gamble"], ["JNJ", "Johnson & Johnson"], ["HD", "Home Depot"], ["PLTR", "Palantir"], ["TSLA", "Tesla"], ["NFLX", "Netflix"], ["ADBE", "Adobe"], ["GS", "Goldman Sachs"]
   ];
 
-  const state = { sectorMode: "d1", sectorSort: { key: "d1", direction: "desc" }, sectorStatus: "all", industryView: "top", industrySort: { key: "rsi", direction: "desc" }, breadthMetric: "ratio5", query: "", drawerTicker: null, toastTimer: null };
+  const state = { sectorMode: "d1", sectorSort: { key: "d1", direction: "desc" }, sectorStatus: "all", industryView: "top", industrySort: { key: "rsi", direction: "desc" }, breadthMetric: "ratio5", query: "", drawerTicker: null, toastTimer: null, rsiHistorySelection: { sector: "SPY", industry: "SPY" }, lastFullRefreshAt: null };
   const $ = (selector, root) => (root || document).querySelector(selector);
   const $$ = (selector, root) => Array.from((root || document).querySelectorAll(selector));
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
-  const signed = (value, digits) => `${value >= 0 ? "+" : "−"}${Math.abs(value).toFixed(digits == null ? 1 : digits)}%`;
+  const signedNumber = (value, digits) => `${value >= 0 ? "+" : "−"}${Math.abs(value).toFixed(digits == null ? 1 : digits)}`;
+  const signed = (value, digits) => `${signedNumber(value, digits)}%`;
   const classFor = (value) => value > 0.08 ? "positive" : value < -0.08 ? "negative" : "neutral";
   const html = (value) => String(value).replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
+  const classificationLabel = (value, labels) => labels[value] || value || "未找到可核验分类";
   const valueFrom = (seed, offset, spread) => {
     const n = Math.sin(seed * 12.9898 + offset * 78.233) * 43758.5453;
     return ((n - Math.floor(n)) * 2 - 1) * spread;
@@ -52,31 +90,36 @@
     ["up", "4%上涨 · 今日", "positive", 0], ["down", "4%下跌 · 今日", "negative", 0], ["ratio5", "5日比率", "neutral", 2], ["ratio10", "10日比率", "neutral", 2],
     ["up25Quarter", "25%上涨 · 季度", "positive", 0], ["down25Quarter", "25%下跌 · 季度", "negative", 0], ["up25Month", "25%上涨 · 月", "positive", 0], ["down25Month", "25%下跌 · 月", "negative", 0],
     ["up50Month", "50%上涨 · 月", "positive", 0], ["down50Month", "50%下跌 · 月", "negative", 0], ["up13_34d", "13%上涨 · 34日", "positive", 0], ["down13_34d", "13%下跌 · 34日", "negative", 0],
-    ["wordenUniverse", "Worden股票宇宙", "neutral", 0], ["t2108", "T2108", "neutral", 2], ["sp500", "S&P 500", "neutral", 2]
+    ["wordenUniverse", "Worden股票宇宙", "positive", 0], ["t2108", "T2108", "neutral", 2], ["sp500", "S&P 500", "positive", 2]
   ];
 
   const sectors = sectorDefs.map((entry, index) => {
     const [ticker, name, rsi, d1] = entry;
-    return { ticker, name, rsi, d1, d5: +(d1 * 1.55 + valueFrom(index + 2, 4, 0.8)).toFixed(2), d20: +(d1 * 2.65 + valueFrom(index + 3, 7, 1.2)).toFixed(2), price: +(98 + index * 8 + valueFrom(index, 2, 2.5)).toFixed(2), trend: d1 > .18 ? "改善" : d1 < -.18 ? "转弱" : "盘整" };
+    const d5 = +(d1 * 1.55 + valueFrom(index + 2, 4, 0.8)).toFixed(2);
+    const d20 = +(d1 * 2.65 + valueFrom(index + 3, 7, 1.2)).toFixed(2);
+    return { ticker, name, rsi, d1, d5, d20, price: +(98 + index * 8 + valueFrom(index, 2, 2.5)).toFixed(2), trend: d1 > .18 ? "改善" : d1 < -.18 ? "转弱" : "盘整", trend150: index % 3 === 0 ? "上涨" : "下降", ma150: null };
   });
   const industries = industryDefs.map((entry, index) => {
     const [ticker, name, group] = entry;
     const rsi = clamp(71 - index * .42 + valueFrom(index + 11, 2, 8), 35, 76);
     const d5 = +(valueFrom(index + 21, 3, 3.3) + (rsi - 50) * .07).toFixed(2);
     const d20 = +(valueFrom(index + 31, 6, 7) + (rsi - 50) * .18).toFixed(2);
-    return { ticker, name, group, rsi: +rsi.toFixed(1), d5, d20, momentum: clamp(Math.round(rsi * .84 + d5 * 1.8), 25, 96) };
+    return { ticker, name, group, rsi: +rsi.toFixed(1), d5, d20, momentum: clamp(Math.round(rsi * .84 + d5 * 1.8), 25, 96), trend150: index % 3 === 0 ? "上涨" : "下降", ma150: null };
   });
   let themes = themeNames.map(([name, ticker], index) => {
     const total = clamp(Math.round(92 - index * 2.1 + valueFrom(index + 81, 3, 7)), 42, 96);
     const factorValues = [valueFrom(index, 1, 8), valueFrom(index, 2, 11), valueFrom(index, 4, 13), valueFrom(index, 7, 10), valueFrom(index, 9, 15)].map((value) => clamp(Math.round(total + value), 30, 99));
     return { rank: index + 1, name, ticker, total, factors: Object.fromEntries(themeFactorDefs.map(([key], factorIndex) => [key, factorValues[factorIndex]])), memberEtfs: [ticker], analysisStatus: "pending" };
   });
-  const holdings = Object.fromEntries(sectorDefs.map(([ticker], sectorIndex) => [ticker, Array.from({ length: 10 }, (_, index) => {
+  let holdings = Object.fromEntries(sectorDefs.map(([ticker], sectorIndex) => [ticker, Array.from({ length: 10 }, (_, index) => {
     const company = companyNames[(sectorIndex * 3 + index) % companyNames.length];
     return { ticker: company[0], name: company[1], weight: +(16.4 - index * 1.2 + valueFrom(sectorIndex + index, 5, .7)).toFixed(1) };
   })]));
-  let breadth = Array.from({ length: 20 }, (_, index) => {
-    const day = 20 - index;
+  let stockbeeMomentum = [];
+  let stockbeeMomentumMeta = { sourceStatus: "unavailable", latestDate: null, rowCount: 0 };
+  let breadth = Array.from({ length: 126 }, (_, index) => {
+    const day = new Date("2026-08-28T00:00:00Z");
+    day.setUTCDate(day.getUTCDate() - index);
     const up = Math.round(112 + index * 1.8 + valueFrom(index + 200, 2, 22));
     const down = Math.round(86 + index * 1.1 + valueFrom(index + 220, 3, 18));
     const ratio5 = +(up / Math.max(down, 1) * .92).toFixed(2);
@@ -93,7 +136,7 @@
     const t2108 = +(46 + index * .45 + valueFrom(index + 240, 2, 4)).toFixed(1);
     const sp500 = +(7600 + index * 8 + valueFrom(index + 350, 11, 85)).toFixed(2);
     const composite = clamp(Math.round((ratio5 - 1) * 4 + (t2108 - 50) / 8), -3, 4);
-    return { date: `08-${String(8 + day).padStart(2, "0")}`, up, down, ratio5, ratio10, up25Quarter, down25Quarter, up25Month, down25Month, up50Month, down50Month, up13_34d, down13_34d, wordenUniverse, t2108, sp500, composite };
+    return { date: day.toISOString().slice(0, 10), up, down, ratio5, ratio10, up25Quarter, down25Quarter, up25Month, down25Month, up50Month, down50Month, up13_34d, down13_34d, wordenUniverse, t2108, sp500, composite };
   });
   // Future API contract: renderers below consume these same named collections.
   const DashboardData = {
@@ -104,15 +147,18 @@
     industryEtfs: industries,
     themes,
     holdings,
+    stockbeeMomentum,
     breadth
   };
   const marketBars = {};
+  const marketIntradayBars = {};
+  const marketPendingBars = {};
   window.StockTestData = DashboardData;
 
   function cssVar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
   function drawSparkline(canvas, seed, positive, pointCount = INDEX_TRADING_DAYS, sourceBars) {
     if (!canvas) return;
-    const ratio = window.devicePixelRatio || 1;
+    const ratio = Math.max(window.devicePixelRatio || 1, canvas.classList.contains("bubble-sparkline") ? 3 : 2);
     const width = canvas.clientWidth || 240;
     const height = canvas.clientHeight || 42;
     canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
@@ -130,7 +176,154 @@
       ctx.beginPath(); ctx.moveTo(x, clamp(mapY(bar.high), 4, height - 4)); ctx.lineTo(x, clamp(mapY(bar.low), 4, height - 4)); ctx.stroke();
       const bodyTop = clamp(Math.min(mapY(bar.open), mapY(bar.close)), 4, height - 4); const bodyHeight = Math.max(2, Math.min(height - 8, Math.abs(mapY(bar.close) - mapY(bar.open)))); ctx.globalAlpha = .82; ctx.fillRect(x - candleWidth / 2, bodyTop, candleWidth, bodyHeight); ctx.globalAlpha = 1;
     });
-    ctx.fillStyle = color; const lastY = clamp(mapY(candleData[candleData.length - 1].close), 5, height - 5); ctx.beginPath(); ctx.arc(width - 1, lastY, 2.5, 0, Math.PI * 2); ctx.fill();
+  }
+  function drawLineAreaChart(canvas, bars, positive) {
+    if (!canvas) return;
+    const data = Array.isArray(bars) && bars.length ? bars : [];
+    if (!data.length) return;
+    const ratio = Math.max(window.devicePixelRatio || 1, canvas.classList.contains("bubble-sparkline") ? 3 : 2);
+    const width = canvas.clientWidth || 260;
+    const height = canvas.clientHeight || 76;
+    canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
+    const ctx = canvas.getContext("2d"); ctx.scale(ratio, ratio); ctx.clearRect(0, 0, width, height);
+    const lineColor = positive >= 0 ? cssVar("--green") : cssVar("--red");
+    const muted = cssVar("--muted-2"); const guide = cssVar("--line");
+    const values = data.map((bar) => Number(bar.close)).filter(Number.isFinite);
+    if (!values.length) return;
+    const minValue = Math.min(...values); const maxValue = Math.max(...values);
+    const padding = Math.max((maxValue - minValue) * .16, Math.abs(maxValue || 1) * .001);
+    const min = minValue - padding; const max = maxValue + padding; const plotTop = 8; const plotBottom = height - 18;
+    const stepX = width / Math.max(values.length - 1, 1);
+    const yFor = (value) => plotBottom - ((value - min) / Math.max(max - min, Number.EPSILON)) * (plotBottom - plotTop);
+    ctx.strokeStyle = guide; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, plotBottom); ctx.lineTo(width, plotBottom); ctx.stroke();
+    ctx.beginPath(); values.forEach((value, index) => { const x = index * stepX; const y = yFor(value); if (!index) ctx.moveTo(x, y); else ctx.lineTo(x, y); }); ctx.lineTo(width, plotBottom); ctx.lineTo(0, plotBottom); ctx.closePath(); ctx.globalAlpha = .14; ctx.fillStyle = lineColor; ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = lineColor; ctx.lineWidth = 2; ctx.lineJoin = "round"; ctx.lineCap = "round"; ctx.beginPath(); values.forEach((value, index) => { const x = index * stepX; const y = yFor(value); if (!index) ctx.moveTo(x, y); else ctx.lineTo(x, y); }); ctx.stroke();
+    const lastY = yFor(values[values.length - 1]); ctx.fillStyle = lineColor; ctx.beginPath(); ctx.arc(width - 1, lastY, 3, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = muted; ctx.font = "9px IBM Plex Mono, monospace"; ctx.textBaseline = "bottom"; ctx.textAlign = "left"; ctx.fillText(data[0].time || data[0].date || "起点", 0, height - 2); ctx.textAlign = "center"; ctx.fillText(data[Math.floor((data.length - 1) / 2)].time || data[Math.floor((data.length - 1) / 2)].date || "", width / 2, height - 2); ctx.textAlign = "right"; ctx.fillText(data[data.length - 1].time || data[data.length - 1].date || "终点", width, height - 2); ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+  }
+  function emaSeries(bars, period) {
+    const closes = (Array.isArray(bars) ? bars : []).map((bar) => Number(bar.close));
+    if (!closes.length) return [];
+    const smoothing = 2 / (period + 1); let previous = closes[0];
+    return closes.map((close, index) => { if (!Number.isFinite(close)) return previous; if (index === 0) { previous = close; return close; } previous = (close - previous) * smoothing + previous; return previous; });
+  }
+  function drawBubbleCandlestickChart(canvas, bars) {
+    if (!canvas || !Array.isArray(bars) || !bars.length) return;
+    const data = bars.slice(-MONTH_TRADING_DAYS); const ratio = Math.max(window.devicePixelRatio || 1, 3);
+    const width = canvas.clientWidth || 560; const height = canvas.clientHeight || 220;
+    canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
+    const ctx = canvas.getContext("2d"); ctx.scale(ratio, ratio); ctx.clearRect(0, 0, width, height);
+    const upColor = cssVar("--green"); const downColor = cssVar("--red"); const ema9Color = cssVar("--blue"); const ema21Color = cssVar("--amber"); const guide = cssVar("--line"); const muted = cssVar("--muted-2");
+    const highs = data.map((bar) => Number(bar.high)).filter(Number.isFinite); const lows = data.map((bar) => Number(bar.low)).filter(Number.isFinite);
+    if (!highs.length || !lows.length) return;
+    const rawHigh = Math.max(...highs); const rawLow = Math.min(...lows); const padding = Math.max((rawHigh - rawLow) * .1, Math.abs(rawHigh || 1) * .002); const min = rawLow - padding; const max = rawHigh + padding;
+    const plotTop = 10; const plotBottom = height - 26; const mapY = (value) => plotBottom - ((value - min) / Math.max(max - min, Number.EPSILON)) * (plotBottom - plotTop);
+    [0, .5, 1].forEach((step) => { const y = plotBottom - step * (plotBottom - plotTop); ctx.strokeStyle = guide; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke(); });
+    const stepX = width / data.length; const candleWidth = Math.max(4, Math.min(14, stepX * .52));
+    data.forEach((bar, index) => {
+      const open = Number(bar.open); const close = Number(bar.close); const high = Number(bar.high); const low = Number(bar.low); if (![open, close, high, low].every(Number.isFinite)) return;
+      const x = index * stepX + stepX / 2; const rising = close >= open; const color = rising ? upColor : downColor; ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 1.1;
+      ctx.beginPath(); ctx.moveTo(x, mapY(high)); ctx.lineTo(x, mapY(low)); ctx.stroke();
+      const bodyTop = Math.min(mapY(open), mapY(close)); const bodyHeight = Math.max(2, Math.abs(mapY(close) - mapY(open))); ctx.globalAlpha = .86; ctx.fillRect(x - candleWidth / 2, bodyTop, candleWidth, bodyHeight); ctx.globalAlpha = 1;
+    });
+    const drawEma = (period, color) => { const series = emaSeries(bars, period).slice(-data.length); if (!series.length) return; ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineJoin = "round"; ctx.lineCap = "round"; ctx.beginPath(); series.forEach((value, index) => { const x = index * stepX + stepX / 2; const y = mapY(value); if (!index) ctx.moveTo(x, y); else ctx.lineTo(x, y); }); ctx.stroke(); };
+    drawEma(9, ema9Color); drawEma(21, ema21Color);
+    ctx.fillStyle = muted; ctx.font = "10px IBM Plex Mono, monospace"; ctx.textBaseline = "bottom"; ctx.textAlign = "left"; ctx.fillText(data[0].date || "起点", 0, height - 4); ctx.textAlign = "center"; ctx.fillText(data[Math.floor((data.length - 1) / 2)].date || "", width / 2, height - 4); ctx.textAlign = "right"; ctx.fillText(data[data.length - 1].date || "终点", width, height - 4); ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+  }
+  function buildIntradayBars(ticker, sourceBars, seed, positive) {
+    const count = ticker === "BTC" ? BTC_INTRADAY_BARS : US_INTRADAY_BARS;
+    const latest = Array.isArray(sourceBars) && sourceBars.length ? sourceBars[sourceBars.length - 1] : null;
+    const anchor = Number(latest?.open) || Number(latest?.close) || 100;
+    const target = Number(latest?.close) || anchor * (1 + Number(positive || 0) / 100);
+    const noise = Math.max(anchor * .0018, Math.abs(target - anchor) * .22);
+    let previous = anchor;
+    return Array.from({ length: count }, (_, index) => {
+      const drift = anchor + (target - anchor) * ((index + 1) / count);
+      const close = Math.max(.01, drift + valueFrom(seed + index, 61, noise));
+      const open = previous;
+      previous = close;
+      const spread = Math.max(anchor * .0008, Math.abs(valueFrom(seed + index, 62, noise * .65)));
+      const intervalMinutes = ticker === "BTC" ? 120 : 5;
+      const minutes = ticker === "BTC" ? index * intervalMinutes : 9 * 60 + 30 + index * intervalMinutes;
+      const hour = Math.floor(minutes / 60) % 24; const minute = minutes % 60;
+      const time = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+      return { open, close, high: Math.max(open, close) + spread, low: Math.max(.01, Math.min(open, close) - spread), time };
+    });
+  }
+  function drawIndexCardChart(canvas) {
+    if (!canvas) return;
+    const ticker = canvas.dataset.sparkTicker;
+    const seed = Number(canvas.dataset.sparkSeed);
+    const change = Number(canvas.dataset.sparkChange);
+    const sourceBars = Array.isArray(marketIntradayBars[ticker]) && marketIntradayBars[ticker].length ? marketIntradayBars[ticker] : null;
+    const bars = sourceBars || buildIntradayBars(ticker, marketBars[ticker], seed, change);
+    if (ticker === "BTC") drawSparkline(canvas, seed, change, BTC_INTRADAY_BARS, bars);
+    else drawLineAreaChart(canvas, bars, change);
+    const incomplete = sourceBars?.[sourceBars.length - 1]?.status === "incomplete";
+    canvas.setAttribute("aria-label", `${ticker} ${ticker === "BTC" ? "当日 2 小时 K 线" : "当日 5 分钟折线面积图"}${incomplete ? "（含未收盘柱）" : ""}`);
+  }
+  function positionIndexHoverBubble(card) {
+    const bubble = card?.__hoverBubble || card?.querySelector(".index-hover-bubble");
+    if (!bubble || bubble.hidden) return;
+    const rect = card.getBoundingClientRect();
+    const bubbleWidth = Math.min(640, Math.max(300, window.innerWidth - 24));
+    const bubbleHeight = bubble.getBoundingClientRect().height || 199;
+    const sideGap = 12;
+    const canPlaceRight = rect.right + sideGap + bubbleWidth <= window.innerWidth - 14;
+    const canPlaceLeft = rect.left - sideGap - bubbleWidth >= 14;
+    const side = canPlaceRight ? "right" : canPlaceLeft ? "left" : null;
+    const left = side === "right" ? rect.right + sideGap : side === "left" ? rect.left - sideGap - bubbleWidth : clamp(rect.left, 14, Math.max(14, window.innerWidth - bubbleWidth - 14));
+    const belowTop = rect.bottom + 12;
+    const aboveTop = rect.top - bubbleHeight - 12;
+    const top = side ? clamp(rect.top, 14, Math.max(14, window.innerHeight - bubbleHeight - 14)) : (belowTop + bubbleHeight <= window.innerHeight - 12 || aboveTop < 12 ? Math.max(12, belowTop) : aboveTop);
+    const arrowLeft = clamp(rect.left + rect.width / 2 - left - 5, 16, bubbleWidth - 26);
+    bubble.style.left = `${Math.round(left)}px`;
+    bubble.style.top = `${Math.round(top)}px`;
+    bubble.style.setProperty("--bubble-arrow-left", `${Math.round(arrowLeft)}px`);
+    bubble.dataset.placement = side || (top < rect.top ? "top" : "bottom");
+  }
+  function updateIndexHoverBubble(card) {
+    const ticker = card?.querySelector(".sparkline")?.dataset.sparkTicker;
+    if (!ticker) return;
+    const source = marketBars[ticker];
+    const bubble = card.__hoverBubble || card.querySelector(".index-hover-bubble");
+    const chart = bubble?.querySelector(".bubble-sparkline");
+    const item = source && source.length ? source[source.length - 1] : null;
+    const pending = marketPendingBars[ticker];
+    const intraday = marketIntradayBars[ticker];
+    const latestIntraday = Array.isArray(intraday) && intraday.length ? intraday[intraday.length - 1] : null;
+    const fallback = indexDefs.find((entry) => entry[0] === ticker);
+    const displayItem = latestIntraday && Number.isFinite(Number(latestIntraday.close)) ? latestIntraday : item || (fallback ? { close: Number(String(fallback[2]).replace(/,/g, "")), date: SNAPSHOT_DATE } : null);
+    const base = source && source.length > MONTH_TRADING_DAYS ? source[source.length - MONTH_TRADING_DAYS - 1] : null;
+    const change = item && base && base.close ? (item.close / base.close - 1) * 100 : null;
+    if (!bubble || !chart) return;
+    if (!card.__hoverBubble) { card.__hoverBubble = bubble; bubble.__ownerCard = card; document.body.appendChild(bubble); }
+    const bubblePrice = bubble.querySelector(".bubble-price");
+    if (bubblePrice) bubblePrice.textContent = displayItem && Number.isFinite(Number(displayItem.close)) ? `价格 ${formatPrice(displayItem.close)}${latestIntraday?.time ? ` · ${latestIntraday.time}` : ""}` : "价格 —";
+    bubble.querySelector(".bubble-change").textContent = Number.isFinite(change) ? signed(change) : "暂无区间数据";
+    const chartBars = Array.isArray(source) ? source.slice() : [];
+    if (pending && pending.date && (!chartBars.length || pending.date > chartBars[chartBars.length - 1].date)) chartBars.push(pending);
+    const visibleBars = chartBars.slice(-MONTH_TRADING_DAYS);
+    bubble.querySelector(".bubble-range").textContent = visibleBars.length > 1 ? `${visibleBars[0].date} — ${visibleBars[visibleBars.length - 1].date}` : (item && base ? `${base.date} — ${item.date}` : "近 1 个月日线");
+    const refreshNote = bubble.querySelector(".bubble-refresh");
+    if (refreshNote) refreshNote.textContent = pending ? "盘中价格每小时刷新 · 含未收盘日线" : latestIntraday ? "盘中价格每小时刷新" : "等待盘中快照";
+    bubble.dataset.pendingDate = pending?.date || "";
+    drawBubbleCandlestickChart(chart, chartBars);
+    bubble.hidden = false;
+    positionIndexHoverBubble(card);
+  }
+  function setupIndexCardInteractions(canvas) {
+    const card = canvas.closest(".index-card");
+    if (!card) return;
+    const showBubble = () => updateIndexHoverBubble(card);
+    const hideBubble = () => { const bubble = card.__hoverBubble || card.querySelector(".index-hover-bubble"); if (bubble) bubble.hidden = true; };
+    const openTradingView = () => { const ticker = card.dataset.indexTicker; if (ticker) window.open(tradingViewIndexUrl(ticker), "_blank", "noopener,noreferrer"); };
+    card.addEventListener("mouseenter", showBubble);
+    card.addEventListener("mouseleave", hideBubble);
+    canvas.addEventListener("focus", showBubble);
+    canvas.addEventListener("blur", hideBubble);
+    card.addEventListener("click", openTradingView);
+    card.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openTradingView(); } });
   }
   function breadthChartRows() {
     return breadth.filter((row) => row && row.date).slice().sort((a, b) => String(a.date).localeCompare(String(b.date)));
@@ -162,37 +355,49 @@
 
   function renderIndices() {
     const root = $("#index-grid");
-    root.innerHTML = indexDefs.map(([ticker, name, price, change], index) => `<article class="index-card"><div class="index-card-top"><div><div class="ticker">${ticker}</div><div class="index-name">${name}</div></div><span class="index-change ${classFor(change)}">${signed(change)}</span></div><div class="index-price">${price}</div><canvas class="sparkline" data-spark-ticker="${ticker}" data-spark-seed="${index + 40}" data-spark-change="${change}" aria-label="${name} 近一个月交易日 K 线"></canvas></article>`).join("");
-    $$(".sparkline", root).forEach((canvas) => drawSparkline(canvas, Number(canvas.dataset.sparkSeed), Number(canvas.dataset.sparkChange), INDEX_TRADING_DAYS, marketBars[canvas.dataset.sparkTicker]));
+    $$(".index-hover-bubble", document.body).forEach((bubble) => bubble.remove());
+    root.innerHTML = indexDefs.map(([ticker, name, price, change], index) => { const latestIntraday = marketIntradayBars[ticker]?.[marketIntradayBars[ticker].length - 1]; const incomplete = latestIntraday?.status === "incomplete"; const mode = ticker === "BTC" ? "当日 · 2H（24H）K 线" : "当日 · 5M 面积图"; const note = incomplete ? "未收盘 · 悬停放大近 1 个月" : "悬停放大近 1 个月"; const aria = `${name} ${ticker === "BTC" ? "当日 2 小时 K 线" : "当日 5 分钟折线面积图"}${incomplete ? "（含未收盘柱）" : ""}`; return `<article class="index-card" tabindex="0" role="link" data-index-ticker="${ticker}" aria-label="在 TradingView 查看 ${name}（${ticker}）"><div class="index-card-top"><div><div class="ticker">${ticker}</div><div class="index-name">${name}</div></div><span class="index-change ${classFor(change)}">${signed(change)}</span></div><div class="index-price">${price}</div><canvas class="sparkline" tabindex="0" data-spark-ticker="${ticker}" data-spark-seed="${index + 40}" data-spark-change="${change}" aria-label="${aria}"></canvas><div class="sparkline-caption"><span class="sparkline-mode">${mode}</span><span class="sparkline-note${incomplete ? " is-incomplete" : ""}">${note}</span></div><div class="index-hover-bubble" role="tooltip" hidden><div class="bubble-heading"><div class="bubble-title-group"><strong>放大 · 近 1 个月日线 K 线</strong><span class="bubble-price">价格 —</span></div><span class="bubble-change">—</span></div><div class="bubble-legend" aria-label="图例"><span><i class="legend-candle"></i>K 线</span><span><i class="legend-ema9"></i>EMA9</span><span><i class="legend-ema21"></i>EMA21</span></div><canvas class="bubble-sparkline" width="640" height="220" aria-hidden="true"></canvas><div class="bubble-meta"><span class="bubble-range">近 1 个月日线</span><span class="bubble-refresh">等待盘中快照</span><span>移开关闭</span></div></div></article>`; }).join("");
+    $$(".sparkline", root).forEach((canvas) => { setupIndexCardInteractions(canvas); drawIndexCardChart(canvas); });
   }
   function sectorScore(sector) { return state.sectorMode === "d1" ? sector.d1 : state.sectorMode === "d5" ? sector.d5 : sector.d20; }
+  function tradingViewUrl(ticker) { const exchange = tradingViewExchanges[ticker] || "AMEX"; return `https://tw.tradingview.com/chart/e2o5U28E/?symbol=${encodeURIComponent(`${exchange}:${ticker}`)}`; }
+  function tradingViewSymbolUrl(ticker) { return `https://tw.tradingview.com/symbols/${encodeURIComponent(ticker)}/`; }
+  function tradingViewIndexUrl(ticker) { const symbol = tradingViewIndexSymbols[ticker] || ticker; return `https://tw.tradingview.com/chart/e2o5U28E/?symbol=${encodeURIComponent(symbol)}`; }
   function sectorRows() {
     const query = state.query.toLowerCase();
-    const rows = sectors.filter((row) => (!query || `${row.ticker} ${row.name}`.toLowerCase().includes(query)) && (row.ticker === "SPY" || state.sectorStatus === "all" || row.trend === state.sectorStatus)).slice().sort((a, b) => {
-      const delta = Number(b[state.sectorSort.key]) - Number(a[state.sectorSort.key]);
-      return (state.sectorSort.direction === "asc" ? -1 : 1) * (delta || a.ticker.localeCompare(b.ticker));
-    });
+    const rows = sectors.filter((row) => (!query || `${row.ticker} ${row.name}`.toLowerCase().includes(query)) && (row.ticker === "SPY" || state.sectorStatus === "all" || row.trend === state.sectorStatus)).slice().sort((a, b) => compareMetricRows(a, b, state.sectorSort.key, state.sectorSort.direction));
     const spy = rows.find((row) => row.ticker === "SPY");
     return spy ? [spy, ...rows.filter((row) => row.ticker !== "SPY")] : rows;
   }
+  function syncPinnedRowCovers() {
+    [".sector-table-scroll", ".industry-table-scroll"].forEach((selector) => {
+      const shell = $(selector); const header = shell && $("thead", shell); const cover = shell && $(".pinned-row-cover", shell);
+      if (!shell || !header) return;
+      const headerHeight = header.getBoundingClientRect().height;
+      shell.style.setProperty("--table-header-height", `${headerHeight}px`);
+      if (cover) { cover.style.top = "0px"; cover.style.height = "0px"; }
+    });
+  }
   function renderSectors() {
     const body = $("#sector-table-body"); const rows = sectorRows();
-    body.innerHTML = rows.length ? rows.map((row, index) => { const tone = row.trend === "改善" ? "positive" : row.trend === "转弱" ? "negative" : "neutral"; return `<tr class="${row.ticker === "SPY" ? "is-pinned" : ""}"><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><button class="etf-button" type="button" data-etf="${row.ticker}">${row.ticker}</button><span class="sub-label">${row.name}${row.ticker === "SPY" ? " · 锁定" : ""}</span></td><td class="price">${row.price.toFixed(2)}</td><td>${row.rsi.toFixed(1)}</td><td class="${classFor(row.d1)}">${signed(row.d1)}</td><td class="${classFor(row.d5)}">${signed(row.d5)}</td><td class="${classFor(row.d20)}">${signed(row.d20)}</td><td><span class="status-label is-${tone}">${row.trend}</span></td></tr>`; }).join("") : `<tr><td colspan="8"><div class="drawer-empty">没有匹配的板块或 ETF</div></td></tr>`;
+    body.innerHTML = rows.length ? rows.map((row, index) => { const tone = row.trend === "改善" ? "positive" : row.trend === "转弱" ? "negative" : "neutral"; const trendTone = row.trend150 === "上涨" ? "positive" : row.trend150 === "下降" ? "negative" : "neutral"; return `<tr class="${row.ticker === "SPY" ? "is-pinned" : ""}"><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="etf-button tradingview-link" href="${tradingViewUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${row.ticker}">${row.ticker}</a><span class="sub-label">${row.name}${row.ticker === "SPY" ? " · 锁定" : ""}</span></td><td><span class="trend-label is-${trendTone}" title="最新收盘价相对 MA150">${row.trend150 || "数据不足"}</span></td><td>${row.rsi.toFixed(1)}</td><td class="${classFor(row.d1)}">${signed(row.d1)}</td><td class="${classFor(row.d5)}">${signed(row.d5)}</td><td class="${classFor(row.d20)}">${signed(row.d20)}</td><td><span class="status-label is-${tone}">${row.trend}</span></td></tr>`; }).join("") : `<tr><td colspan="8"><div class="drawer-empty">没有匹配的板块或 ETF</div></td></tr>`;
     updateSectorSortButtons();
+    requestAnimationFrame(syncPinnedRowCovers);
   }
   function renderIndustries() {
     const query = state.query.toLowerCase(); const filtered = industries.filter((row) => !query || `${row.ticker} ${row.name} ${row.group}`.toLowerCase().includes(query));
-    const sorted = filtered.slice().sort((a, b) => { const delta = Number(b[state.industrySort.key]) - Number(a[state.industrySort.key]); return (state.industrySort.direction === "asc" ? -1 : 1) * (delta || a.ticker.localeCompare(b.ticker)); });
+    const sorted = filtered.slice().sort((a, b) => compareMetricRows(a, b, state.industrySort.key, state.industrySort.direction));
     const spy = sorted.find((row) => row.ticker === "SPY");
     const ordered = spy ? [spy, ...sorted.filter((row) => row.ticker !== "SPY")] : sorted;
     const visible = state.industryView === "top" ? ordered.slice(0, 15) : ordered;
     const body = $("#industry-table-body");
-    body.innerHTML = visible.length ? visible.map((row, index) => `<tr class="${row.ticker === "SPY" ? "is-pinned" : ""}"><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><button class="etf-button" type="button" data-etf="${row.ticker}">${row.ticker}</button><span class="sub-label">${row.ticker === "SPY" ? "标普 500 · 锁定" : ""}</span></td><td>${row.name}<span class="sub-label">${row.group}</span></td><td>${row.rsi.toFixed(1)}</td><td class="${classFor(row.d5)}">${signed(row.d5)}</td><td class="${classFor(row.d20)}">${signed(row.d20)}</td><td><button class="holding-link" type="button" data-etf="${row.ticker}">前十大 →</button></td></tr>`).join("") : `<tr><td colspan="7"><div class="drawer-empty">没有匹配的行业 ETF</div></td></tr>`;
+    body.innerHTML = visible.length ? visible.map((row, index) => { const status = row.d5 > .18 ? "改善" : row.d5 < -.18 ? "转弱" : "盘整"; const tone = status === "改善" ? "positive" : status === "转弱" ? "negative" : "neutral"; const trendTone = row.trend150 === "上涨" ? "positive" : row.trend150 === "下降" ? "negative" : "neutral"; return `<tr class="${row.ticker === "SPY" ? "is-pinned" : ""}"><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="etf-button tradingview-link" href="${tradingViewUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${row.ticker}">${row.ticker}</a><span class="sub-label">${row.ticker === "SPY" ? "标普 500 · 锁定" : ""}</span></td><td>${row.name}<span class="sub-label">${row.group}</span></td><td><span class="trend-label is-${trendTone}" title="最新收盘价相对 MA150">${row.trend150 || "数据不足"}</span></td><td>${row.rsi.toFixed(1)}</td><td class="${classFor(row.d5)}">${signed(row.d5)}</td><td class="${classFor(row.d20)}">${signed(row.d20)}</td><td><button class="holding-link" type="button" data-etf="${row.ticker}">前十大 →</button></td><td><span class="status-label is-${tone}">${status}</span></td></tr>`; }).join("") : `<tr><td colspan="9"><div class="drawer-empty">没有匹配的行业 ETF</div></td></tr>`;
     $("#industry-view-meta").textContent = `显示 ${visible.length} / ${filtered.length}`;
     const matrix = $("#industry-matrix");
     matrix.hidden = true;
     matrix.innerHTML = filtered.map((row) => `<button class="matrix-cell" type="button" data-etf="${row.ticker}" aria-label="查看 ${row.ticker} ${row.name} 详情"><span class="matrix-ticker">${row.ticker}</span><span class="matrix-name">${row.name}</span><span class="matrix-metric ${classFor(row.d5)}">${row.rsi.toFixed(0)} · ${signed(row.d5)}</span></button>`).join("");
     updateIndustrySortButtons();
+    requestAnimationFrame(syncPinnedRowCovers);
   }
   function renderThemes() {
     const themeRoot = $("#theme-grid"); if (!themeRoot) return;
@@ -202,9 +407,32 @@
   function renderHoldings() {
     $("#holdings-strip").innerHTML = sectors.filter((sector) => sector.ticker !== "SPY").slice(0, 12).map((sector) => `<button class="holding-button" type="button" data-etf="${sector.ticker}"><span class="ticker">${sector.ticker}</span><small>${sector.name} · 前十大持仓</small><span class="holding-arrow">查看详情 →</span></button>`).join("");
   }
+  function renderStockbeeMomentum() {
+    const meta = $("#stockbee-momentum-meta"); const body = $("#stockbee-momentum-body");
+    if (!body) return;
+    const rows = Array.isArray(stockbeeMomentum) ? stockbeeMomentum : [];
+    if (meta) {
+      const dateLabel = stockbeeMomentumMeta.latestDate ? `来源最新日期 ${stockbeeMomentumMeta.latestDate}` : "尚无来源日期";
+      const staleLabel = stockbeeMomentumMeta.isStale ? " · 来源已过期，仅供回溯" : " · 每日更新来源";
+      const verified = Number(stockbeeMomentumMeta.classificationVerifiedCount);
+      const total = Number(stockbeeMomentumMeta.rowCount);
+      const coverageLabel = Number.isFinite(verified) && Number.isFinite(total) ? ` · 分类已核验 ${verified}/${total}` : "";
+      meta.textContent = `${dateLabel}${staleLabel}${coverageLabel}`;
+      meta.classList.toggle("is-stale", Boolean(stockbeeMomentumMeta.isStale));
+    }
+    body.innerHTML = rows.length ? rows.map((row, index) => `<tr><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="stockbee-ticker tradingview-link" href="${tradingViewSymbolUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${html(row.ticker)}">${html(row.ticker)}</a></td><td class="stockbee-classification">${html(classificationLabel(row.sector, sectorLabelsZh))}</td><td class="stockbee-classification">${html(classificationLabel(row.industry, industryLabelsZh))}</td></tr>`).join("") : `<tr><td colspan="4"><div class="drawer-empty">暂无可验证的 Stockbee 动能股票名单</div></td></tr>`;
+    const shell = $(".stockbee-momentum-table-scroll"); if (shell) shell.scrollLeft = 0;
+  }
   function renderBreadth() {
     const displayValue = (row, key, digits) => { const value = Number(row[key]); return Number.isFinite(value) ? (digits ? value.toLocaleString("en-US", { minimumFractionDigits: digits, maximumFractionDigits: digits }) : value.toLocaleString("en-US")) : "—"; };
-    $("#breadth-table-body").innerHTML = breadth.map((row) => `<tr><td class="breadth-date">${row.date}</td>${breadthColumnDefs.map(([key, label, tone, digits]) => `<td class="${tone}">${displayValue(row, key, digits)}</td>`).join("")}</tr>`).join("");
+    const breadthGroupFor = (index) => index < 6 ? "primary" : index < 12 ? "secondary" : "context";
+    const breadthCellFill = (row, key) => {
+      if (key !== "up" && key !== "down") return "";
+      const value = Number(row[key]); if (!Number.isFinite(value)) return "";
+      if (key === "up") return value >= 300 ? "#339966" : value >= 150 ? "#00ff00" : "#f4cccc";
+      return value >= 300 ? "#e06666" : value > 150 ? "#f4cccc" : "#00ff00";
+    };
+    $("#breadth-table-body").innerHTML = breadth.map((row) => `<tr><td class="breadth-date">${row.date}</td>${breadthColumnDefs.map(([key, label, tone, digits], index) => { const fill = breadthCellFill(row, key); return `<td class="breadth-cell breadth-cell-${breadthGroupFor(index)} ${tone}${fill ? " has-cell-fill" : ""}" data-metric="${key}"${fill ? ` style="--cell-fill: ${fill}"` : ""}>${displayValue(row, key, digits)}</td>`; }).join("")}</tr>`).join("");
     const metric = breadthMetricDefs[state.breadthMetric] || breadthMetricDefs.ratio5;
     $("#breadth-metric-label").textContent = metric.label;
     const chartRows = breadthChartRows();
@@ -231,6 +459,14 @@
     const previous = Number(bars[bars.length - periods - 1].close); const latest = Number(bars[bars.length - 1].close);
     return Number.isFinite(previous) && previous !== 0 && Number.isFinite(latest) ? +((latest / previous - 1) * 100).toFixed(2) : null;
   }
+  function compareMetricRows(a, b, key, direction) {
+    const av = Number(a[key]); const bv = Number(b[key]);
+    if (!Number.isFinite(av) && !Number.isFinite(bv)) return a.ticker.localeCompare(b.ticker);
+    if (!Number.isFinite(av)) return 1;
+    if (!Number.isFinite(bv)) return -1;
+    const delta = bv - av;
+    return (direction === "asc" ? -1 : 1) * (delta || a.ticker.localeCompare(b.ticker));
+  }
   function rsi14FromBars(bars) {
     if (!Array.isArray(bars) || bars.length < 15) return null;
     const closes = bars.slice(-15).map((bar) => Number(bar.close)); const gains = []; const losses = [];
@@ -239,6 +475,35 @@
     if (!Number.isFinite(averageGain) || !Number.isFinite(averageLoss)) return null;
     return +(averageLoss === 0 ? 100 : (100 - 100 / (1 + averageGain / averageLoss))).toFixed(1);
   }
+  function rsiHistoryFor(ticker) {
+    const bars = Array.isArray(marketBars[ticker]) ? marketBars[ticker] : [];
+    const points = [];
+    for (let index = 14; index < bars.length; index += 1) {
+      const value = rsi14FromBars(bars.slice(0, index + 1));
+      const date = bars[index] && (bars[index].date || bars[index].timestamp);
+      if (value != null && date) points.push({ date: String(date).slice(0, 10), value });
+    }
+    return points.slice(-RSI_HISTORY_DAYS).reverse();
+  }
+  function rsiBand(value) { return value >= 60 ? ["强势", "positive"] : value <= 40 ? ["弱势", "negative"] : ["中性", "neutral"]; }
+  function renderRsiHistory(kind) {
+    const rows = kind === "sector" ? sectors : industries;
+    const select = $(`#${kind}-rsi-symbol`); const body = $(`#${kind}-rsi-history-body`);
+    if (!select || !body) return;
+    const available = rows.filter((row) => row && row.ticker);
+    const requested = state.rsiHistorySelection[kind];
+    const selected = available.some((row) => row.ticker === requested) ? requested : (available.find((row) => row.ticker === "SPY") || available[0] || {}).ticker;
+    state.rsiHistorySelection[kind] = selected || "SPY";
+    const optionSignature = available.map((row) => row.ticker).join("|");
+    if (select.dataset.options !== optionSignature) {
+      select.innerHTML = available.map((row) => `<option value="${html(row.ticker)}">${html(row.ticker)} · ${html(row.name)}</option>`).join("");
+      select.dataset.options = optionSignature;
+    }
+    select.value = state.rsiHistorySelection[kind];
+    const points = rsiHistoryFor(state.rsiHistorySelection[kind]);
+    body.innerHTML = points.length ? points.map((point) => { const [label, tone] = rsiBand(point.value); return `<tr><td class="rsi-history-date">${html(point.date)}</td><td class="rsi-history-value">${point.value.toFixed(1)}</td><td><span class="status-label is-${tone}">${label}</span></td></tr>`; }).join("") : `<tr><td colspan="3"><div class="drawer-empty">暂无本地 RSI 历史数据</div></td></tr>`;
+  }
+  function renderRsiHistoryControls() { renderRsiHistory("sector"); renderRsiHistory("industry"); }
   function formatPrice(value) { return Number(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
   function applyMarketSnapshot(snapshot) {
     const instruments = snapshot && snapshot.instruments;
@@ -247,6 +512,8 @@
       const bars = Array.isArray(instrument.bars) ? instrument.bars : [];
       if (!bars.length) return;
       marketBars[ticker] = bars;
+      marketIntradayBars[ticker] = Array.isArray(instrument.intradayBars) ? instrument.intradayBars : [];
+      marketPendingBars[ticker] = instrument.pendingBar || null;
       const latest = instrument.latest || bars[bars.length - 1];
       const index = indexDefs.find((entry) => entry[0] === ticker);
       if (index && latest) { index[2] = formatPrice(latest.close); index[3] = Number.isFinite(Number(latest.change)) ? Number(latest.change) : index[3]; }
@@ -258,6 +525,8 @@
         sector.d5 = closeChange(bars, 5) ?? sector.d5;
         sector.d20 = closeChange(bars, 20) ?? sector.d20;
         sector.trend = sector.d1 > .18 ? "改善" : sector.d1 < -.18 ? "转弱" : "盘整";
+        sector.ma150 = instrument.ma150 ?? sector.ma150;
+        sector.trend150 = instrument.trend150 || sector.trend150;
       }
       const industry = industries.find((row) => row.ticker === ticker);
       if (industry && latest) {
@@ -265,11 +534,14 @@
         industry.d5 = closeChange(bars, 5) ?? industry.d5;
         industry.d20 = closeChange(bars, 20) ?? industry.d20;
         industry.momentum = clamp(Math.round(industry.rsi * .84 + industry.d5 * 1.8), 25, 96);
+        industry.ma150 = instrument.ma150 ?? industry.ma150;
+        industry.trend150 = instrument.trend150 || industry.trend150;
       }
     });
     const marketMeta = snapshot.metadata || {};
     const referenceDate = instruments.SPX && instruments.SPX.latestDate ? instruments.SPX.latestDate : marketMeta.latestDate;
     DashboardData.marketSnapshot = snapshot;
+    if (snapshot.holdings && typeof snapshot.holdings === "object") DashboardData.holdings = snapshot.holdings;
     const comparisonDate = marketMeta.comparisonDate || referenceDate;
     const calendarLatestDates = marketMeta.calendarLatestDates || {};
     DashboardData.metadata = { ...DashboardData.metadata, dataDate: referenceDate || DashboardData.metadata.dataDate, comparisonDate, calendarLatestDates, generatedAt: marketMeta.fetchedAt || DashboardData.metadata.generatedAt, sourceStatus: marketMeta.sourceStatus || "loaded", isStale: DashboardData.metadata.refresh ? DashboardData.metadata.isStale : false, missing: marketMeta.missing || [], marketData: marketMeta };
@@ -284,6 +556,11 @@
       staleBadge.innerHTML = pendingBars.length ? `<i></i>未收盘日线 · ${pendingBars.length} 项 · ${html(pendingBars[0].date)}` : (marketMeta.latestDate ? `<i></i>跨资产日期 · ${html(marketMeta.latestDate)}` : staleBadge.innerHTML);
       staleBadge.title = pendingBars.length ? pendingBars.map((item) => `${item.symbol} ${item.date}`).join("、") : "";
     }
+    renderLocalMarketAnalysis();
+    const holdingsMeta = marketMeta.holdings || {};
+    const holdingsMetaLabel = $("#holdings-meta");
+    if (holdingsMetaLabel) holdingsMetaLabel.textContent = holdingsMeta.loadedCount ? `真实持仓 · ${holdingsMeta.loadedCount}/${holdingsMeta.requestedCount} · 日更` : "持仓数据待接入";
+    holdings = snapshot.holdings && typeof snapshot.holdings === "object" ? snapshot.holdings : holdings;
     const sidebarNote = $(".sidebar-note");
     if (sidebarNote) sidebarNote.innerHTML = "本地快照模式<br />不连接实时行情";
     const footer = $(".site-footer");
@@ -297,7 +574,12 @@
       if (!response.ok) return;
       const snapshot = await response.json();
       if (!applyMarketSnapshot(snapshot)) return;
-      renderIndices(); renderSectors(); renderIndustries(); renderHoldings();
+      const hoveredTicker = $(".index-card:hover .sparkline")?.dataset.sparkTicker;
+      renderIndices(); renderSectors(); renderIndustries(); renderRsiHistoryControls(); renderHoldings(); renderStockbeeMomentum();
+      if (hoveredTicker) {
+        const hoveredCanvas = $$(".sparkline", $("#index-grid")).find((canvas) => canvas.dataset.sparkTicker === hoveredTicker);
+        if (hoveredCanvas) updateIndexHoverBubble(hoveredCanvas.closest(".index-card"));
+      }
     } catch (_) {
       // Keep deterministic sample data when the local snapshot is unavailable.
     }
@@ -329,8 +611,17 @@
       badge.innerHTML = `<i></i>数据新鲜 · ${completedAt.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}`;
       badge.title = `最后成功刷新：${lastCompleted}`;
     }
+    const fullRefreshAt = status.lastFullSuccessAt || null;
+    const shouldHydrateDaily = state.lastFullRefreshAt && fullRefreshAt && state.lastFullRefreshAt !== fullRefreshAt;
+    state.lastFullRefreshAt = fullRefreshAt;
     DashboardData.metadata.refresh = status;
     DashboardData.metadata.isStale = status.status === "failed" || status.status === "partial" || ageMs == null || ageMs > STALE_AFTER_MS;
+    renderLocalMarketAnalysis();
+    if (shouldHydrateDaily) {
+      hydrateStockbee();
+      hydrateStockbeeMomentum();
+      hydrateMarketSnapshot();
+    }
     return true;
   }
   async function hydrateRefreshStatus() {
@@ -350,17 +641,67 @@
       if (!response.ok) return;
       const snapshot = await response.json();
       if (!Array.isArray(snapshot.rows) || !snapshot.rows.length) return;
-      breadth = snapshot.rows.slice(0, 20).map((row) => ({ ...row, composite: compositeFromSnapshot(row) }));
+      breadth = snapshot.rows.map((row) => ({ ...row, composite: compositeFromSnapshot(row) }));
       DashboardData.breadth = breadth;
       DashboardData.metadata.sourceStatus = snapshot.metadata && snapshot.metadata.sourceStatus ? snapshot.metadata.sourceStatus : "loaded";
       DashboardData.metadata.dataDate = snapshot.metadata && snapshot.metadata.latestDate ? snapshot.metadata.latestDate : DashboardData.metadata.dataDate;
       DashboardData.metadata.generatedAt = snapshot.metadata && snapshot.metadata.fetchedAt ? snapshot.metadata.fetchedAt : DashboardData.metadata.generatedAt;
       renderBreadth();
+      renderLocalMarketAnalysis();
     } catch (_) {
       // Local file previews keep the deterministic fallback when fetch is unavailable.
     }
   }
-  function renderAll() { renderIndices(); renderSectors(); renderIndustries(); renderThemes(); renderHoldings(); renderBreadth(); updateModeButtons(); }
+  async function hydrateStockbeeMomentum() {
+    if (window.location.protocol === "file:") return;
+    try {
+      const response = await fetch("data/stockbee_momentum.json", { cache: "no-store" });
+      if (!response.ok) return;
+      const snapshot = await response.json();
+      if (!Array.isArray(snapshot.rows)) return;
+      stockbeeMomentum = snapshot.rows.filter((row) => row && row.ticker);
+      stockbeeMomentumMeta = snapshot.metadata || stockbeeMomentumMeta;
+      DashboardData.stockbeeMomentum = stockbeeMomentum;
+      renderStockbeeMomentum();
+    } catch (_) {
+      // The list remains empty when the source snapshot is unavailable.
+    }
+  }
+  const clockFormatters = {
+    us: new Intl.DateTimeFormat("en-GB", { timeZone: "America/New_York", hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" }),
+    usDate: new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" }),
+    cn: new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Shanghai", hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" })
+  };
+  function updateClocks(now = new Date()) {
+    const timestamp = now instanceof Date ? now : new Date(now);
+    [["#us-date", clockFormatters.usDate], ["#us-clock", clockFormatters.us], ["#cn-clock", clockFormatters.cn]].forEach(([selector, formatter]) => {
+      const clock = $(selector); if (!clock) return; clock.textContent = formatter.format(timestamp); clock.dateTime = timestamp.toISOString();
+    });
+  }
+  function renderLocalMarketAnalysis() {
+    const latestBreadth = breadth[breadth.length - 1] || {};
+    const avg = (items, key) => items.length ? items.reduce((sum, item) => sum + (Number(item[key]) || 0), 0) / items.length : 0;
+    const signals = {
+      trend: avg([...sectors, ...industries], "d5") > 0 ? 1 : -1,
+      breadth: Number(latestBreadth.ratio5) >= 1 ? 1 : -1,
+      momentum: avg(industries, "d5") > 0 ? 1 : -1,
+      liquidity: avg(sectors, "d1") >= 0 ? 1 : 0,
+      risk: (DashboardData.metadata.missing || []).length || DashboardData.metadata.isStale ? -1 : 0
+    };
+    const score = Object.values(signals).reduce((sum, value) => sum + value, 0);
+    const stateLabel = score >= 3 ? "偏强" : score <= -2 ? "偏弱" : "震荡";
+    const heroTitle = $("#overview-title"); if (heroTitle) heroTitle.innerHTML = `${stateLabel} <span class="hero-score">· ${score >= 0 ? "+" : "−"}${Math.abs(score)}</span>`;
+    const heroCopy = $(".hero-copy"); if (heroCopy) heroCopy.textContent = `本地快照显示板块 5 日变化${avg(sectors, "d5") >= 0 ? "偏正" : "偏弱"}，Stockbee 5 日上涨／下跌比为 ${Number(latestBreadth.ratio5 || 0).toFixed(2)}。结论随下一次本地刷新更新。`;
+    const signalLabels = { trend: "趋势", breadth: "宽度", momentum: "动量", liquidity: "流动", risk: "风险" };
+    const signalRow = $(".signal-row"); if (signalRow) signalRow.innerHTML = Object.entries(signals).map(([key, value]) => `<span class="signal-chip is-${value > 0 ? "positive" : value < 0 ? "negative" : "neutral"}"><b>${signalLabels[key]}</b> ${value > 0 ? "+" : ""}${value}</span>`).join("");
+    const date = DashboardData.metadata.dataDate || SNAPSHOT_DATE; const heroDate = $(".hero-date"); if (heroDate) heroDate.innerHTML = `${html(date)} 美股收盘 <span class="dot-divider">·</span> 本地分析`;
+    const topSectors = [...sectors].sort((a, b) => b.d5 - a.d5).slice(0, 2).map((item) => `${item.ticker} ${item.name}`).join("、") || "暂无板块数据";
+    const topIndustries = [...industries].sort((a, b) => b.d5 - a.d5).slice(0, 2).map((item) => `${item.ticker} ${item.name}`).join("、") || "暂无行业数据";
+    const breadthLabel = Number(latestBreadth.ratio5) >= 1.2 ? "强势" : Number(latestBreadth.ratio5) >= 0.9 ? "中性" : "偏弱";
+    const items = [["板块强势", topSectors], ["行业强势", topIndustries], ["Stockbee 宽度", `${breadthLabel} · 5 日上涨／下跌比 ${Number(latestBreadth.ratio5 || 0).toFixed(2)}`]];
+    $$(".briefing-item").forEach((node, index) => { const item = items[index]; if (!item) return; const strong = $("strong", node); const text = $("p", node); if (strong) strong.textContent = item[0]; if (text) text.textContent = item[1]; });
+  }
+  function renderAll() { renderIndices(); renderSectors(); renderIndustries(); renderRsiHistoryControls(); renderThemes(); renderHoldings(); renderStockbeeMomentum(); renderBreadth(); renderLocalMarketAnalysis(); updateModeButtons(); }
   function updateSectorSortButtons() {
     $$('[data-sector-sort]').forEach((button) => { const active = button.dataset.sectorSort === state.sectorSort.key; const glyph = button.querySelector(".sort-glyph"); button.classList.toggle("is-active", active); button.setAttribute("aria-sort", active ? (state.sectorSort.direction === "asc" ? "ascending" : "descending") : "none"); if (glyph) glyph.textContent = active ? (state.sectorSort.direction === "asc" ? "↑" : "↓") : "↕"; });
   }
@@ -377,31 +718,69 @@
   function instrumentFor(ticker) { return sectors.find((row) => row.ticker === ticker) || industries.find((row) => row.ticker === ticker); }
   function openDrawer(ticker) {
     const item = instrumentFor(ticker); if (!item) return;
-    state.drawerTicker = ticker; const drawer = $("#detail-drawer"); const backdrop = $("#drawer-backdrop"); const isSector = sectors.some((row) => row.ticker === ticker); const list = holdings[ticker] || holdings.SPY;
-    $("#drawer-title").textContent = `${ticker} · ${item.name}`; $("#drawer-subtitle").textContent = `${isSector ? "板块 ETF" : "行业 ETF"} · ${SNAPSHOT_DATE} 收盘 · 示例数据`;
-    $("#drawer-content").innerHTML = `<canvas class="drawer-chart" id="drawer-chart" width="360" height="140" aria-label="${ticker} 60 日走势"></canvas><div class="drawer-metrics"><div class="drawer-metric"><span>RSI14</span><strong>${item.rsi.toFixed(1)}</strong></div><div class="drawer-metric"><span>Δ5</span><strong class="${classFor(item.d5)}">${signed(item.d5)}</strong></div><div class="drawer-metric"><span>Δ20</span><strong class="${classFor(item.d20)}">${signed(item.d20)}</strong></div></div><div class="drawer-section"><h3>前十大权重股</h3><p>持仓数据日期 · ${SNAPSHOT_DATE}</p><div class="holding-list">${list.map((holding, index) => `<div class="holding-row"><span>${String(index + 1).padStart(2, "0")}</span><div><strong>${holding.ticker}</strong><small>${holding.name}</small></div><span class="mono">${holding.weight.toFixed(1)}%</span><div class="weight-track"><span style="width:${clamp(holding.weight * 4.6, 0, 100)}%"></span></div></div>`).join("")}</div></div><div class="drawer-section"><h3>研究提示</h3><p>${isSector ? "该板块的多周期动能与相对强弱仅用于盘后研究排序；点击外部区域或按 Escape 关闭抽屉。" : "该行业来自 60 个行业 ETF 矩阵，当前详情沿用同一抽屉组件，便于快速对照持仓与多周期表现。"}</p></div>`;
+    state.drawerTicker = ticker; const drawer = $("#detail-drawer"); const backdrop = $("#drawer-backdrop"); const isSector = sectors.some((row) => row.ticker === ticker); const entry = holdings[ticker]; const holdingsMeta = DashboardData.metadata.marketData && DashboardData.metadata.marketData.holdings || {}; const missingEntry = Array.isArray(holdingsMeta.missing) ? holdingsMeta.missing.find((record) => record && record.ticker === ticker) : null; const coverageStatus = entry && !Array.isArray(entry) ? entry.coverageStatus : null; const isReal = Boolean(entry && !Array.isArray(entry) && entry.status === "loaded" && coverageStatus !== "partial"); const list = isReal && Array.isArray(entry.holdings) ? entry.holdings.slice(0, 10) : [];
+    const asOf = entry && entry.asOf ? entry.asOf : "未提供日期";
+    const source = entry && entry.provider ? entry.provider : "暂无真实持仓数据";
+    const failureReason = missingEntry && missingEntry.reason ? `原因：${missingEntry.reason}` : coverageStatus === "partial" ? `原因：来源仅返回 ${Array.isArray(entry.holdings) ? entry.holdings.length : 0} 行，未达到前十大` : "来源未返回可验证记录";
+    $("#drawer-title").textContent = `${ticker} · ${item.name}`; $("#drawer-subtitle").textContent = `${isSector ? "板块 ETF" : "行业 ETF"} · ${SNAPSHOT_DATE} 收盘 · ${isReal ? "真实前十大名单" : "持仓待核对"}`;
+    const holdingsMarkup = list.length ? `<div class="holding-list">${list.map((holding, index) => `<div class="holding-row"><span>${String(index + 1).padStart(2, "0")}</span><div><strong>${html(holding.ticker || "未提供代码")}</strong><small>${html(holding.name)}</small></div></div>`).join("")}</div>` : `<div class="drawer-empty">该 ETF 暂无可验证的前十大名单。${html(failureReason)}</div>`;
+    $("#drawer-content").innerHTML = `<canvas class="drawer-chart" id="drawer-chart" width="360" height="140" aria-label="${ticker} 60 日走势"></canvas><div class="drawer-metrics"><div class="drawer-metric"><span>RSI14</span><strong>${item.rsi.toFixed(1)}</strong></div><div class="drawer-metric"><span>Δ5</span><strong class="${classFor(item.d5)}">${signed(item.d5)}</strong></div><div class="drawer-metric"><span>Δ20</span><strong class="${classFor(item.d20)}">${signed(item.d20)}</strong></div></div><div class="drawer-section"><h3>前十大持仓名单</h3><p>来源 · ${html(source)}<br>持仓日期 · ${html(asOf)} · 日更<br>仅展示名单，不展示权重比例。</p>${holdingsMarkup}</div><div class="drawer-section"><h3>研究提示</h3><p>${isSector ? "板块 ETF 的前十大名单来自公开来源，已保留来源与日期，适合盘后研究核对；未使用其他 ETF 数据替代。" : "行业 ETF 的前十大名单来自公开来源，未使用其他 ETF 数据替代；点击 ETF 名称可在 TradingView 查看行情。"}</p></div>`;
     drawer.classList.add("is-open"); drawer.setAttribute("aria-hidden", "false"); backdrop.hidden = false; document.body.style.overflow = "hidden"; drawSparkline($("#drawer-chart"), ticker.length * 11, item.d5, DETAIL_TRADING_DAYS, marketBars[ticker]);
     $("#drawer-close").focus();
   }
   function closeDrawer() { const drawer = $("#detail-drawer"); drawer.classList.remove("is-open"); drawer.setAttribute("aria-hidden", "true"); $("#drawer-backdrop").hidden = true; document.body.style.overflow = ""; state.drawerTicker = null; }
+  function openEvidenceDrawer() {
+    const metadata = DashboardData.metadata || {}; const market = metadata.marketData || {}; const refresh = metadata.refresh || {};
+    const holdings = market.holdings || {}; const content = $("#evidence-content"); if (!content) return;
+    const sourceRows = [
+      ["行情快照", `${market.loadedCount || 0}/${market.requiredCount || 0} 个标的`, market.fetchedAt || metadata.generatedAt || "未提供"],
+      ["ETF 持仓", `${holdings.loadedCount || 0}/${holdings.requestedCount || 0} 个来源`, holdings.fetchedAt || "日更"],
+      ["刷新状态", refresh.status === "ok" ? "刷新成功" : (refresh.status || "未知"), refresh.lastCompletedAt || "未提供"],
+      ["数据日期", metadata.dataDate || "未提供", metadata.comparisonDate ? `共同观察日 ${metadata.comparisonDate}` : "美股交易日历与 BTC 24×7 分开处理"]
+    ];
+    content.innerHTML = `<div class="evidence-list">${sourceRows.map(([label, value, detail]) => `<div class="evidence-item"><strong>${html(label)} · ${html(value)}</strong><span>${html(detail)}</span></div>`).join("")}<div class="evidence-item"><strong>来源边界</strong><span>网页仅读取本地快照；Yahoo、Binance、Stockbee 与发行方持仓来源由本地刷新器处理。缺失时保留上一份有效快照。</span></div></div>`;
+    const drawer = $("#evidence-drawer"); drawer.classList.add("is-open"); drawer.setAttribute("aria-hidden", "false"); $("#drawer-backdrop").hidden = false; document.body.style.overflow = "hidden"; $("#evidence-close").focus();
+  }
+  function closeEvidenceDrawer() { const drawer = $("#evidence-drawer"); if (!drawer) return; drawer.classList.remove("is-open"); drawer.setAttribute("aria-hidden", "true"); $("#drawer-backdrop").hidden = true; document.body.style.overflow = ""; }
   function setTheme(theme) { document.documentElement.dataset.theme = theme; const button = $("#theme-toggle"); const dark = theme === "dark"; button.querySelector(".theme-label").textContent = dark ? "浅色模式" : "深色模式"; button.classList.toggle("is-on", dark); button.setAttribute("aria-pressed", String(dark)); button.setAttribute("aria-label", dark ? "切换浅色模式" : "切换深色模式"); try { localStorage.setItem(STORAGE_KEY, theme); } catch (_) {} requestAnimationFrame(() => { renderIndices(); drawBreadthChart(); if (state.drawerTicker) drawSparkline($("#drawer-chart"), state.drawerTicker.length * 11, (instrumentFor(state.drawerTicker) || {}).d5 || 0, DETAIL_TRADING_DAYS, marketBars[state.drawerTicker]); }); }
   function initTheme() { let saved = "light"; try { saved = localStorage.getItem(STORAGE_KEY) || "light"; } catch (_) {} setTheme(saved === "dark" ? "dark" : "light"); }
 
-  $$(".nav-item").forEach((button) => button.addEventListener("click", () => { const target = document.getElementById(button.dataset.target); if (target) target.scrollIntoView({ behavior: "smooth", block: "start" }); $$(".nav-item").forEach((item) => item.classList.toggle("is-active", item === button)); }));
+  const navItems = $$(".nav-item");
+  const setActiveNav = (targetId) => navItems.forEach((item) => {
+    const active = item.dataset.target === targetId;
+    item.classList.toggle("is-active", active);
+    if (active) item.setAttribute("aria-current", "location"); else item.removeAttribute("aria-current");
+  });
+  setActiveNav(navItems[0]?.dataset.target);
+  navItems.forEach((button) => button.addEventListener("click", () => { const target = document.getElementById(button.dataset.target); if (target) target.scrollIntoView({ behavior: "smooth", block: "start" }); setActiveNav(button.dataset.target); }));
+  if ("IntersectionObserver" in window) {
+    const navTargets = navItems.map((item) => document.getElementById(item.dataset.target)).filter(Boolean);
+    const sectionObserver = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+      if (!visible) return;
+      setActiveNav(visible.target.id);
+    }, { rootMargin: "-96px 0px -58% 0px", threshold: 0.01 });
+    navTargets.forEach((target) => sectionObserver.observe(target));
+  }
   $$('[data-sector-mode]').forEach((button) => button.addEventListener("click", () => { state.sectorMode = button.dataset.sectorMode; state.sectorSort = { key: state.sectorMode, direction: "desc" }; renderSectors(); updateModeButtons(); }));
   $$('[data-sector-sort]').forEach((button) => button.addEventListener("click", () => { const key = button.dataset.sectorSort; state.sectorSort = { key, direction: state.sectorSort.key === key && state.sectorSort.direction === "desc" ? "asc" : "desc" }; if (key === "d5" || key === "d20") state.sectorMode = key; renderSectors(); updateModeButtons(); }));
   $$('[data-industry-view]').forEach((button) => button.addEventListener("click", () => { state.industryView = button.dataset.industryView; renderIndustries(); updateModeButtons(); }));
   $$('[data-industry-sort]').forEach((button) => button.addEventListener("click", () => { const key = button.dataset.industrySort; state.industrySort = { key, direction: state.industrySort.key === key && state.industrySort.direction === "desc" ? "asc" : "desc" }; renderIndustries(); }));
+  ["sector", "industry"].forEach((kind) => {
+    $(`#${kind}-rsi-symbol`).addEventListener("change", (event) => { state.rsiHistorySelection[kind] = event.target.value; renderRsiHistory(kind); });
+    $(`#${kind}-rsi-toggle`).addEventListener("click", (event) => { const button = event.currentTarget; const table = $(`#${kind}-rsi-history`); const expanded = button.getAttribute("aria-expanded") === "true"; button.setAttribute("aria-expanded", String(!expanded)); button.textContent = expanded ? "展开" : "收起"; table.hidden = expanded; if (!expanded) renderRsiHistory(kind); });
+  });
   $$('[data-breadth-metric]').forEach((button) => button.addEventListener("click", () => { state.breadthMetric = button.dataset.breadthMetric; renderBreadth(); }));
-  $("#global-search").addEventListener("input", (event) => { state.query = event.target.value.trim(); renderSectors(); renderIndustries(); renderThemes(); if (state.query) showToast(`正在筛选「${state.query}」`); });
   $("#sector-status-filter").addEventListener("change", (event) => { state.sectorStatus = event.target.value; renderSectors(); showToast(state.sectorStatus === "all" ? "已显示全部板块" : `已筛选状态：${state.sectorStatus}（SPY 固定首行）`); });
-  $("#focus-search").addEventListener("click", () => $("#global-search").focus());
   $("#theme-toggle").addEventListener("click", () => setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
-  $("#breadth-toggle").addEventListener("click", (event) => { const table = $("#breadth-data"); const expanded = event.currentTarget.getAttribute("aria-expanded") === "true"; event.currentTarget.setAttribute("aria-expanded", String(!expanded)); event.currentTarget.textContent = expanded ? "展开 20 日数据" : "收起 20 日数据"; table.hidden = expanded; if (!expanded) setupBreadthScroll(); });
+  $("#breadth-toggle").addEventListener("click", (event) => { const table = $("#breadth-data"); const expanded = event.currentTarget.getAttribute("aria-expanded") === "true"; event.currentTarget.setAttribute("aria-expanded", String(!expanded)); event.currentTarget.textContent = expanded ? "展开半年数据" : "收起半年数据"; table.hidden = expanded; if (!expanded) setupBreadthScroll(); });
   $("#drawer-close").addEventListener("click", closeDrawer); $("#drawer-backdrop").addEventListener("click", closeDrawer);
+  $("#evidence-open").addEventListener("click", openEvidenceDrawer); $("#evidence-close").addEventListener("click", closeEvidenceDrawer);
   document.addEventListener("click", (event) => { const trigger = event.target.closest("[data-etf]"); if (trigger) openDrawer(trigger.dataset.etf); });
-  document.addEventListener("keydown", (event) => { if (event.key === "Escape" && state.drawerTicker) closeDrawer(); if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); $("#global-search").focus(); } });
-  window.addEventListener("resize", () => { $$(".sparkline").forEach((canvas) => drawSparkline(canvas, Number(canvas.dataset.sparkSeed), Number(canvas.dataset.sparkChange), INDEX_TRADING_DAYS, marketBars[canvas.dataset.sparkTicker])); drawBreadthChart(); setupBreadthScroll(); });
-  renderAll(); initTheme(); hydrateStockbee(); hydrateMarketSnapshot(); hydrateRefreshStatus();
-  window.setInterval(() => { hydrateStockbee(); hydrateMarketSnapshot(); hydrateRefreshStatus(); }, REFRESH_INTERVAL_MS);
+  document.addEventListener("keydown", (event) => { if (event.key !== "Escape") return; if (state.drawerTicker) closeDrawer(); else if ($("#evidence-drawer")?.classList.contains("is-open")) closeEvidenceDrawer(); });
+  window.addEventListener("resize", () => { $$(".sparkline", $("#index-grid")).forEach((canvas) => drawIndexCardChart(canvas)); $$(".index-hover-bubble:not([hidden])").forEach((bubble) => updateIndexHoverBubble(bubble.__ownerCard || bubble.closest(".index-card"))); drawBreadthChart(); setupBreadthScroll(); syncPinnedRowCovers(); });
+  [".sector-table-scroll", ".industry-table-scroll"].forEach((selector) => { const shell = $(selector); if (shell) shell.addEventListener("scroll", () => requestAnimationFrame(syncPinnedRowCovers), { passive: true }); });
+  window.addEventListener("scroll", () => { $$(".index-hover-bubble:not([hidden])").forEach((bubble) => positionIndexHoverBubble(bubble.__ownerCard || bubble.closest(".index-card"))); }, { passive: true });
+  renderAll(); initTheme(); updateClocks(); window.setInterval(updateClocks, 1000); hydrateStockbee(); hydrateStockbeeMomentum(); hydrateMarketSnapshot(); hydrateRefreshStatus();
+  window.setInterval(() => { hydrateMarketSnapshot(); hydrateRefreshStatus(); }, BTC_REFRESH_INTERVAL_MS);
 })();
