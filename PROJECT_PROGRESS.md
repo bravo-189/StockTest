@@ -824,7 +824,7 @@
 
 ## 2026-09-04 TightPlayer 自定义域名配置进度
 
-- 用户已确认完整域名为 `www.tightplayer.com`，已通过 GitHub Pages API 写入仓库配置。
-- GitHub 当前已记录 `cname=www.tightplayer.com`，但 DNS 查询返回 NXDOMAIN，说明域名尚未配置或尚未传播；因此暂时不能验证域名，HTTPS 也仍未开启。
-- 待用户在 DNS 服务商添加：主机名 `www`、类型 `CNAME`、目标 `bravo-189.github.io`（TTL 使用默认值即可）。若存在同名 A/AAAA/CNAME 冲突记录，需要先清理冲突。
+- 截图确认实际注册域名为 `www.tightplayer.asia`；已将 GitHub Pages 的 `cname` 从 `.com` 切换为 `www.tightplayer.asia`。
+- 切换后再次验证：GitHub Pages 状态为 `built`、`cname=www.tightplayer.asia`，但本地、Google DNS 和 HTTPS 查询仍返回 NXDOMAIN；因此域名目前仍不能访问，HTTPS 也未开启。
+- 待用户在阿里云 DNS 保存并启用：主机名 `www`、类型 `CNAME`、目标 `bravo-189.github.io`（TTL 使用默认值即可）。若存在同名 A/AAAA/CNAME 冲突记录，需要先清理冲突，并确认 `.asia` 域名的 DNS 服务器已完成委派。
 - DNS 生效后，继续核验域名、Pages 状态、HTTPS 强制开启和线上资源路径；不要在 DNS 未生效时反复修改 Pages 配置。
