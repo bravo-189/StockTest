@@ -1,0 +1,126 @@
+name: Refresh data and deploy Pages
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Run shortly after the hour. The refresh script decides whether the run
+    # is BTC-only or the once-per-US-session daily refresh.
+    - cron: "5 * * * *"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: stocktest-pages
+  cancel-in-progress: false
+
+jobs:
+  refresh-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out application
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Restore the last published snapshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p data
+          if git ls-remote --exit-code --heads origin data-state >/dev/null 2>&1; then
+            git fetch --no-tags --depth=1 origin data-state
+            for file in \
+              data/market_snapshot.json \
+              data/market_snapshot_quality.json \
+              data/refresh_status.json \
+              data/stockbee.json \
+              data/stockbee_momentum.json; do
+              if git cat-file -e "origin/data-state:$file" 2>/dev/null; then
+                git show "origin/data-state:$file" > "$file"
+              fi
+            done
+          fi
+
+      - name: Run regression tests
+        working-directory: ..
+        env:
+          PYTHONPATH: ${{ github.workspace }}/..
+        run: python -m unittest discover -s StockTest/data_pipeline -p 'test_*.py'
+
+      - name: Refresh market and Stockbee snapshots
+        run: python data_pipeline/refresh_local_data.py --output-dir data --once
+
+      - name: Validate the generated market snapshot
+        run: >-
+          python data_pipeline/validate_market_snapshot.py
+          data/market_snapshot.json
+          --min-bars 21
+          --report data/market_snapshot_quality.json
+
+      - name: Prepare the Pages artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf site
+          mkdir -p site/data
+          cp index.html app.js styles.css favicon.svg long-term.html site/
+          cp data/market_snapshot.json site/data/
+          cp data/market_snapshot_quality.json site/data/
+          cp data/refresh_status.json site/data/
+          cp data/stockbee.json site/data/
+          cp data/stockbee_momentum.json site/data/
+          touch site/.nojekyll
+
+      - name: Save the latest snapshots in the data-state branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          state_dir="${RUNNER_TEMP}/stocktest-data-state"
+          rm -rf "$state_dir"
+          if git ls-remote --exit-code --heads origin data-state >/dev/null 2>&1; then
+            git fetch --no-tags --depth=1 origin data-state
+            git worktree add --detach "$state_dir" origin/data-state
+          else
+            git worktree add --detach "$state_dir" HEAD
+            git -C "$state_dir" switch --orphan data-state
+            git -C "$state_dir" rm -rf . || true
+          fi
+          mkdir -p "$state_dir/data"
+          find "$state_dir/data" -type f -delete
+          cp data/market_snapshot.json "$state_dir/data/"
+          cp data/market_snapshot_quality.json "$state_dir/data/"
+          cp data/refresh_status.json "$state_dir/data/"
+          cp data/stockbee.json "$state_dir/data/"
+          cp data/stockbee_momentum.json "$state_dir/data/"
+          git -C "$state_dir" config user.name "github-actions[bot]"
+          git -C "$state_dir" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C "$state_dir" add -f data/market_snapshot.json data/market_snapshot_quality.json data/refresh_status.json data/stockbee.json data/stockbee_momentum.json
+          if git -C "$state_dir" diff --cached --quiet; then
+            echo "No snapshot changes; skipping data-state commit."
+          else
+            git -C "$state_dir" commit -m "chore(data): refresh published snapshots"
+            git -C "$state_dir" push origin HEAD:data-state
+          fi
+          git worktree remove --force "$state_dir"
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -86,6 +86,12 @@ python StockTest/data_pipeline/fetch_stockbee.py --output StockTest/data/stockbe
 
 通过静态服务器或 GitHub Pages 打开时，页面会读取 `data/stockbee.json`；直接双击 `index.html` 时会尝试切换到本地服务，服务不可用才使用示例回退并给出提示，避免把空白误认为数据缺失。
 
+### GitHub Pages 自动数据发布
+
+`.github/workflows/refresh-and-deploy.yml` 会每小时启动一次。它先恢复上一份有效快照，再运行同一套本地刷新器：美股、板块、行业和 Stockbee 在美股收盘后每天刷新，BTC 在其余时段按小时刷新；随后执行快照质量校验并把静态页面发布到 GitHub Pages。工作流可在 Actions 页面手动运行。
+
+为避免主分支积累大型行情文件，最新的 `market_snapshot.json`、质量报告、刷新状态和 Stockbee 快照保存在独立的 `data-state` 分支；Pages 发布产物只包含网页文件和这些已校验 JSON。刷新失败时工作流会在发布前停止，页面继续保留上一份已发布数据；局部缺失则通过质量报告和页面状态明确标记。
+
 ### SEC 基本面试点
 
 `data_pipeline/fetch_sec_fundamentals.py` 使用 SEC EDGAR Company Facts 的免费接口抓取 MSFT、NVDA、AAPL、AMZN、META 五家公司。输出保留每个指标的报告期、表单、提交日期和 accession；缺失字段不会被填成 0，必要时只使用同一报告期的明确派生公式。质量检查命令：
@@ -100,7 +106,7 @@ python StockTest/data_pipeline/validate_fundamentals.py StockTest/data/fundament
 
 项目使用私有 GitHub 仓库管理版本：`https://github.com/bravo-189/StockTest`，默认分支为 `main`。
 
-`.runtime/`、浏览器 QA 配置目录、Python 缓存、日志、环境密钥文件以及每小时更新的行情和 Stockbee 快照不会进入 Git 历史。代码、测试、设计文档、正式 QA 截图和静态配置均纳入版本管理。
+`.runtime/`、浏览器 QA 配置目录、Python 缓存、日志和环境密钥文件不会进入主分支。代码、测试、设计文档、正式 QA 截图和静态配置均纳入版本管理；供 GitHub Pages 使用的最新行情和 Stockbee 快照由 Actions 保存在独立的 `data-state` 分支。
 
 常用命令：
 
