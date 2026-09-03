@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-09-03T16:44:29Z",
+    "fetchedAt": "2026-09-03T16:48:23Z",
     "latestDate": "2026-09-03",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -156,7 +156,23 @@
         "USO": "USCF issuer holdings API"
       }
     },
-    "dailyRefreshDate": "2026-09-03"
+    "dailyRefreshDate": "2026-09-03",
+    "btcRefreshAt": "2026-09-03T16:48:23Z",
+    "btcLatestDate": "2026-09-03",
+    "btcIntraday": {
+      "requested": [
+        "SPX",
+        "NDX",
+        "DJI",
+        "RUT",
+        "BTC"
+      ],
+      "loaded": [
+        "BTC"
+      ],
+      "missing": [],
+      "sourceStatus": "loaded"
+    }
   },
   "sources": {
     "equities": {
@@ -76419,14 +76435,14 @@
           "open": 77340.01,
           "high": 81370.33,
           "low": 76968.0,
-          "close": 80793.99,
-          "volume": 13995.75989
+          "close": 81006.02,
+          "volume": 14065.53908
         }
       ],
       "latest": {
         "date": "2026-09-03",
-        "close": 80793.99,
-        "change": 4.466
+        "close": 81006.02,
+        "change": 4.7401
       },
       "latestDate": "2026-09-03",
       "kind": "crypto",
@@ -76530,8 +76546,8 @@
           "open": 81348.0,
           "high": 81360.0,
           "low": 80613.52,
-          "close": 80817.5,
-          "volume": 1021.25555,
+          "close": 81006.02,
+          "volume": 1088.25882,
           "status": "incomplete"
         }
       ],
@@ -76541,10 +76557,6 @@
         "interval": "2h",
         "timezone": "UTC",
         "latestDate": "2026-09-03"
-      },
-      "relativeStrengthRating": {
-        "sector": {},
-        "industry": {}
       }
     },
     "COPX": {
