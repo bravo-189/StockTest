@@ -812,3 +812,12 @@
 - SLX 的两个 RIO 已确认分别为 `$RIO` 与 `!asx/RIO`，解析器现在保存为 `RIO` 与 `ASX:RIO`，不再把跨交易所证券误判为重复代码。
 - 单独刷新 71 个 ETF 持仓并重算质量报告；当前持仓异常告警已清除，仅剩 BTC MA150 数据不足这一项后台准备性告警。
 - 验证：全量 data pipeline 测试 99 项通过，`app.js` 语法检查通过；本地网页与每小时刷新进程已重新启动并保持运行。
+
+## 2026-09-04 GitHub 公开发布与上线交接记录
+
+- 已完成公开发布：仓库 [bravo-189/StockTest](https://github.com/bravo-189/StockTest) 已设为 Public，`main` 与远程同步；最后一笔功能修复提交为 `b44561d`。
+- GitHub Pages 已启用并验证成功，线上地址为 [https://bravo-189.github.io/StockTest/](https://bravo-189.github.io/StockTest/)，Pages 使用 workflow 构建，HTTPS 已强制开启。
+- 已加入 `.github/workflows/refresh-and-deploy.yml`：支持手动运行和每小时调度；美股按盘后日更，BTC 按小时刷新；生成快照后自动校验并部署 Pages，同时将历史快照保存到 `data-state` 分支。
+- 线上验证记录：workflow run `33780804836` 成功；公开 `market_snapshot.json`、`market_snapshot_quality.json`、`refresh_status.json`、`stockbee.json` 和 `stockbee_momentum.json` 均返回 200；最新快照日期为 `2026-09-03`，刷新状态为 `ok`，行情 `loaded=76`、`missing=0`。
+- 发布前已扫描 68 个受版本控制文件，未发现 API key、私钥、密码、`.env` 或其他凭据；本机 `.codex/skills/` 目录未上传。
+- 当前未完成事项：尚未配置 TightPlayer 自定义域名（Pages API 的 `cname` 仍为 `null`）；下一次需要用户提供完整域名和 DNS 服务商信息。另有 GitHub Actions Node.js 20 弃用提示，属于非阻塞维护项。

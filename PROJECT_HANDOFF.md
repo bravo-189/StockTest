@@ -116,7 +116,7 @@
 
 真实日内接入、每日 RSI 历史面板、双表并列对比、SPY 固定行滚动修正、COPX 真实数据补齐、ETF 持仓、交易所映射和 Stockbee 名单区块均已完成：5 张卡片、5M/2H 标签、真实价格、640px 气泡、42 日 RSI 历史、滚动遮挡层、76/76 快照、49 项测试和浏览器交互检查通过。Stockbee 50 已进一步切换并验证用户指定工作表 `gid=1499398020`，当前快照 50 行、最新日期 2026-08-25；后续刷新沿用该导出地址即可。
 
-在用户确认前，不要恢复主题 AI 排名、不接入小程序、不发布 GitHub Pages，也不要重做已有页面交互。
+在用户确认前，不要恢复主题 AI 排名、不接入小程序，也不要重做已有页面交互。GitHub 公开发布与 Pages 部署已按用户后续明确授权完成，当前以本文件最后的“2026-09-04 休息后启动入口”为准。
 
 ## 2026-08-31 本地执行交接
 
@@ -143,3 +143,16 @@
 ```text
 请只在本机继续 StockTest，不进行任何 GitHub 推送、PR、Pages 发布或授权操作。先阅读 StockTest/PROJECT_HANDOFF.md、PROJECT_CONTEXT.md、PROJECT_PROGRESS.md 最后一节和 PROJECT_ROADMAP.md；当前网页指数卡片口径是美股真实 Yahoo 原生 5M、BTC Binance 真实 2H，640px 近月价格气泡，不要重复制作或回退。先运行现有 data_pipeline 测试和 app.js 语法检查，再做刷新异常监控与持仓来源回归；Task 4 已完成独立复审，不要重复复审。不要重复制作已有页面、数据契约或进度文档。主题 AI、小程序、新闻热度、基本面 UI 与线上部署继续暂停。
 ```
+
+## 2026-09-04 休息后启动入口
+
+当前线上发布已经完成；下一次不要从 UI 或数据管线重做，直接从域名配置与线上监控继续：
+
+1. 先读取本文件最后两节、`PROJECT_PROGRESS.md` 最后一节和 `DATA_RELIABILITY_AUDIT.md`。
+2. 快速核验 `https://bravo-189.github.io/StockTest/`、Pages 状态和最近一次 workflow；只有出现失败或数据缺口时才修复。
+3. 向用户确认 TightPlayer 的完整域名（例如 `www.tightplayer.com` 或 `stock.tightplayer.com`），不要自行猜测顶级域名；同时确认 DNS 服务商/可修改 DNS 的权限。
+4. 配置 GitHub Pages 自定义域名：子域名使用指向 `bravo-189.github.io` 的 CNAME；根域名按 GitHub 要求配置 A/AAAA 记录；随后验证 HTTPS、重定向和线上资源路径。
+5. 检查 Actions 的 Node.js 20 弃用提示，并观察每小时刷新、盘后日更和 `data-state` 快照是否持续成功。
+6. 继续遵守：不上传 `.codex/skills/`，不写入或提交任何 API key/密码，不恢复已暂停的主题 AI/新闻功能，除非用户重新明确要求。
+
+本次已完成的 GitHub 公开发布、Pages 上线、数据端点验证和敏感信息扫描均记录在 `PROJECT_PROGRESS.md`，无需重复执行。
