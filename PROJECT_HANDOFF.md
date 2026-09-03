@@ -150,8 +150,8 @@
 
 1. 先读取本文件最后两节、`PROJECT_PROGRESS.md` 最后一节和 `DATA_RELIABILITY_AUDIT.md`。
 2. 快速核验 `https://bravo-189.github.io/StockTest/`、Pages 状态和最近一次 workflow；只有出现失败或数据缺口时才修复。
-3. 向用户确认 TightPlayer 的完整域名（例如 `www.tightplayer.com` 或 `stock.tightplayer.com`），不要自行猜测顶级域名；同时确认 DNS 服务商/可修改 DNS 的权限。
-4. 配置 GitHub Pages 自定义域名：子域名使用指向 `bravo-189.github.io` 的 CNAME；根域名按 GitHub 要求配置 A/AAAA 记录；随后验证 HTTPS、重定向和线上资源路径。
+3. TightPlayer 完整域名已确认并写入 Pages：`www.tightplayer.com`。当前只等待 DNS 生效。
+4. 引导用户在 DNS 服务商添加 `www` → `bravo-189.github.io` 的 CNAME；DNS 生效后验证 HTTPS、重定向和线上资源路径，再开启 HTTPS 强制。
 5. 检查 Actions 的 Node.js 20 弃用提示，并观察每小时刷新、盘后日更和 `data-state` 快照是否持续成功。
 6. 继续遵守：不上传 `.codex/skills/`，不写入或提交任何 API key/密码，不恢复已暂停的主题 AI/新闻功能，除非用户重新明确要求。
 

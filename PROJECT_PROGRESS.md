@@ -821,3 +821,10 @@
 - 线上验证记录：workflow run `33780804836` 成功；公开 `market_snapshot.json`、`market_snapshot_quality.json`、`refresh_status.json`、`stockbee.json` 和 `stockbee_momentum.json` 均返回 200；最新快照日期为 `2026-09-03`，刷新状态为 `ok`，行情 `loaded=76`、`missing=0`。
 - 发布前已扫描 68 个受版本控制文件，未发现 API key、私钥、密码、`.env` 或其他凭据；本机 `.codex/skills/` 目录未上传。
 - 当前未完成事项：尚未配置 TightPlayer 自定义域名（Pages API 的 `cname` 仍为 `null`）；下一次需要用户提供完整域名和 DNS 服务商信息。另有 GitHub Actions Node.js 20 弃用提示，属于非阻塞维护项。
+
+## 2026-09-04 TightPlayer 自定义域名配置进度
+
+- 用户已确认完整域名为 `www.tightplayer.com`，已通过 GitHub Pages API 写入仓库配置。
+- GitHub 当前已记录 `cname=www.tightplayer.com`，但 DNS 查询返回 NXDOMAIN，说明域名尚未配置或尚未传播；因此暂时不能验证域名，HTTPS 也仍未开启。
+- 待用户在 DNS 服务商添加：主机名 `www`、类型 `CNAME`、目标 `bravo-189.github.io`（TTL 使用默认值即可）。若存在同名 A/AAAA/CNAME 冲突记录，需要先清理冲突。
+- DNS 生效后，继续核验域名、Pages 状态、HTTPS 强制开启和线上资源路径；不要在 DNS 未生效时反复修改 Pages 配置。
