@@ -75,6 +75,7 @@ while True:
             time.sleep(0.1)
         return False
 
+    @unittest.skipUnless(os.name == "nt", "Windows process lifecycle")
     def test_runtime_lifecycle_starts_once_and_stops_owned_processes(self):
         first = self.run_manager("start")
         self.assertTrue(
