@@ -1,0 +1,82 @@
+{
+  "summary": {
+    "requiredCount": 76,
+    "loadedCount": 76,
+    "coverageRate": 1.0,
+    "instrumentCount": 76,
+    "totalBars": 37676,
+    "pendingCount": 75,
+    "findingCount": 1
+  },
+  "providerDateRanges": {
+    "crypto-24x7": {
+      "earliest": "2026-06-06",
+      "latest": "2026-09-03",
+      "instrumentCount": 1
+    },
+    "us-equity": {
+      "earliest": "2024-09-03",
+      "latest": "2026-09-02",
+      "instrumentCount": 75
+    }
+  },
+  "intraday": {
+    "SPX": {
+      "interval": "5m",
+      "latestDate": "2026-09-03",
+      "barCount": 40,
+      "firstTimestamp": "2026-09-03T13:30:00Z",
+      "lastTimestamp": "2026-09-03T16:44:39Z",
+      "incompleteCount": 2
+    },
+    "NDX": {
+      "interval": "5m",
+      "latestDate": "2026-09-03",
+      "barCount": 40,
+      "firstTimestamp": "2026-09-03T13:30:00Z",
+      "lastTimestamp": "2026-09-03T16:44:38Z",
+      "incompleteCount": 2
+    },
+    "DJI": {
+      "interval": "5m",
+      "latestDate": "2026-09-03",
+      "barCount": 40,
+      "firstTimestamp": "2026-09-03T13:30:00Z",
+      "lastTimestamp": "2026-09-03T16:44:39Z",
+      "incompleteCount": 2
+    },
+    "RUT": {
+      "interval": "5m",
+      "latestDate": "2026-09-03",
+      "barCount": 37,
+      "firstTimestamp": "2026-09-03T13:30:00Z",
+      "lastTimestamp": "2026-09-03T16:29:35Z",
+      "incompleteCount": 0
+    },
+    "BTC": {
+      "interval": "2h",
+      "latestDate": "2026-09-03",
+      "barCount": 9,
+      "firstTimestamp": "2026-09-03T00:00:00Z",
+      "lastTimestamp": "2026-09-03T16:00:00Z",
+      "incompleteCount": 1
+    }
+  },
+  "notes": [
+    {
+      "check": "calendar_note",
+      "severity": "info",
+      "evidence": "crypto-24x7: 2026-06-06 → 2026-09-03 | us-equity: 2024-09-03 → 2026-09-02",
+      "message": "不同交易日历是预期差异；跨资产比较使用共同观察日，不补造缺失 K 线。"
+    }
+  ],
+  "findings": [
+    {
+      "check": "trend150_insufficient",
+      "severity": "medium",
+      "evidence": "BTC has 90 confirmed daily bars; MA150 unavailable",
+      "risk": "页面不应把数据不足的 MA150 趋势解释为上涨或下降",
+      "confidence": "high"
+    }
+  ]
+}
