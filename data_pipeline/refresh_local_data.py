@@ -90,7 +90,12 @@ def _daily_refresh_due(previous_market):
     now = _eastern_now()
     if now.weekday() >= 5 or now.hour < 17:
         return False
-    previous_date = (previous_market.get("metadata") or {}).get("dailyRefreshDate")
+    metadata = previous_market.get("metadata") or {}
+    previous_date = metadata.get("dailyRefreshDate")
+    # Older snapshots only had dailyRefreshDate. Treat those as due once after
+    # close so an initial pre-close bootstrap cannot suppress today's close run.
+    if not metadata.get("dailyRefreshAt"):
+        return True
     return previous_date != now.date().isoformat()
 
 
@@ -123,7 +128,9 @@ def refresh_once(output_dir, market_builder=None, stockbee_csv=None, fetched_at=
         else:
             market_snapshot = (market_builder or _build_live_market_snapshot)()
             if daily_refresh_date:
-                market_snapshot.setdefault("metadata", {})["dailyRefreshDate"] = daily_refresh_date
+                metadata = market_snapshot.setdefault("metadata", {})
+                metadata["dailyRefreshDate"] = daily_refresh_date
+                metadata["dailyRefreshAt"] = fetched_at
     except Exception as exc:
         raise RefreshSourceError("market", str(exc)) from exc
     if btc_only:
@@ -288,11 +295,13 @@ def main(argv=None):
     args = parser.parse_args(argv)
     while True:
         previous_market = _read_json(Path(args.output_dir) / "market_snapshot.json")
+        now = _eastern_now()
         daily_due = _daily_refresh_due(previous_market)
+        after_close = now.weekday() < 5 and now.hour >= 17
         status = run_refresh_attempt(
             args.output_dir,
             btc_only=not daily_due,
-            daily_refresh_date=_eastern_now().date().isoformat() if daily_due else None,
+            daily_refresh_date=now.date().isoformat() if daily_due and after_close else None,
         )
         print(f"refresh {status['status']} at {status['attemptedAt']}")
         if args.once:

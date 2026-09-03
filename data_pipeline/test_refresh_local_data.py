@@ -1,13 +1,27 @@
 import json
 import tempfile
 import unittest
+from datetime import datetime
 from pathlib import Path
 from unittest.mock import patch
+from zoneinfo import ZoneInfo
 
-from StockTest.data_pipeline.refresh_local_data import _write_json, refresh_once, run_refresh_attempt
+from StockTest.data_pipeline.refresh_local_data import _daily_refresh_due, _write_json, refresh_once, run_refresh_attempt
 
 
 class RefreshLocalDataTests(unittest.TestCase):
+
+    def test_preclose_bootstrap_is_followed_by_after_close_daily_refresh(self):
+        previous = {
+            "metadata": {"dailyRefreshDate": "2026-09-03"},
+            "instruments": {"SPY": {"latestDate": "2026-09-03"}},
+        }
+        before_close = datetime(2026, 9, 3, 16, 30, tzinfo=ZoneInfo("America/New_York"))
+        after_close = datetime(2026, 9, 3, 17, 5, tzinfo=ZoneInfo("America/New_York"))
+        with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=before_close):
+            self.assertFalse(_daily_refresh_due(previous))
+        with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=after_close):
+            self.assertTrue(_daily_refresh_due(previous))
 
     def test_write_json_replaces_snapshot_atomically(self):
         with tempfile.TemporaryDirectory() as directory:
