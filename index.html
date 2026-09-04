@@ -6,7 +6,7 @@
     <meta name="description" content="StockTest 美股盘后市场雷达网页原型" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <title>StockTest · 美股盘后雷达</title>
-    <link rel="stylesheet" href="styles.css?v=20260905-rsi-fix5" />
+    <link rel="stylesheet" href="styles.css?v=20260905-industry-d1" />
   </head>
   <body>
     <a class="skip-link" href="#market-overview">跳到主要内容</a>
@@ -97,8 +97,8 @@
             <div class="industry-layout">
               <div class="industry-leaderboard table-shell industry-table-scroll">
                 <table class="data-table industry-table">
-                  <colgroup><col class="col-rank"><col class="col-etf"><col class="col-industry"><col class="col-rsi"><col class="col-delta"><col class="col-delta"><col class="col-holdings"></colgroup>
-                  <thead><tr><th scope="col">#</th><th scope="col">ETF</th><th scope="col">行业</th><th scope="col"><button class="table-sort" type="button" data-industry-sort="rsi" aria-sort="descending">RSI14 <span class="sort-glyph" aria-hidden="true">↓</span></button></th><th scope="col"><button class="table-sort" type="button" data-industry-sort="d5" aria-sort="none">Δ5 <span class="sort-glyph" aria-hidden="true">↕</span></button></th><th scope="col"><button class="table-sort" type="button" data-industry-sort="d20" aria-sort="none">Δ20 <span class="sort-glyph" aria-hidden="true">↕</span></button></th><th scope="col">前十大</th></tr></thead>
+                  <colgroup><col class="col-rank"><col class="col-etf"><col class="col-industry"><col class="col-rsi"><col class="col-delta"><col class="col-delta"><col class="col-delta"><col class="col-holdings"></colgroup>
+                  <thead><tr><th scope="col">#</th><th scope="col">ETF</th><th scope="col">行业</th><th scope="col"><button class="table-sort" type="button" data-industry-sort="rsi" aria-sort="descending">RSI14 <span class="sort-glyph" aria-hidden="true">↓</span></button></th><th scope="col"><button class="table-sort" type="button" data-industry-sort="d1" aria-sort="none">Δ1 <span class="sort-glyph" aria-hidden="true">↕</span></button></th><th scope="col"><button class="table-sort" type="button" data-industry-sort="d5" aria-sort="none">Δ5 <span class="sort-glyph" aria-hidden="true">↕</span></button></th><th scope="col"><button class="table-sort" type="button" data-industry-sort="d20" aria-sort="none">Δ20 <span class="sort-glyph" aria-hidden="true">↕</span></button></th><th scope="col">前十大</th></tr></thead>
                   <tbody id="industry-table-body"></tbody>
                 </table>
                 <div class="pinned-row-cover" aria-hidden="true"></div>
@@ -208,6 +208,6 @@
     </aside>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="app.js?v=20260905-rsi-fix5"></script>
+    <script src="app.js?v=20260905-industry-d1"></script>
   </body>
 </html>

@@ -117,9 +117,10 @@
   const industries = industryDefs.map((entry, index) => {
     const [ticker, name, group] = entry;
     const rsi = clamp(71 - index * .42 + valueFrom(index + 11, 2, 8), 35, 76);
+    const d1 = +(valueFrom(index + 11, 2, 1.2) + (rsi - 50) * .03).toFixed(2);
     const d5 = +(valueFrom(index + 21, 3, 3.3) + (rsi - 50) * .07).toFixed(2);
     const d20 = +(valueFrom(index + 31, 6, 7) + (rsi - 50) * .18).toFixed(2);
-    return { ticker, name, group, rsi: +rsi.toFixed(1), d5, d20, momentum: clamp(Math.round(rsi * .84 + d5 * 1.8), 25, 96), trend150: index % 3 === 0 ? "上涨" : "下降", ma150: null };
+    return { ticker, name, group, rsi: +rsi.toFixed(1), d1, d5, d20, momentum: clamp(Math.round(rsi * .84 + d5 * 1.8), 25, 96), trend150: index % 3 === 0 ? "上涨" : "下降", ma150: null };
   });
   let themes = themeNames.map(([name, ticker], index) => {
     const total = clamp(Math.round(92 - index * 2.1 + valueFrom(index + 81, 3, 7)), 42, 96);
@@ -461,7 +462,7 @@
     const ordered = spy ? [spy, ...sorted.filter((row) => row.ticker !== "SPY")] : sorted;
     const visible = state.industryView === "top" ? ordered.slice(0, 15) : ordered;
     const body = $("#industry-table-body");
-    body.innerHTML = visible.length ? visible.map((row, index) => { const bars = marketBars[row.ticker]; const d5Delta = closeDelta(bars, 5); const d20Delta = closeDelta(bars, 20); return `<tr class="${row.ticker === "SPY" ? "is-pinned" : ""}"><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="etf-button tradingview-link" href="${tradingViewUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${row.ticker}">${row.ticker}</a><span class="sub-label">${row.ticker === "SPY" ? "标普 500 · 锁定" : ""}</span></td><td>${row.name}<span class="sub-label">${row.group}</span></td><td>${row.rsi.toFixed(1)}</td><td>${deltaDisplay(d5Delta)}</td><td>${deltaDisplay(d20Delta)}</td><td><button class="holding-link" type="button" data-etf="${row.ticker}">前十大 →</button></td></tr>`; }).join("") : `<tr><td colspan="7"><div class="drawer-empty">没有匹配的行业 ETF</div></td></tr>`;
+    body.innerHTML = visible.length ? visible.map((row, index) => { const bars = marketBars[row.ticker]; const d1Delta = closeDelta(bars, 1); const d5Delta = closeDelta(bars, 5); const d20Delta = closeDelta(bars, 20); return `<tr class="${row.ticker === "SPY" ? "is-pinned" : ""}"><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="etf-button tradingview-link" href="${tradingViewUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${row.ticker}">${row.ticker}</a><span class="sub-label">${row.ticker === "SPY" ? "标普 500 · 锁定" : ""}</span></td><td>${row.name}<span class="sub-label">${row.group}</span></td><td>${row.rsi.toFixed(1)}</td><td>${deltaDisplay(d1Delta)}</td><td>${deltaDisplay(d5Delta)}</td><td>${deltaDisplay(d20Delta)}</td><td><button class="holding-link" type="button" data-etf="${row.ticker}">前十大 →</button></td></tr>`; }).join("") : `<tr><td colspan="8"><div class="drawer-empty">没有匹配的行业 ETF</div></td></tr>`;
     $("#industry-view-meta").textContent = `显示 ${visible.length} / ${filtered.length}`;
     const matrix = $("#industry-matrix");
     matrix.hidden = true;
@@ -633,6 +634,7 @@
       const industry = industries.find((row) => row.ticker === ticker);
       if (industry && latest) {
         industry.rsi = rsi14FromBars(bars) ?? industry.rsi;
+        industry.d1 = closeChange(bars, 1) ?? industry.d1;
         industry.d5 = closeChange(bars, 5) ?? industry.d5;
         industry.d20 = closeChange(bars, 20) ?? industry.d20;
         industry.momentum = clamp(Math.round(industry.rsi * .84 + industry.d5 * 1.8), 25, 96);
