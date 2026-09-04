@@ -64,7 +64,7 @@
     ["MSFT", "Microsoft"], ["NVDA", "NVIDIA"], ["AAPL", "Apple"], ["AMZN", "Amazon"], ["META", "Meta Platforms"], ["GOOGL", "Alphabet"], ["AVGO", "Broadcom"], ["LLY", "Eli Lilly"], ["JPM", "JPMorgan Chase"], ["XOM", "Exxon Mobil"], ["V", "Visa"], ["UNH", "UnitedHealth"], ["COST", "Costco"], ["CAT", "Caterpillar"], ["NEE", "NextEra Energy"], ["GE", "GE Aerospace"], ["RTX", "RTX Corp"], ["CRM", "Salesforce"], ["ORCL", "Oracle"], ["AMD", "AMD"], ["LIN", "Linde"], ["WMT", "Walmart"], ["PG", "Procter & Gamble"], ["JNJ", "Johnson & Johnson"], ["HD", "Home Depot"], ["PLTR", "Palantir"], ["TSLA", "Tesla"], ["NFLX", "Netflix"], ["ADBE", "Adobe"], ["GS", "Goldman Sachs"]
   ];
 
-  const state = { sectorMode: "d1", sectorSort: { key: "d1", direction: "desc" }, sectorStatus: "all", industryView: "top", industrySort: { key: "rsi", direction: "desc" }, rsiRankingSort: { top: { key: "rsi", direction: "desc" }, bottom: { key: "rsi", direction: "asc" } }, breadthMetric: "ratio5", query: "", drawerTicker: null, toastTimer: null, rsiHistorySelection: { sector: "SPY", industry: "SPY" }, lastFullRefreshAt: null };
+  const state = { sectorMode: "d1", sectorSort: { key: "d1", direction: "desc" }, industryView: "top", industrySort: { key: "rsi", direction: "desc" }, rsiRankingSort: { top: { key: "rsi", direction: "desc" }, bottom: { key: "rsi", direction: "asc" } }, breadthMetric: "ratio5", query: "", drawerTicker: null, toastTimer: null, rsiHistorySelection: { sector: "SPY", industry: "SPY" }, lastFullRefreshAt: null };
   const $ = (selector, root) => (root || document).querySelector(selector);
   const $$ = (selector, root) => Array.from((root || document).querySelectorAll(selector));
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -406,7 +406,7 @@
   function tradingViewIndexUrl(ticker) { const symbol = tradingViewIndexSymbols[ticker] || ticker; return `https://tw.tradingview.com/chart/e2o5U28E/?symbol=${encodeURIComponent(symbol)}`; }
   function sectorRows() {
     const query = state.query.toLowerCase();
-    const rows = sectors.filter((row) => (!query || `${row.ticker} ${row.name}`.toLowerCase().includes(query)) && (row.ticker === "SPY" || state.sectorStatus === "all" || row.trend === state.sectorStatus)).slice().sort((a, b) => compareMetricRows(a, b, state.sectorSort.key, state.sectorSort.direction));
+    const rows = sectors.filter((row) => !query || `${row.ticker} ${row.name}`.toLowerCase().includes(query)).slice().sort((a, b) => compareMetricRows(a, b, state.sectorSort.key, state.sectorSort.direction));
     const spy = rows.find((row) => row.ticker === "SPY");
     return spy ? [spy, ...rows.filter((row) => row.ticker !== "SPY")] : rows;
   }
@@ -421,7 +421,7 @@
   }
   function renderSectors() {
     const body = $("#sector-table-body"); const rows = sectorRows();
-    body.innerHTML = rows.length ? rows.map((row, index) => { const tone = row.trend === "改善" ? "positive" : row.trend === "转弱" ? "negative" : "neutral"; const trendTone = row.trend150 === "上涨" ? "positive" : row.trend150 === "下降" ? "negative" : "neutral"; const bars = marketBars[row.ticker]; const d1Delta = closeDelta(bars, 1); const d5Delta = closeDelta(bars, 5); const d20Delta = closeDelta(bars, 20); return `<tr class="${row.ticker === "SPY" ? "is-pinned" : ""}"><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="etf-button tradingview-link" href="${tradingViewUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${row.ticker}">${row.ticker}</a><span class="sub-label">${row.name}${row.ticker === "SPY" ? " · 锁定" : ""}</span></td><td><span class="trend-label is-${trendTone}" title="最新收盘价相对 MA150">${row.trend150 || "数据不足"}</span></td><td>${row.rsi.toFixed(1)}</td><td class="${classFor(d1Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d1Delta)}</td><td class="${classFor(d5Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d5Delta)}</td><td class="${classFor(d20Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d20Delta)}</td><td><span class="status-label is-${tone}">${row.trend}</span></td></tr>`; }).join("") : `<tr><td colspan="8"><div class="drawer-empty">没有匹配的板块或 ETF</div></td></tr>`;
+    body.innerHTML = rows.length ? rows.map((row, index) => { const bars = marketBars[row.ticker]; const d1Delta = closeDelta(bars, 1); const d5Delta = closeDelta(bars, 5); const d20Delta = closeDelta(bars, 20); return `<tr class="${row.ticker === "SPY" ? "is-pinned" : ""}"><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="etf-button tradingview-link" href="${tradingViewUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${row.ticker}">${row.ticker}</a><span class="sub-label">${row.name}${row.ticker === "SPY" ? " · 锁定" : ""}</span></td><td>${row.rsi.toFixed(1)}</td><td class="${classFor(d1Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d1Delta)}</td><td class="${classFor(d5Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d5Delta)}</td><td class="${classFor(d20Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d20Delta)}</td><td><button class="holding-link" type="button" data-etf="${row.ticker}">前十大 →</button></td></tr>`; }).join("") : `<tr><td colspan="7"><div class="drawer-empty">没有匹配的板块或 ETF</div></td></tr>`;
     updateSectorSortButtons();
     requestAnimationFrame(syncPinnedRowCovers);
   }
@@ -432,7 +432,7 @@
     const ordered = spy ? [spy, ...sorted.filter((row) => row.ticker !== "SPY")] : sorted;
     const visible = state.industryView === "top" ? ordered.slice(0, 15) : ordered;
     const body = $("#industry-table-body");
-    body.innerHTML = visible.length ? visible.map((row, index) => { const status = row.d5 > .18 ? "改善" : row.d5 < -.18 ? "转弱" : "盘整"; const tone = status === "改善" ? "positive" : status === "转弱" ? "negative" : "neutral"; const trendTone = row.trend150 === "上涨" ? "positive" : row.trend150 === "下降" ? "negative" : "neutral"; const bars = marketBars[row.ticker]; const d5Delta = closeDelta(bars, 5); const d20Delta = closeDelta(bars, 20); return `<tr class="${row.ticker === "SPY" ? "is-pinned" : ""}"><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="etf-button tradingview-link" href="${tradingViewUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${row.ticker}">${row.ticker}</a><span class="sub-label">${row.ticker === "SPY" ? "标普 500 · 锁定" : ""}</span></td><td>${row.name}<span class="sub-label">${row.group}</span></td><td><span class="trend-label is-${trendTone}" title="最新收盘价相对 MA150">${row.trend150 || "数据不足"}</span></td><td>${row.rsi.toFixed(1)}</td><td class="${classFor(d5Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d5Delta)}</td><td class="${classFor(d20Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d20Delta)}</td><td><button class="holding-link" type="button" data-etf="${row.ticker}">前十大 →</button></td><td><span class="status-label is-${tone}">${status}</span></td></tr>`; }).join("") : `<tr><td colspan="9"><div class="drawer-empty">没有匹配的行业 ETF</div></td></tr>`;
+    body.innerHTML = visible.length ? visible.map((row, index) => { const bars = marketBars[row.ticker]; const d5Delta = closeDelta(bars, 5); const d20Delta = closeDelta(bars, 20); return `<tr class="${row.ticker === "SPY" ? "is-pinned" : ""}"><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="etf-button tradingview-link" href="${tradingViewUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${row.ticker}">${row.ticker}</a><span class="sub-label">${row.ticker === "SPY" ? "标普 500 · 锁定" : ""}</span></td><td>${row.name}<span class="sub-label">${row.group}</span></td><td>${row.rsi.toFixed(1)}</td><td class="${classFor(d5Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d5Delta)}</td><td class="${classFor(d20Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d20Delta)}</td><td><button class="holding-link" type="button" data-etf="${row.ticker}">前十大 →</button></td></tr>`; }).join("") : `<tr><td colspan="7"><div class="drawer-empty">没有匹配的行业 ETF</div></td></tr>`;
     $("#industry-view-meta").textContent = `显示 ${visible.length} / ${filtered.length}`;
     const matrix = $("#industry-matrix");
     matrix.hidden = true;
@@ -444,9 +444,6 @@
     const themeRoot = $("#theme-grid"); if (!themeRoot) return;
     const query = state.query.toLowerCase(); const visible = themes.filter((theme) => !query || `${theme.ticker} ${theme.name}`.toLowerCase().includes(query));
     themeRoot.innerHTML = visible.length ? visible.map((theme) => `<article class="theme-card"><div class="theme-top"><span class="theme-rank">候选 ${String(theme.rank).padStart(2, "0")}</span><span class="theme-score">${theme.analysisStatus === "ready" ? theme.total : "待研究"}</span></div><div class="theme-name">${theme.name}</div><div class="theme-ticker">${theme.ticker} · ${theme.memberEtfs ? theme.memberEtfs.length : 1} 个 ETF · 候选集</div><div class="factor-list">${themeFactorDefs.map(([key, label]) => `<div class="factor-line"><span>${label}</span><i><span style="width:${theme.factors[key]}%"></span></i><b>${theme.factors[key]}</b></div>`).join("")}</div></article>`).join("") : `<div class="drawer-empty">没有匹配的主题</div>`;
-  }
-  function renderHoldings() {
-    $("#holdings-strip").innerHTML = sectors.filter((sector) => sector.ticker !== "SPY").slice(0, 12).map((sector) => `<button class="holding-button" type="button" data-etf="${sector.ticker}"><span class="ticker">${sector.ticker}</span><small>${sector.name} · 前十大持仓</small><span class="holding-arrow">查看详情 →</span></button>`).join("");
   }
   function renderStockbeeMomentum() {
     const meta = $("#stockbee-momentum-meta"); const body = $("#stockbee-momentum-body");
@@ -624,9 +621,6 @@
       staleBadge.title = pendingBars.length ? pendingBars.map((item) => `${item.symbol} ${item.date}`).join("、") : "";
     }
     renderLocalMarketAnalysis();
-    const holdingsMeta = marketMeta.holdings || {};
-    const holdingsMetaLabel = $("#holdings-meta");
-    if (holdingsMetaLabel) holdingsMetaLabel.textContent = holdingsMeta.loadedCount ? `真实持仓 · ${holdingsMeta.loadedCount}/${holdingsMeta.requestedCount} · 日更` : "持仓数据待接入";
     holdings = snapshot.holdings && typeof snapshot.holdings === "object" ? snapshot.holdings : holdings;
     const sidebarNote = $(".sidebar-note");
     if (sidebarNote) sidebarNote.innerHTML = "本地快照模式<br />不连接实时行情";
@@ -642,7 +636,7 @@
       const snapshot = await response.json();
       if (!applyMarketSnapshot(snapshot)) return;
       const hoveredTicker = $(".index-card:hover .sparkline")?.dataset.sparkTicker;
-      renderIndices(); renderMarketOverview(); renderSectors(); renderIndustries(); renderRsiHistoryControls(); renderRsiGainers(); renderHoldings(); renderStockbeeMomentum();
+      renderIndices(); renderMarketOverview(); renderSectors(); renderIndustries(); renderRsiHistoryControls(); renderRsiGainers(); renderStockbeeMomentum();
       if (hoveredTicker) {
         const hoveredCanvas = $$(".sparkline", $("#index-grid")).find((canvas) => canvas.dataset.sparkTicker === hoveredTicker);
         if (hoveredCanvas) updateIndexHoverBubble(hoveredCanvas.closest(".index-card"));
@@ -768,7 +762,7 @@
     const items = [["板块强势", topSectors], ["行业强势", topIndustries], ["Stockbee 宽度", `${breadthLabel} · 5 日上涨／下跌比 ${Number(latestBreadth.ratio5 || 0).toFixed(2)}`]];
     $$(".briefing-item").forEach((node, index) => { const item = items[index]; if (!item) return; const strong = $("strong", node); const text = $("p", node); if (strong) strong.textContent = item[0]; if (text) text.textContent = item[1]; });
   }
-  function renderAll() { renderIndices(); renderMarketOverview(); renderSectors(); renderIndustries(); renderRsiHistoryControls(); renderRsiGainers(); renderThemes(); renderHoldings(); renderStockbeeMomentum(); renderBreadth(); renderLocalMarketAnalysis(); updateModeButtons(); }
+  function renderAll() { renderIndices(); renderMarketOverview(); renderSectors(); renderIndustries(); renderRsiHistoryControls(); renderRsiGainers(); renderThemes(); renderStockbeeMomentum(); renderBreadth(); renderLocalMarketAnalysis(); updateModeButtons(); }
   function updateSectorSortButtons() {
     $$('[data-sector-sort]').forEach((button) => { const active = button.dataset.sectorSort === state.sectorSort.key; const glyph = button.querySelector(".sort-glyph"); button.classList.toggle("is-active", active); button.setAttribute("aria-sort", active ? (state.sectorSort.direction === "asc" ? "ascending" : "descending") : "none"); if (glyph) glyph.textContent = active ? (state.sectorSort.direction === "asc" ? "↑" : "↓") : "↕"; });
   }
@@ -843,7 +837,6 @@
     $(`#${kind}-rsi-toggle`).addEventListener("click", (event) => { const button = event.currentTarget; const table = $(`#${kind}-rsi-history`); const expanded = button.getAttribute("aria-expanded") === "true"; button.setAttribute("aria-expanded", String(!expanded)); button.textContent = expanded ? "展开" : "收起"; table.hidden = expanded; if (!expanded) renderRsiHistory(kind); });
   });
   $$('[data-breadth-metric]').forEach((button) => button.addEventListener("click", () => { state.breadthMetric = button.dataset.breadthMetric; renderBreadth(); }));
-  $("#sector-status-filter").addEventListener("change", (event) => { state.sectorStatus = event.target.value; renderSectors(); showToast(state.sectorStatus === "all" ? "已显示全部板块" : `已筛选状态：${state.sectorStatus}（SPY 固定首行）`); });
   $("#theme-toggle").addEventListener("click", () => setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
   $("#breadth-toggle").addEventListener("click", (event) => { const table = $("#breadth-data"); const expanded = event.currentTarget.getAttribute("aria-expanded") === "true"; event.currentTarget.setAttribute("aria-expanded", String(!expanded)); event.currentTarget.textContent = expanded ? "展开半年数据" : "收起半年数据"; table.hidden = expanded; if (!expanded) setupBreadthScroll(); });
   $("#drawer-close").addEventListener("click", closeDrawer); $("#drawer-backdrop").addEventListener("click", closeDrawer);

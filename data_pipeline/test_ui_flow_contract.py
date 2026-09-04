@@ -17,7 +17,8 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn("板块与权重股", self.page)
         self.assertNotIn('data-target="holdings"', self.page)
         self.assertEqual(self.page.count('id="holdings"'), 0)
-        self.assertIn('id="holdings-strip"', self.page)
+        self.assertIn('<th scope="col">前十大</th>', self.page)
+        self.assertIn('class="holding-link"', self.app)
 
     def test_long_term_page_entry_and_empty_shell_exist(self):
         self.assertIn('href="long-term.html"', self.page)
@@ -39,15 +40,14 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn('data-sector-sort="d1"', self.page)
         self.assertIn('data-sector-sort="d5"', self.page)
         self.assertIn('data-sector-sort="d20"', self.page)
-        self.assertIn('趋势（MA150）', self.page)
-        self.assertIn('id="sector-status-filter"', self.page)
-        self.assertIn('class="status-filter"', self.page)
-        self.assertIn('state.sectorStatus', self.app)
-        self.assertIn('class="status-label is-${tone}"', self.app)
+        self.assertNotIn('趋势（MA150）', self.page)
+        self.assertNotIn('id="sector-status-filter"', self.page)
+        self.assertNotIn('state.sectorStatus', self.app)
+        self.assertIn('data-etf="${row.ticker}">前十大 →', self.app)
         self.assertNotIn('data-status-etf', self.app)
         self.assertNotIn('class="status-select', self.app)
-        self.assertIn('ticker !== "SPY"', self.app)
-        self.assertIn('slice(0, 12)', self.app)
+        self.assertNotIn('id="holdings-strip"', self.page)
+        self.assertNotIn('function renderHoldings()', self.app)
 
     def test_industry_view_switch_sorting_and_holdings_action(self):
         for key in ("rsi", "d5", "d20"):
@@ -126,14 +126,13 @@ class UiFlowContractTests(unittest.TestCase):
     def test_sector_and_industry_tables_have_internal_scroll_and_pinned_spy_rows(self):
         self.assertIn('class="table-shell sector-table-scroll"', self.page)
         self.assertIn('class="industry-leaderboard table-shell industry-table-scroll"', self.page)
-        self.assertIn('<colgroup><col class="col-rank"><col class="col-etf"><col class="col-trend">', self.page)
-        self.assertIn('<colgroup><col class="col-rank"><col class="col-etf"><col class="col-industry"><col class="col-trend"><col class="col-rsi"><col class="col-delta"><col class="col-delta"><col class="col-holdings"><col class="col-status"></colgroup>', self.page)
-        self.assertIn('<th scope="col">状态</th>', self.page)
-        self.assertIn('<td colspan="9">', self.app)
-        self.assertIn('趋势（MA150）', self.page)
-        self.assertIn('trend150', self.app)
-        self.assertIn('class="trend-label is-${trendTone}"', self.app)
-        self.assertIn('const status = row.d5 > .18 ? "改善"', self.app)
+        self.assertIn('<colgroup><col class="col-rank"><col class="col-etf"><col class="col-rsi"><col class="col-delta"><col class="col-delta"><col class="col-delta"><col class="col-holdings"></colgroup>', self.page)
+        self.assertIn('<colgroup><col class="col-rank"><col class="col-etf"><col class="col-industry"><col class="col-rsi"><col class="col-delta"><col class="col-delta"><col class="col-holdings"></colgroup>', self.page)
+        self.assertNotIn('<th scope="col">状态</th>', self.page)
+        self.assertIn('<td colspan="7">', self.app)
+        self.assertNotIn('趋势（MA150）', self.page)
+        self.assertNotIn('class="trend-label is-${trendTone}"', self.app)
+        self.assertNotIn('const status = row.d5 > .18 ? "改善"', self.app)
         self.assertIn('class="${row.ticker === "SPY" ? "is-pinned" : ""}"', self.app)
         self.assertIn('top: var(--table-header-height, 40px)', self.styles)
         self.assertIn('shell.style.setProperty("--table-header-height"', self.app)
@@ -226,7 +225,7 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn('DTCR: "NASDAQ"', self.app)
         self.assertIn('class="etf-button tradingview-link"', self.app)
         self.assertIn('target="_blank" rel="noopener noreferrer"', self.app)
-        self.assertIn('class="holding-button" type="button" data-etf=', self.app)
+        self.assertIn('class="holding-link" type="button" data-etf=', self.app)
 
     def test_industry_etf_links_open_tradingview_while_holdings_keep_drawer_hooks(self):
         self.assertIn('aria-label="在 TradingView 查看 ${row.ticker}"', self.app)
