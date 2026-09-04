@@ -6,7 +6,7 @@ from pathlib import Path
 from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
-from StockTest.data_pipeline.refresh_local_data import _daily_refresh_due, _write_json, refresh_once, run_refresh_attempt
+from StockTest.data_pipeline.refresh_local_data import _daily_refresh_due, _last_us_session_date, _write_json, refresh_once, run_refresh_attempt
 
 
 class RefreshLocalDataTests(unittest.TestCase):
@@ -22,6 +22,20 @@ class RefreshLocalDataTests(unittest.TestCase):
             self.assertFalse(_daily_refresh_due(previous))
         with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=after_close):
             self.assertTrue(_daily_refresh_due(previous))
+
+    def test_weekend_catches_up_missed_friday_daily_refresh(self):
+        saturday = datetime(2026, 9, 5, 10, 0, tzinfo=ZoneInfo("America/New_York"))
+        previous = {"metadata": {"dailyRefreshDate": "2026-09-03", "dailyRefreshAt": "2026-09-03T21:05:00Z"}, "instruments": {"SPY": {"latestDate": "2026-09-03"}}}
+        with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=saturday):
+            self.assertEqual(_last_us_session_date(), "2026-09-04")
+            self.assertTrue(_daily_refresh_due(previous))
+
+    def test_weekend_does_not_repeat_completed_friday_refresh(self):
+        saturday = datetime(2026, 9, 5, 10, 0, tzinfo=ZoneInfo("America/New_York"))
+        previous = {"metadata": {"dailyRefreshDate": "2026-09-04", "dailyRefreshAt": "2026-09-04T21:05:00Z"}, "instruments": {"SPY": {"latestDate": "2026-09-04"}}}
+        with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=saturday):
+            self.assertEqual(_last_us_session_date(), "2026-09-04")
+            self.assertFalse(_daily_refresh_due(previous))
 
     def test_write_json_replaces_snapshot_atomically(self):
         with tempfile.TemporaryDirectory() as directory:

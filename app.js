@@ -216,21 +216,10 @@
     return closes.map((close, index) => { if (!Number.isFinite(close)) return previous; if (index === 0) { previous = close; return close; } previous = (close - previous) * smoothing + previous; return previous; });
   }
   function calendarBarsForDisplay(bars, calendar) {
-    const source = (Array.isArray(bars) ? bars : []).filter((bar) => /^\d{4}-\d{2}-\d{2}$/.test(String(bar.date))).slice(-MONTH_TRADING_DAYS).sort((a, b) => String(a.date).localeCompare(String(b.date)));
-    if (calendar !== "us-equity" || source.length < 2) return source;
-    const byDate = new Map(source.map((bar) => [String(bar.date), bar]));
-    const start = new Date(`${source[0].date}T00:00:00Z`); const end = new Date(`${source[source.length - 1].date}T00:00:00Z`);
-    // If the latest US bar is Friday, show the immediately following weekend as
-    // a calendar gap too, without inventing an additional trading session.
-    if (end.getUTCDay() === 5) end.setUTCDate(end.getUTCDate() + 2);
-    const result = []; let previous = null;
-    for (const cursor = new Date(start); cursor <= end; cursor.setUTCDate(cursor.getUTCDate() + 1)) {
-      const date = cursor.toISOString().slice(0, 10); const real = byDate.get(date);
-      if (real) { result.push(real); previous = real; continue; }
-      const day = cursor.getUTCDay();
-      if (previous && (day === 0 || day === 6)) result.push({ date, open: previous.close, high: previous.close, low: previous.close, close: previous.close, volume: 0, status: "weekend" });
-    }
-    return result;
+    // Only render bars that came from the source snapshot. US index feeds do
+    // not normally publish Saturday/Sunday sessions; never synthesize them.
+    // If a future provider supplies genuine weekend bars, they pass through.
+    return (Array.isArray(bars) ? bars : []).filter((bar) => /^\d{4}-\d{2}-\d{2}$/.test(String(bar.date))).slice(-MONTH_TRADING_DAYS).sort((a, b) => String(a.date).localeCompare(String(b.date)));
   }
   function drawBubbleCandlestickChart(canvas, bars, calendar) {
     if (!canvas || !Array.isArray(bars) || !bars.length) return;
@@ -247,21 +236,15 @@
     const stepX = width / data.length; const candleWidth = Math.max(4, Math.min(14, stepX * .52));
     data.forEach((bar, index) => {
       const x = index * stepX + stepX / 2;
-      if (bar.status === "weekend") {
-        ctx.globalAlpha = .1; ctx.fillStyle = cssVar("--amber"); ctx.fillRect(index * stepX, plotTop, stepX, plotBottom - plotTop); ctx.globalAlpha = 1;
-        ctx.fillStyle = muted; ctx.font = "9px IBM Plex Mono, monospace"; ctx.textAlign = "center"; ctx.textBaseline = "alphabetic"; ctx.fillText("周末", x, plotBottom + 15);
-        return;
-      }
       const open = Number(bar.open); const close = Number(bar.close); const high = Number(bar.high); const low = Number(bar.low); if (![open, close, high, low].every(Number.isFinite)) return;
       const rising = close >= open; const color = rising ? upColor : downColor; ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 1.1;
       ctx.beginPath(); ctx.moveTo(x, mapY(high)); ctx.lineTo(x, mapY(low)); ctx.stroke();
       const bodyTop = Math.min(mapY(open), mapY(close)); const bodyHeight = Math.max(2, Math.abs(mapY(close) - mapY(open))); ctx.globalAlpha = .86; ctx.fillRect(x - candleWidth / 2, bodyTop, candleWidth, bodyHeight); ctx.globalAlpha = 1;
     });
     const drawEma = (period, color) => {
-      const realBars = data.filter((bar) => bar.status !== "weekend"); const series = emaSeries(realBars, period); if (!series.length) return;
-      const byDate = new Map(realBars.map((bar, index) => [bar.date, series[index]]));
-      ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineJoin = "round"; ctx.lineCap = "round"; ctx.beginPath(); let drawing = false;
-      data.forEach((bar, index) => { if (bar.status === "weekend") { drawing = false; return; } const value = byDate.get(bar.date); if (!Number.isFinite(value)) return; const x = index * stepX + stepX / 2; const y = mapY(value); if (!drawing) { ctx.moveTo(x, y); drawing = true; } else ctx.lineTo(x, y); });
+      const series = emaSeries(data, period); if (!series.length) return;
+      ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineJoin = "round"; ctx.lineCap = "round"; ctx.beginPath();
+      series.forEach((value, index) => { const x = index * stepX + stepX / 2; const y = mapY(value); if (!index) ctx.moveTo(x, y); else ctx.lineTo(x, y); });
       ctx.stroke();
     };
     drawEma(9, ema9Color); drawEma(21, ema21Color);
@@ -344,9 +327,10 @@
     const visibleBars = calendarBarsForDisplay(chartBars, calendar);
     bubble.querySelector(".bubble-range").textContent = visibleBars.length > 1 ? `${visibleBars[0].date} — ${visibleBars[visibleBars.length - 1].date}` : (item && base ? `${base.date} — ${item.date}` : "近 1 个月日线");
     const bubbleTitle = bubble.querySelector(".bubble-heading strong");
-    if (bubbleTitle) bubbleTitle.textContent = calendar === "us-equity" ? "放大 · 近 1 个月日线 K 线（含周末空档）" : "放大 · 近 1 个月日线 K 线（24/7）";
+    const hasWeekendBars = visibleBars.some((bar) => { const day = new Date(`${bar.date}T00:00:00Z`).getUTCDay(); return day === 0 || day === 6; });
+    if (bubbleTitle) bubbleTitle.textContent = calendar === "us-equity" ? (hasWeekendBars ? "放大 · 近 1 个月日线 K 线（含周末数据）" : "放大 · 近 1 个月美股交易日日线 K 线") : "放大 · 近 1 个月日线 K 线（24/7）";
     const refreshNote = bubble.querySelector(".bubble-refresh");
-    if (refreshNote) refreshNote.textContent = pending ? (calendar === "us-equity" ? "盘中价格每小时刷新 · 含未收盘日线 · 周末无成交" : "盘中价格每小时刷新 · 含未收盘日线") : latestIntraday ? (calendar === "us-equity" ? "盘中价格每小时刷新 · 周末无成交" : "盘中价格每小时刷新 · 24/7") : "等待盘中快照";
+    if (refreshNote) refreshNote.textContent = pending ? (calendar === "us-equity" ? "盘中价格每小时刷新 · 含未收盘日线" : "盘中价格每小时刷新 · 含未收盘日线") : latestIntraday ? (calendar === "us-equity" ? (hasWeekendBars ? "盘中价格每小时刷新 · 周末数据源已提供" : "盘中价格每小时刷新 · 美股周末无指数成交") : "盘中价格每小时刷新 · 24/7") : "等待盘中快照";
     bubble.dataset.pendingDate = pending?.date || "";
     drawBubbleCandlestickChart(chart, chartBars, calendar);
     bubble.hidden = false;
@@ -358,6 +342,8 @@
     const showBubble = () => updateIndexHoverBubble(card);
     const hideBubble = () => { const bubble = card.__hoverBubble || card.querySelector(".index-hover-bubble"); if (bubble) bubble.hidden = true; };
     const openTradingView = () => { const ticker = card.dataset.indexTicker; if (ticker) window.open(tradingViewIndexUrl(ticker), "_blank", "noopener,noreferrer"); };
+    card.addEventListener("focus", showBubble);
+    card.addEventListener("blur", hideBubble);
     card.addEventListener("mouseenter", showBubble);
     card.addEventListener("mouseleave", hideBubble);
     canvas.addEventListener("focus", showBubble);
@@ -406,7 +392,7 @@
       const change = Number.isFinite(d1) ? d1 : fallbackChange;
       const displayPrice = Number.isFinite(price) ? formatPrice(price) : formatPrice(String(fallbackPrice).replace(/,/g, ""));
       const latestIntraday = marketIntradayBars[ticker]?.[marketIntradayBars[ticker].length - 1]; const incomplete = latestIntraday?.status === "incomplete";
-      const hasIntraday = Array.isArray(marketIntradayBars[ticker]) && marketIntradayBars[ticker].length > 0; const mode = ticker === "BTC" ? "当日 · 2H（24H）K 线" : hasIntraday ? "当日 · 5M 面积图" : "近 1 个月日线（周末含空档）"; const weekendNow = ticker !== "BTC" && !hasIntraday && [0, 6].includes(new Date().getDay()); const note = incomplete ? "未收盘 · 悬停放大近 1 个月" : weekendNow ? "周末无成交 · 沿用最近收盘" : "悬停放大近 1 个月"; const aria = `${name} ${ticker === "BTC" ? "当日 2 小时 K 线" : hasIntraday ? "当日 5 分钟折线面积图" : "近 1 个月日线折线图（周末含空档）"}${incomplete ? "（含未收盘柱）" : ""}`;
+      const hasIntraday = Array.isArray(marketIntradayBars[ticker]) && marketIntradayBars[ticker].length > 0; const mode = ticker === "BTC" ? "当日 · 2H（24H）K 线" : hasIntraday ? "当日 · 5M 面积图" : "近 1 个月日线"; const weekendNow = ticker !== "BTC" && !hasIntraday && [0, 6].includes(new Date().getDay()); const note = incomplete ? "未收盘 · 悬停放大近 1 个月" : weekendNow ? "周末无成交 · 沿用最近收盘" : "悬停放大近 1 个月"; const aria = `${name} ${ticker === "BTC" ? "当日 2 小时 K 线" : hasIntraday ? "当日 5 分钟折线面积图" : "近 1 个月日线折线图"}${incomplete ? "（含未收盘柱）" : ""}`;
       const rsi = rsi14FromBars(bars);
       return `<article class="index-card" tabindex="0" role="link" data-index-ticker="${ticker}" aria-label="在 TradingView 查看 ${name}（${ticker}）"><div class="index-card-top"><div><div class="ticker">${ticker}</div><div class="index-name">${name}</div></div><span class="index-change ${classFor(change)}">${signed(change)}</span></div><div class="index-price">${displayPrice} <span class="index-rsi">RSI ${rsi == null ? "—" : rsi.toFixed(1)}</span></div><canvas class="sparkline" tabindex="0" data-spark-ticker="${ticker}" data-spark-seed="${index + 40}" data-spark-change="${change}" aria-label="${aria}"></canvas><div class="sparkline-caption"><span class="sparkline-mode">${mode}</span><span class="sparkline-note${incomplete ? " is-incomplete" : ""}">${note}</span></div><div class="index-overview-metrics"><span><small class="overview-index-delta-label">1日</small><b class="${classFor(d1Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d1Delta)}</b></span><span><small class="overview-index-delta-label">5日</small><b class="${classFor(d5Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d5Delta)}</b></span><span><small class="overview-index-delta-label">20日</small><b class="${classFor(d20Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d20Delta)}</b></span></div><div class="index-hover-bubble" role="tooltip" hidden><div class="bubble-heading"><div class="bubble-title-group"><strong>放大 · 近 1 个月日线 K 线</strong><span class="bubble-price">价格 —</span></div><span class="bubble-change">—</span></div><div class="bubble-legend" aria-label="图例"><span><i class="legend-candle"></i>K 线</span><span><i class="legend-ema9"></i>EMA9</span><span><i class="legend-ema21"></i>EMA21</span></div><canvas class="bubble-sparkline" width="640" height="220" aria-hidden="true"></canvas><div class="bubble-meta"><span class="bubble-range">近 1 个月日线</span><span class="bubble-refresh">等待盘中快照</span><span>移开关闭</span></div></div></article>`;
     }).join("");
@@ -429,7 +415,11 @@
     const latestBreadth = breadth.slice().sort((a, b) => String(a.date).localeCompare(String(b.date))).at(-1) || {};
     const breadthCards = [["T2108", Number(latestBreadth.t2108), "%", "neutral", "40MA 以上股票占比"], ["4%上涨 · 今日", Number(latestBreadth.up), "", "positive", "今日涨幅 ≥ 4% 的股票数"], ["4%下跌 · 今日", Number(latestBreadth.down), "", "negative", "今日跌幅 ≤ −4% 的股票数"], ["5日比率", Number(latestBreadth.ratio5), "", "neutral", "5 日上涨 / 下跌比"], ["10日比率", Number(latestBreadth.ratio10), "", "neutral", "10 日上涨 / 下跌比"], ["25%上涨 · 季度", Number(latestBreadth.up25Quarter), "", "positive", "季度涨幅 ≥ 25% 的股票数"], ["25%下跌 · 季度", Number(latestBreadth.down25Quarter), "", "negative", "季度跌幅 ≤ −25% 的股票数"]];
     breadthRoot.innerHTML = breadthCards.map(([label, value, suffix, tone, description]) => `<article class="market-overview-breadth-card"><small>${label}</small><strong class="${tone}">${Number.isFinite(value) ? value.toLocaleString("en-US", { minimumFractionDigits: suffix === "%" ? 1 : value % 1 ? 2 : 0, maximumFractionDigits: suffix === "%" ? 1 : value % 1 ? 2 : 0 }) : "—"}${suffix}</strong><span class="breadth-card-description">${description}</span><span class="breadth-card-source">Stockbee 市场宽度</span></article>`).join("");
-    if (meta) meta.textContent = latestBreadth.date ? `最新交易日 ${latestBreadth.date} · 变化列为绝对价格差` : "最新交易日 · 变化列为绝对价格差";
+    if (meta) {
+      const indexDate = DashboardData.metadata.dataDate || "";
+      const breadthDate = latestBreadth.date || "";
+      meta.textContent = indexDate && breadthDate && indexDate !== breadthDate ? `指数最新确认日 ${indexDate} · 市场宽度最新日 ${breadthDate} · 变化列为绝对价格差` : `最新交易日 ${indexDate || breadthDate || "—"} · 变化列为绝对价格差`;
+    }
     renderRsiRankings();
   }
   function sectorScore(sector) { return state.sectorMode === "d1" ? sector.d1 : state.sectorMode === "d5" ? sector.d5 : sector.d20; }

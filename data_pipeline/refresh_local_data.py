@@ -5,7 +5,7 @@ import json
 import os
 import tempfile
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -83,12 +83,20 @@ def _eastern_now():
     return datetime.now(timezone.utc).astimezone(ZoneInfo("America/New_York"))
 
 
+def _last_us_session_date(now=None):
+    """Return the most recent weekday session date in New York time."""
+    now = now or _eastern_now()
+    if now.weekday() >= 5:
+        return (now.date() - timedelta(days=now.weekday() - 4)).isoformat()
+    return now.date().isoformat()
+
+
 def _daily_refresh_due(previous_market):
-    """Refresh non-BTC data once after the US session closes on weekdays."""
+    """Refresh non-BTC data once after close, including missed Friday runs."""
     if not isinstance(previous_market, dict) or not previous_market.get("instruments"):
         return True
     now = _eastern_now()
-    if now.weekday() >= 5 or now.hour < 17:
+    if now.weekday() < 5 and now.hour < 17:
         return False
     metadata = previous_market.get("metadata") or {}
     previous_date = metadata.get("dailyRefreshDate")
@@ -96,7 +104,7 @@ def _daily_refresh_due(previous_market):
     # close so an initial pre-close bootstrap cannot suppress today's close run.
     if not metadata.get("dailyRefreshAt"):
         return True
-    return previous_date != now.date().isoformat()
+    return previous_date != _last_us_session_date(now)
 
 
 def _build_live_holdings_snapshot(fetched_at=None):
@@ -297,11 +305,11 @@ def main(argv=None):
         previous_market = _read_json(Path(args.output_dir) / "market_snapshot.json")
         now = _eastern_now()
         daily_due = _daily_refresh_due(previous_market)
-        after_close = now.weekday() < 5 and now.hour >= 17
+        after_close = (now.weekday() < 5 and now.hour >= 17) or now.weekday() >= 5
         status = run_refresh_attempt(
             args.output_dir,
             btc_only=not daily_due,
-            daily_refresh_date=now.date().isoformat() if daily_due and after_close else None,
+            daily_refresh_date=_last_us_session_date(now) if daily_due and after_close else None,
         )
         print(f"refresh {status['status']} at {status['attemptedAt']}")
         if args.once:
