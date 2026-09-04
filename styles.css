@@ -482,11 +482,15 @@ h2 { font-size: 22px; letter-spacing: -.025em; line-height: 1.2; }
 .breadth-scroll-hint { padding: 8px 14px 10px; color: var(--muted-2); font-size: 10px; }
 .breadth-raw-table { min-width: 1920px; }
 .breadth-raw-table th, .breadth-raw-table td { min-width: 112px; text-align: right; }
-.breadth-raw-table th:first-child { position: sticky; top: 0; left: 0; z-index: 7; min-width: 92px; background: var(--surface); text-align: left; }
-.breadth-raw-table td:first-child { position: sticky; left: 0; z-index: 5; min-width: 92px; background: var(--surface); text-align: left; }
+.breadth-raw-table th:first-child { position: sticky; top: 0; left: 0; z-index: 7; min-width: 112px; background: var(--surface); text-align: left; }
+.breadth-raw-table td:first-child { position: sticky; left: 0; z-index: 5; min-width: 112px; background: var(--surface); text-align: left; }
 .breadth-raw-table td:first-child { color: var(--muted-2); }
 .breadth-raw-table .breadth-group-row th { top: 0; height: 42px; padding: 9px 12px; color: var(--text-strong); font-size: 12px; letter-spacing: .08em; text-align: center; }
 .breadth-raw-table .breadth-column-row th { top: 42px; min-width: 120px; height: 44px; padding: 10px 12px; white-space: nowrap; line-height: 1.35; text-align: right; font-size: 11px; }
+.breadth-raw-table th.breadth-date-header { z-index: 12; width: 112px; min-width: 112px; max-width: 112px; height: 86px; background: var(--surface); background-clip: padding-box; box-shadow: 2px 0 0 var(--line); text-align: left; }
+.breadth-raw-table .breadth-group-row th:not(.breadth-date-header) { z-index: 8; }
+.breadth-raw-table .breadth-column-row th { z-index: 7; }
+.breadth-raw-table tbody td:first-child { width: 112px; min-width: 112px; max-width: 112px; box-shadow: 2px 0 0 var(--line); }
 .breadth-group-primary { background: color-mix(in srgb, var(--cyan) 14%, var(--surface)) !important; color: var(--cyan) !important; }
 .breadth-group-secondary { background: color-mix(in srgb, var(--amber) 12%, var(--surface)) !important; color: var(--amber) !important; }
 .breadth-group-context { background: color-mix(in srgb, var(--blue) 12%, var(--surface)) !important; color: var(--blue) !important; }

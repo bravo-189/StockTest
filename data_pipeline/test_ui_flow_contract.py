@@ -331,6 +331,11 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn(".breadth-column-row th", self.styles)
         self.assertIn("white-space: nowrap", self.styles)
 
+    def test_breadth_date_header_has_its_own_fixed_layer(self):
+        self.assertIn('class="breadth-date-header"', self.page)
+        self.assertIn(".breadth-raw-table th.breadth-date-header", self.styles)
+        self.assertIn("z-index: 12", self.styles)
+
     def test_breadth_redesign_has_readout_and_independent_horizontal_scrollbar(self):
         self.assertIn('class="breadth-chart-heading"', self.page)
         self.assertIn('id="breadth-latest-value"', self.page)
