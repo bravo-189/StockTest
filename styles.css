@@ -368,9 +368,11 @@ h2 { font-size: 22px; letter-spacing: -.025em; line-height: 1.2; }
 .rsi-history-comparison .rsi-history-panel { min-width: 0; margin-top: 0; }
 .rsi-history-comparison .rsi-history-toolbar { min-height: 76px; }
 .rsi-gainers-section { margin-top: 18px; }
-.rsi-daily-rankings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.rsi-daily-rankings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
 .rsi-daily-ranking-panel { min-width: 0; }
 .rsi-daily-ranking-panel .overview-panel-heading { min-height: 68px; }
+.rsi-daily-ranking-panel .rsi-gainers-table { min-width: 0; }
+.rsi-daily-ranking-panel .rsi-gainers-table th, .rsi-daily-ranking-panel .rsi-gainers-table td { padding-inline: 9px; }
 .rsi-gainers-table-shell { overflow-x: auto; }
 .rsi-gainers-table { min-width: 760px; }
 .rsi-gainers-table th, .rsi-gainers-table td { padding: 11px 15px; }
