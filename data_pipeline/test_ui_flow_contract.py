@@ -103,8 +103,10 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn('data-rsi-sort="bottom"', self.page)
         self.assertIn('data-target="market-overview"', self.page)
         self.assertIn("breadth-card-description", self.app)
-        self.assertIn("AFTER-HOURS RSI LEADER", self.app)
-        self.assertIn("盘后 RSI 最强标的", self.app)
+        self.assertIn("AFTER-HOURS RSI LEADERS", self.app)
+        self.assertIn("盘后 RSI 强势标的", self.app)
+        self.assertIn("leadersByTicker", self.app)
+        self.assertIn("slice(0, 3)", self.app)
         self.assertNotIn("MARKET REGIME · 盘后状态", self.page)
         self.assertNotIn('id="indices"', self.page)
 

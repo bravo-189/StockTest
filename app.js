@@ -438,10 +438,15 @@
     const breadthRoot = $("#market-overview-breadth"); const meta = $("#market-overview-meta"); const leaderRoot = $("#market-rsi-leader");
     if (!breadthRoot) return;
     if (leaderRoot) {
-      const leader = [...sectors.map((row) => ({ ...row, scope: "板块" })), ...industries.map((row) => ({ ...row, scope: "行业" }))]
+      const leadersByTicker = new Map();
+      [...sectors.map((row) => ({ ...row, scope: "板块" })), ...industries.map((row) => ({ ...row, scope: "行业" }))]
         .filter((row) => Number.isFinite(Number(row.rsi)))
-        .sort((a, b) => Number(b.rsi) - Number(a.rsi) || a.ticker.localeCompare(b.ticker))[0];
-      leaderRoot.innerHTML = leader ? `<div class="market-rsi-leader-copy"><small>AFTER-HOURS RSI LEADER</small><strong>盘后 RSI 最强标的</strong><span class="market-rsi-leader-detail">${html(leader.scope)} · ${html(leader.name)} · 当前可用板块与行业 ETF 中 RSI14 最高</span></div><a class="market-rsi-leader-symbol tradingview-link" href="${tradingViewUrl(leader.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${leader.ticker}">${html(leader.ticker)}</a><div class="market-rsi-leader-score"><small>RSI14</small><strong>${Number(leader.rsi).toFixed(1)}</strong></div>` : `<div class="market-rsi-leader-copy"><small>AFTER-HOURS RSI LEADER</small><strong>盘后 RSI 最强标的</strong><span class="market-rsi-leader-detail">暂无可用的板块或行业 RSI 数据</span></div>`;
+        .forEach((row) => {
+          const current = leadersByTicker.get(row.ticker);
+          if (!current || Number(row.rsi) > Number(current.rsi) || (Number(row.rsi) === Number(current.rsi) && row.scope === "板块")) leadersByTicker.set(row.ticker, row);
+        });
+      const leaders = [...leadersByTicker.values()].sort((a, b) => Number(b.rsi) - Number(a.rsi) || a.ticker.localeCompare(b.ticker)).slice(0, 3);
+      leaderRoot.innerHTML = leaders.length ? `<div class="market-rsi-leader-copy"><small>AFTER-HOURS RSI LEADERS</small><strong>盘后 RSI 强势标的</strong><span class="market-rsi-leader-detail">当前可用板块与行业 ETF 中 RSI14 排名前三 · 同一代码仅保留一次</span></div><div class="market-rsi-leader-list">${leaders.map((leader, index) => `<a class="market-rsi-leader-item tradingview-link" href="${tradingViewUrl(leader.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${leader.ticker}"><span class="market-rsi-leader-rank">TOP ${index + 1}</span><span class="market-rsi-leader-symbol">${html(leader.ticker)}</span><span class="market-rsi-leader-name">${html(leader.scope)} · ${html(leader.name)}</span><strong>${Number(leader.rsi).toFixed(1)}</strong></a>`).join("")}</div>` : `<div class="market-rsi-leader-copy"><small>AFTER-HOURS RSI LEADERS</small><strong>盘后 RSI 强势标的</strong><span class="market-rsi-leader-detail">暂无可用的板块或行业 RSI 数据</span></div>`;
     }
     const latestBreadth = breadth.slice().sort((a, b) => String(a.date).localeCompare(String(b.date))).at(-1) || {};
     const breadthCards = [["T2108", Number(latestBreadth.t2108), "%", "neutral", "40MA 以上股票占比"], ["4%上涨 · 今日", Number(latestBreadth.up), "", "positive", "今日涨幅 ≥ 4% 的股票数"], ["4%下跌 · 今日", Number(latestBreadth.down), "", "negative", "今日跌幅 ≤ −4% 的股票数"], ["5日比率", Number(latestBreadth.ratio5), "", "neutral", "5 日上涨 / 下跌比"], ["10日比率", Number(latestBreadth.ratio10), "", "neutral", "10 日上涨 / 下跌比"], ["25%上涨 · 季度", Number(latestBreadth.up25Quarter), "", "positive", "季度涨幅 ≥ 25% 的股票数"], ["25%下跌 · 季度", Number(latestBreadth.down25Quarter), "", "negative", "季度跌幅 ≤ −25% 的股票数"]];
@@ -613,7 +618,7 @@
     return { current, previous, delta: +(current - previous).toFixed(1), date: String(bars[bars.length - 1].date || "").slice(0, 10) };
   }
   function renderRsiGainers() {
-    const gainersBody = $("#rsi-gainers-body"); const losersBody = $("#rsi-losers-body"); const meta = $("#rsi-gainers-meta"); const gainersMeta = $("#rsi-gainers-panel-meta"); const losersMeta = $("#rsi-losers-panel-meta");
+    const gainersBody = $("#rsi-gainers-body"); const losersBody = $("#rsi-losers-body");
     if (!gainersBody && !losersBody) return;
     const sourceRows = [...sectors.map((row) => ({ ...row, scope: "板块" })), ...industries.map((row) => ({ ...row, scope: "行业" }))];
     const changesByTicker = new Map();
@@ -630,9 +635,6 @@
     const renderRows = (rows, emptyCopy) => rows.length ? rows.map(({ change, ...row }, index) => `<tr><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="etf-button tradingview-link" href="${tradingViewUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${row.ticker}">${row.ticker}</a></td><td><span class="rsi-scope-list">${row.labels.map((label) => html(label)).join("<br>")}</span></td><td class="rsi-history-value">${change.current.toFixed(1)}</td><td class="rsi-history-value">${change.previous.toFixed(1)}</td><td>${deltaDisplay(change.delta)}</td></tr>`).join("") : `<tr><td colspan="6"><div class="drawer-empty">${emptyCopy}</div></td></tr>`;
     if (gainersBody) gainersBody.innerHTML = renderRows(gainers, `当前没有 RSI14 增长达到 ${RSI_GAIN_THRESHOLD} 点的板块或行业 ETF`);
     if (losersBody) losersBody.innerHTML = renderRows(losers, `当前没有 RSI14 减少达到 ${RSI_GAIN_THRESHOLD} 点的板块或行业 ETF`);
-    if (meta) meta.textContent = `日增 ${gainers.length} 项 · 日减 ${losers.length} 项 · 同一代码已合并`;
-    if (gainersMeta) gainersMeta.textContent = gainers.length ? `共 ${gainers.length} 项 · 门槛 +${RSI_GAIN_THRESHOLD} 点` : `暂无达到 +${RSI_GAIN_THRESHOLD} 点的标的`;
-    if (losersMeta) losersMeta.textContent = losers.length ? `共 ${losers.length} 项 · 门槛 −${RSI_GAIN_THRESHOLD} 点` : `暂无达到 −${RSI_GAIN_THRESHOLD} 点的标的`;
   }
   function formatPrice(value) { return Number(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
   function applyMarketSnapshot(snapshot) {
