@@ -6,7 +6,7 @@
     <meta name="description" content="StockTest 美股盘后市场雷达网页原型" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <title>StockTest · 美股盘后雷达</title>
-    <link rel="stylesheet" href="styles.css?v=20260902-index-tv-links" />
+    <link rel="stylesheet" href="styles.css?v=20260904-rsi-gainers" />
   </head>
   <body>
     <a class="skip-link" href="#overview">跳到主要内容</a>
@@ -30,7 +30,8 @@
           <button class="nav-item" type="button" data-target="industries"><span class="nav-index">04</span><span>行业动能</span></button>
           <button class="nav-item" type="button" data-target="stockbee-momentum"><span class="nav-index">05</span><span>Stockbee 股票</span></button>
           <button class="nav-item" type="button" data-target="rsi-history"><span class="nav-index">06</span><span>每日 RSI</span></button>
-          <button class="nav-item" type="button" data-target="breadth"><span class="nav-index">07</span><span>市场宽度</span></button>
+          <button class="nav-item" type="button" data-target="rsi-gainers"><span class="nav-index">07</span><span>RSI 日增榜</span></button>
+          <button class="nav-item" type="button" data-target="breadth"><span class="nav-index">08</span><span>市场宽度</span></button>
         </nav>
         <div class="sidebar-footer">
           <div class="source-state"><span class="state-dot is-live"></span><span>盘后数据</span></div>
@@ -177,6 +178,20 @@
             </div>
           </section>
 
+          <section class="rsi-gainers-section" id="rsi-gainers" aria-labelledby="rsi-gainers-title">
+            <div class="section-heading">
+              <div><div class="section-kicker">RSI DAILY GAINERS</div><h2 id="rsi-gainers-title">RSI 日增榜</h2><p>筛选当日 RSI14 较上一交易日上升至少 6 点，并按增幅从高到低排列。</p></div>
+              <span class="section-meta" id="rsi-gainers-meta">仅使用已确认收盘日线</span>
+            </div>
+            <div class="table-shell rsi-gainers-table-shell">
+              <table class="data-table rsi-gainers-table">
+                <colgroup><col class="col-rank"><col class="col-etf"><col class="col-industry"><col class="col-rsi"><col class="col-rsi"><col class="col-delta"></colgroup>
+                <thead><tr><th scope="col">排名</th><th scope="col">代码 · TradingView</th><th scope="col">板块/行业</th><th scope="col">当前 RSI14</th><th scope="col">前一日 RSI14</th><th scope="col">RSI 变化</th></tr></thead>
+                <tbody id="rsi-gainers-body"></tbody>
+              </table>
+            </div>
+          </section>
+
           <section class="breadth-section" id="breadth" aria-labelledby="breadth-title">
             <div class="section-heading">
               <div><div class="section-kicker">STOCKBEE MARKET MONITOR</div><h2 id="breadth-title">市场宽度</h2><p>直接使用 Stockbee 最近半年的原始列绘制趋势。</p></div>
@@ -217,6 +232,6 @@
     </aside>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="app.js?v=20260904-daily-change-labels"></script>
+    <script src="app.js?v=20260904-rsi-gainers"></script>
   </body>
 </html>

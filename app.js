@@ -23,6 +23,7 @@
   const BTC_INTRADAY_BARS = 12;
   const DETAIL_TRADING_DAYS = 60;
   const RSI_HISTORY_DAYS = 42;
+  const RSI_GAIN_THRESHOLD = 6;
   const BTC_REFRESH_INTERVAL_MS = 60 * 60 * 1000;
   const STALE_AFTER_MS = 90 * 60 * 1000;
   const STORAGE_KEY = "stocktest-theme";
@@ -504,6 +505,21 @@
     body.innerHTML = points.length ? points.map((point) => { const [label, tone] = rsiBand(point.value); return `<tr><td class="rsi-history-date">${html(point.date)}</td><td class="rsi-history-value">${point.value.toFixed(1)}</td><td><span class="status-label is-${tone}">${label}</span></td></tr>`; }).join("") : `<tr><td colspan="3"><div class="drawer-empty">暂无本地 RSI 历史数据</div></td></tr>`;
   }
   function renderRsiHistoryControls() { renderRsiHistory("sector"); renderRsiHistory("industry"); }
+  function rsiDailyChangeFor(ticker) {
+    const bars = Array.isArray(marketBars[ticker]) ? marketBars[ticker] : [];
+    if (bars.length < 16) return null;
+    const current = rsi14FromBars(bars); const previous = rsi14FromBars(bars.slice(0, -1));
+    if (current == null || previous == null) return null;
+    return { current, previous, delta: +(current - previous).toFixed(1), date: String(bars[bars.length - 1].date || "").slice(0, 10) };
+  }
+  function renderRsiGainers() {
+    const body = $("#rsi-gainers-body"); const meta = $("#rsi-gainers-meta");
+    if (!body) return;
+    const sourceRows = [...sectors.map((row) => ({ ...row, scope: "板块" })), ...industries.map((row) => ({ ...row, scope: "行业" }))];
+    const rows = sourceRows.map((row) => ({ row, change: rsiDailyChangeFor(row.ticker) })).filter((entry) => entry.change && entry.change.delta >= RSI_GAIN_THRESHOLD).sort((a, b) => b.change.delta - a.change.delta || a.row.ticker.localeCompare(b.row.ticker));
+    body.innerHTML = rows.length ? rows.map(({ row, change }, index) => `<tr><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="etf-button tradingview-link" href="${tradingViewUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${row.ticker}">${row.ticker}</a></td><td>${html(row.scope)} · ${html(row.name)}</td><td class="rsi-history-value">${change.current.toFixed(1)}</td><td class="rsi-history-value">${change.previous.toFixed(1)}</td><td class="${classFor(change.delta)}">${signedNumber(change.delta, 1)} 点</td></tr>`).join("") : `<tr><td colspan="6"><div class="drawer-empty">当前没有 RSI14 增长达到 6 点的板块或行业 ETF</div></td></tr>`;
+    if (meta) meta.textContent = rows.length ? `共 ${rows.length} 项 · 门槛 +${RSI_GAIN_THRESHOLD} 点` : `暂无达到 +${RSI_GAIN_THRESHOLD} 点的标的`;
+  }
   function formatPrice(value) { return Number(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
   function applyMarketSnapshot(snapshot) {
     const instruments = snapshot && snapshot.instruments;
@@ -575,7 +591,7 @@
       const snapshot = await response.json();
       if (!applyMarketSnapshot(snapshot)) return;
       const hoveredTicker = $(".index-card:hover .sparkline")?.dataset.sparkTicker;
-      renderIndices(); renderSectors(); renderIndustries(); renderRsiHistoryControls(); renderHoldings(); renderStockbeeMomentum();
+      renderIndices(); renderSectors(); renderIndustries(); renderRsiHistoryControls(); renderRsiGainers(); renderHoldings(); renderStockbeeMomentum();
       if (hoveredTicker) {
         const hoveredCanvas = $$(".sparkline", $("#index-grid")).find((canvas) => canvas.dataset.sparkTicker === hoveredTicker);
         if (hoveredCanvas) updateIndexHoverBubble(hoveredCanvas.closest(".index-card"));
@@ -701,7 +717,7 @@
     const items = [["板块强势", topSectors], ["行业强势", topIndustries], ["Stockbee 宽度", `${breadthLabel} · 5 日上涨／下跌比 ${Number(latestBreadth.ratio5 || 0).toFixed(2)}`]];
     $$(".briefing-item").forEach((node, index) => { const item = items[index]; if (!item) return; const strong = $("strong", node); const text = $("p", node); if (strong) strong.textContent = item[0]; if (text) text.textContent = item[1]; });
   }
-  function renderAll() { renderIndices(); renderSectors(); renderIndustries(); renderRsiHistoryControls(); renderThemes(); renderHoldings(); renderStockbeeMomentum(); renderBreadth(); renderLocalMarketAnalysis(); updateModeButtons(); }
+  function renderAll() { renderIndices(); renderSectors(); renderIndustries(); renderRsiHistoryControls(); renderRsiGainers(); renderThemes(); renderHoldings(); renderStockbeeMomentum(); renderBreadth(); renderLocalMarketAnalysis(); updateModeButtons(); }
   function updateSectorSortButtons() {
     $$('[data-sector-sort]').forEach((button) => { const active = button.dataset.sectorSort === state.sectorSort.key; const glyph = button.querySelector(".sort-glyph"); button.classList.toggle("is-active", active); button.setAttribute("aria-sort", active ? (state.sectorSort.direction === "asc" ? "ascending" : "descending") : "none"); if (glyph) glyph.textContent = active ? (state.sectorSort.direction === "asc" ? "↑" : "↓") : "↕"; });
   }

@@ -69,6 +69,18 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn('<span class="drawer-metric-label">5日变化</span>', self.app)
         self.assertIn('<span class="drawer-metric-label">20日变化</span>', self.app)
 
+    def test_daily_rsi_gainers_page_filters_six_point_increases(self):
+        self.assertIn('data-target="rsi-gainers"', self.page)
+        self.assertIn('id="rsi-gainers"', self.page)
+        self.assertIn("RSI 日增榜", self.page)
+        for label in ("板块/行业", "当前 RSI14", "前一日 RSI14", "RSI 变化"):
+            self.assertIn(label, self.page)
+        self.assertIn("const RSI_GAIN_THRESHOLD = 6;", self.app)
+        self.assertIn("function rsiDailyChangeFor(ticker)", self.app)
+        self.assertIn("function renderRsiGainers()", self.app)
+        self.assertIn("delta >= RSI_GAIN_THRESHOLD", self.app)
+        self.assertIn("renderRsiGainers()", self.app)
+
     def test_industry_table_has_no_redundant_rsi_callout(self):
         self.assertIn('class="industry-layout"', self.page)
         self.assertNotIn('class="industry-callout', self.page)
