@@ -828,3 +828,10 @@
 - 切换后再次验证：GitHub Pages 状态为 `built`、`cname=www.tightplayer.asia`，但本地、Google DNS 和 HTTPS 查询仍返回 NXDOMAIN；因此域名目前仍不能访问，HTTPS 也未开启。
 - 待用户在阿里云 DNS 保存并启用：主机名 `www`、类型 `CNAME`、目标 `bravo-189.github.io`（TTL 使用默认值即可）。若存在同名 A/AAAA/CNAME 冲突记录，需要先清理冲突，并确认 `.asia` 域名的 DNS 服务器已完成委派。
 - DNS 生效后，继续核验域名、Pages 状态、HTTPS 强制开启和线上资源路径；不要在 DNS 未生效时反复修改 Pages 配置。
+
+### 2026-09-04 阿里云控制台核验结果
+
+- 用户 Chrome 中的阿里云页面确认 `www` CNAME 已保存、已启用，记录值为 `bravo-189.github.io`，TTL 为 10 分钟。
+- 阿里云页面同时提示：当前域名查询到的 NS 地址与云解析系统分配的 NS 地址不一致；页面列出的阿里云分配 NS 为 `dns13.hichina.com` 和 `dns14.hichina.com`。
+- 因此当前阻塞点不是 CNAME 内容，而是 `.asia` 域名的权威 DNS 委派尚未指向阿里云，或刚注册/实名认证导致同步延迟。公网 DNS 仍返回 NXDOMAIN。
+- 下一步应在阿里云域名注册控制台核对并更新 DNS 服务器委派；如果域名当天注册或刚完成实名认证，先等待至次日再复查，避免反复改动解析记录。
