@@ -941,6 +941,7 @@
   $$('[data-breadth-metric]').forEach((button) => button.addEventListener("click", () => { state.breadthMetric = button.dataset.breadthMetric; renderBreadth(); }));
   $("#theme-toggle").addEventListener("click", () => setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
   $("#breadth-toggle").addEventListener("click", (event) => { const table = $("#breadth-data"); const expanded = event.currentTarget.getAttribute("aria-expanded") === "true"; event.currentTarget.setAttribute("aria-expanded", String(!expanded)); event.currentTarget.textContent = expanded ? "展开半年数据" : "收起半年数据"; table.hidden = expanded; if (!expanded) setupBreadthScroll(); });
+  $("#breadth-guide-toggle").addEventListener("click", (event) => { const guide = $("#breadth-guide"); const expanded = event.currentTarget.getAttribute("aria-expanded") === "true"; event.currentTarget.setAttribute("aria-expanded", String(!expanded)); event.currentTarget.textContent = expanded ? "字段说明" : "收起说明"; guide.hidden = expanded; });
   $("#drawer-close").addEventListener("click", closeDrawer); $("#drawer-backdrop").addEventListener("click", closeDrawer);
   $("#evidence-open").addEventListener("click", openEvidenceDrawer); $("#evidence-close").addEventListener("click", closeEvidenceDrawer);
   document.addEventListener("click", (event) => { const trigger = event.target.closest("[data-etf]"); if (trigger) openDrawer(trigger.dataset.etf); });

@@ -323,6 +323,14 @@ class UiFlowContractTests(unittest.TestCase):
             self.assertIn(f'data-breadth-metric="{key}"', self.page)
             self.assertIn(f'"{key}"', self.app)
 
+    def test_breadth_data_has_a_toggleable_field_guide_and_single_line_column_labels(self):
+        self.assertIn('id="breadth-guide-toggle"', self.page)
+        self.assertIn('id="breadth-guide"', self.page)
+        self.assertIn("T2108</dt>", self.page)
+        self.assertIn('"#breadth-guide-toggle").addEventListener', self.app)
+        self.assertIn(".breadth-column-row th", self.styles)
+        self.assertIn("white-space: nowrap", self.styles)
+
     def test_breadth_redesign_has_readout_and_independent_horizontal_scrollbar(self):
         self.assertIn('class="breadth-chart-heading"', self.page)
         self.assertIn('id="breadth-latest-value"', self.page)
