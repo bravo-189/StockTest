@@ -33,9 +33,9 @@
           <button class="nav-item" type="button" data-target="breadth"><span class="nav-index">07</span><span>市场宽度</span></button>
         </nav>
         <div class="sidebar-footer">
-          <div class="source-state"><span class="state-dot is-live"></span><span>盘后数据</span></div>
-          <div class="sidebar-time">2026-08-27<br />18:30 ET</div>
-          <div class="sidebar-note">示例模式<br />未连接实时行情</div>
+          <div class="source-state data-badge is-stale" id="refresh-status-badge" aria-live="polite"><i></i><span>正在加载快照</span></div>
+          <div class="sidebar-time" id="sidebar-data-time">正在读取<br />已发布数据</div>
+          <div class="sidebar-note">BTC 每小时更新<br />其余盘后日更</div>
         </div>
       </aside>
 
@@ -208,6 +208,6 @@
     </aside>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="app.js?v=20260905-rsi-layout"></script>
+    <script src="app.js?v=20260905-data-status"></script>
   </body>
 </html>

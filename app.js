@@ -71,9 +71,17 @@
     ["MSFT", "Microsoft"], ["NVDA", "NVIDIA"], ["AAPL", "Apple"], ["AMZN", "Amazon"], ["META", "Meta Platforms"], ["GOOGL", "Alphabet"], ["AVGO", "Broadcom"], ["LLY", "Eli Lilly"], ["JPM", "JPMorgan Chase"], ["XOM", "Exxon Mobil"], ["V", "Visa"], ["UNH", "UnitedHealth"], ["COST", "Costco"], ["CAT", "Caterpillar"], ["NEE", "NextEra Energy"], ["GE", "GE Aerospace"], ["RTX", "RTX Corp"], ["CRM", "Salesforce"], ["ORCL", "Oracle"], ["AMD", "AMD"], ["LIN", "Linde"], ["WMT", "Walmart"], ["PG", "Procter & Gamble"], ["JNJ", "Johnson & Johnson"], ["HD", "Home Depot"], ["PLTR", "Palantir"], ["TSLA", "Tesla"], ["NFLX", "Netflix"], ["ADBE", "Adobe"], ["GS", "Goldman Sachs"]
   ];
 
-  const state = { sectorMode: "d1", sectorSort: { key: "d1", direction: "desc" }, industryView: "top", industrySort: { key: "rsi", direction: "desc" }, rsiRankingSort: { top: { key: "rsi", direction: "desc" }, bottom: { key: "rsi", direction: "asc" } }, breadthMetric: "ratio5", query: "", drawerTicker: null, toastTimer: null, rsiHistorySelection: { sector: "SPY", industry: "SPY" }, lastFullRefreshAt: null };
+  const state = { sectorMode: "d1", sectorSort: { key: "d1", direction: "desc" }, industryView: "top", industrySort: { key: "rsi", direction: "desc" }, rsiRankingSort: { top: { key: "rsi", direction: "desc" }, bottom: { key: "rsi", direction: "asc" } }, breadthMetric: "ratio5", query: "", drawerTicker: null, toastTimer: null, rsiHistorySelection: { sector: "SPY", industry: "SPY" }, lastFullRefreshAt: null, marketSnapshotLoaded: false, marketSnapshotFailed: false, refreshStatus: null };
   const $ = (selector, root) => (root || document).querySelector(selector);
   const $$ = (selector, root) => Array.from((root || document).querySelectorAll(selector));
+  const formatSnapshotTime = (value) => {
+    const time = value ? new Date(value) : null;
+    if (!time || !Number.isFinite(time.getTime())) return null;
+    return {
+      date: new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" }).format(time),
+      clock: new Intl.DateTimeFormat("en-GB", { timeZone: "America/New_York", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(time)
+    };
+  };
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const signedNumber = (value, digits) => `${value >= 0 ? "+" : "−"}${Math.abs(value).toFixed(digits == null ? 1 : digits)}`;
   const signed = (value, digits) => `${signedNumber(value, digits)}%`;
@@ -669,17 +677,21 @@
     }
     renderLocalMarketAnalysis();
     holdings = snapshot.holdings && typeof snapshot.holdings === "object" ? snapshot.holdings : holdings;
-    const sidebarNote = $(".sidebar-note");
-    if (sidebarNote) sidebarNote.innerHTML = "本地快照模式<br />不连接实时行情";
     const footer = $(".site-footer");
     if (footer) footer.textContent = "StockTest 原型 · 本地行情快照，仅供研究参考，不构成任何投资建议。行情可能延迟、缺失或出错。";
+    state.marketSnapshotLoaded = true;
+    state.marketSnapshotFailed = false;
+    renderRefreshPresentation();
     return true;
   }
   async function hydrateMarketSnapshot() {
     if (window.location.protocol === "file:") return;
+    state.marketSnapshotLoaded = false;
+    state.marketSnapshotFailed = false;
+    renderRefreshPresentation();
     try {
       const response = await fetch(snapshotUrl("market_snapshot.json"), { cache: "no-store" });
-      if (!response.ok) return;
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const snapshot = await response.json();
       const applied = applyMarketSnapshot(snapshot);
       if (!applied) return;
@@ -698,42 +710,67 @@
         if (hoveredCanvas) updateIndexHoverBubble(hoveredCanvas.closest(".index-card"));
       }
     } catch (_) {
-      // Keep deterministic sample data when the local snapshot is unavailable.
+      state.marketSnapshotFailed = true;
+      renderRefreshPresentation();
     }
   }
-  function applyRefreshStatus(status) {
+  function renderRefreshPresentation() {
     const badge = $("#refresh-status-badge");
-    if (!badge || !status || typeof status !== "object") return false;
-    const lastCompleted = status.lastCompletedAt || status.lastFullSuccessAt;
+    const sidebarTime = $("#sidebar-data-time");
+    const sidebarNote = $(".sidebar-note");
+    if (!badge || !sidebarTime || !sidebarNote) return;
+    const refresh = state.refreshStatus;
+    const lastCompleted = refresh && (refresh.lastCompletedAt || refresh.lastFullSuccessAt);
     const completedAt = lastCompleted ? new Date(lastCompleted) : null;
     const ageMs = completedAt && Number.isFinite(completedAt.getTime()) ? Math.max(Date.now() - completedAt.getTime(), 0) : null;
-    const missingCount = Number(status.sources && status.sources.market && status.sources.market.missingCount) || 0;
-    badge.hidden = false;
-    badge.classList.remove("is-loaded", "is-stale", "is-missing");
-    if (status.status === "failed") {
-      badge.classList.add("is-missing");
-      badge.innerHTML = "<i></i>刷新失败 · 保留上次数据";
-      badge.title = (status.errors || []).map((item) => `${item.source}: ${item.message}`).join("；");
-    } else if (status.status === "partial") {
-      badge.classList.add("is-missing");
-      badge.innerHTML = `<i></i>局部缺失 · ${missingCount} 项`;
-      badge.title = "本次刷新完成，但部分市场标的缺失。";
-    } else if (ageMs == null || ageMs > STALE_AFTER_MS) {
-      const hours = ageMs == null ? null : Math.max(1, Math.floor(ageMs / 3_600_000));
-      badge.classList.add("is-stale");
-      badge.innerHTML = `<i></i>数据过期${hours == null ? "" : ` · ${hours} 小时`}`;
-      badge.title = lastCompleted ? `最后成功刷新：${lastCompleted}` : "没有可用的刷新完成时间。";
-    } else {
-      badge.classList.add("is-loaded");
-      badge.innerHTML = `<i></i>数据新鲜 · ${completedAt.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}`;
-      badge.title = `最后成功刷新：${lastCompleted}`;
+    const stamp = formatSnapshotTime(lastCompleted || DashboardData.metadata.generatedAt);
+    let tone = "is-stale";
+    let label = "正在加载快照";
+    let note = "正在读取已发布行情";
+    if (state.marketSnapshotFailed) {
+      tone = "is-missing";
+      label = "行情加载失败 · 回退数据";
+      note = "请稍后刷新页面重试";
+    } else if (state.marketSnapshotLoaded && refresh && refresh.status === "failed") {
+      tone = "is-missing";
+      label = "刷新失败 · 保留上次数据";
+      note = "BTC 每小时更新 · 其余盘后日更";
+    } else if (state.marketSnapshotLoaded && refresh && refresh.status === "partial") {
+      const missing = Number(refresh.sources && refresh.sources.market && refresh.sources.market.missingCount) || 0;
+      tone = "is-missing";
+      label = `局部缺失 · ${missing} 项`;
+      note = "BTC 每小时更新 · 其余盘后日更";
+    } else if (state.marketSnapshotLoaded && ageMs != null && ageMs <= STALE_AFTER_MS) {
+      tone = "is-loaded";
+      label = `数据新鲜 · ${stamp ? stamp.clock : "已更新"} ET`;
+      note = "BTC 每小时更新 · 其余盘后日更";
+    } else if (state.marketSnapshotLoaded && ageMs != null) {
+      const hours = Math.max(1, Math.floor(ageMs / 3_600_000));
+      label = `数据过期 · ${hours} 小时`;
+      note = "正在保留最近可用快照";
+    } else if (state.marketSnapshotLoaded) {
+      label = "快照已加载 · 状态未知";
+      note = "未能读取刷新状态，请稍后重试";
     }
+    badge.className = `source-state data-badge ${tone}`;
+    badge.innerHTML = `<i></i><span>${html(label)}</span>`;
+    badge.title = lastCompleted ? `最后成功刷新：${lastCompleted}` : label;
+    sidebarTime.innerHTML = stamp ? `${html(stamp.date)}<br />${html(stamp.clock)} ET` : "正在读取<br />已发布数据";
+    sidebarNote.textContent = note;
+  }
+  function applyRefreshStatus(status) {
+    if (!status || typeof status !== "object") return false;
+    state.refreshStatus = status;
     const fullRefreshAt = status.lastFullSuccessAt || null;
     const shouldHydrateDaily = state.lastFullRefreshAt && fullRefreshAt && state.lastFullRefreshAt !== fullRefreshAt;
     state.lastFullRefreshAt = fullRefreshAt;
+    const lastCompleted = status.lastCompletedAt || status.lastFullSuccessAt;
+    const completedAt = lastCompleted ? new Date(lastCompleted) : null;
+    const ageMs = completedAt && Number.isFinite(completedAt.getTime()) ? Math.max(Date.now() - completedAt.getTime(), 0) : null;
     DashboardData.metadata.refresh = status;
     DashboardData.metadata.isStale = status.status === "failed" || status.status === "partial" || ageMs == null || ageMs > STALE_AFTER_MS;
     renderLocalMarketAnalysis();
+    renderRefreshPresentation();
     if (shouldHydrateDaily) {
       hydrateStockbee();
       hydrateStockbeeMomentum();
@@ -745,10 +782,11 @@
     if (window.location.protocol === "file:") return;
     try {
       const response = await fetch(snapshotUrl("refresh_status.json"), { cache: "no-store" });
-      if (!response.ok) return;
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
       applyRefreshStatus(await response.json());
     } catch (_) {
-      // The market and Stockbee snapshots remain usable when status metadata is absent.
+      state.refreshStatus = null;
+      renderRefreshPresentation();
     }
   }
   async function hydrateStockbee() {
