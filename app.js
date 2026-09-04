@@ -558,12 +558,18 @@
     return { current, previous, delta: +(current - previous).toFixed(1), date: String(bars[bars.length - 1].date || "").slice(0, 10) };
   }
   function renderRsiGainers() {
-    const body = $("#rsi-gainers-body"); const meta = $("#rsi-gainers-meta");
-    if (!body) return;
+    const gainersBody = $("#rsi-gainers-body"); const losersBody = $("#rsi-losers-body"); const meta = $("#rsi-gainers-meta"); const gainersMeta = $("#rsi-gainers-panel-meta"); const losersMeta = $("#rsi-losers-panel-meta");
+    if (!gainersBody && !losersBody) return;
     const sourceRows = [...sectors.map((row) => ({ ...row, scope: "板块" })), ...industries.map((row) => ({ ...row, scope: "行业" }))];
-    const rows = sourceRows.map((row) => ({ row, change: rsiDailyChangeFor(row.ticker) })).filter((entry) => entry.change && entry.change.delta >= RSI_GAIN_THRESHOLD).sort((a, b) => b.change.delta - a.change.delta || a.row.ticker.localeCompare(b.row.ticker));
-    body.innerHTML = rows.length ? rows.map(({ row, change }, index) => `<tr><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="etf-button tradingview-link" href="${tradingViewUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${row.ticker}">${row.ticker}</a></td><td>${html(row.scope)} · ${html(row.name)}</td><td class="rsi-history-value">${change.current.toFixed(1)}</td><td class="rsi-history-value">${change.previous.toFixed(1)}</td><td class="${classFor(change.delta)}">${signedNumber(change.delta, 1)} 点</td></tr>`).join("") : `<tr><td colspan="6"><div class="drawer-empty">当前没有 RSI14 增长达到 6 点的板块或行业 ETF</div></td></tr>`;
-    if (meta) meta.textContent = rows.length ? `共 ${rows.length} 项 · 门槛 +${RSI_GAIN_THRESHOLD} 点` : `暂无达到 +${RSI_GAIN_THRESHOLD} 点的标的`;
+    const changes = sourceRows.map((row) => ({ row, change: rsiDailyChangeFor(row.ticker) })).filter((entry) => entry.change);
+    const gainers = changes.filter((entry) => entry.change.delta >= RSI_GAIN_THRESHOLD).sort((a, b) => b.change.delta - a.change.delta || a.row.ticker.localeCompare(b.row.ticker));
+    const losers = changes.filter((entry) => entry.change.delta <= -RSI_GAIN_THRESHOLD).sort((a, b) => a.change.delta - b.change.delta || a.row.ticker.localeCompare(b.row.ticker));
+    const renderRows = (rows, emptyCopy) => rows.length ? rows.map(({ row, change }, index) => `<tr><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="etf-button tradingview-link" href="${tradingViewUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${row.ticker}">${row.ticker}</a></td><td>${html(row.scope)} · ${html(row.name)}</td><td class="rsi-history-value">${change.current.toFixed(1)}</td><td class="rsi-history-value">${change.previous.toFixed(1)}</td><td class="${classFor(change.delta)}">${signedNumber(change.delta, 1)} 点</td></tr>`).join("") : `<tr><td colspan="6"><div class="drawer-empty">${emptyCopy}</div></td></tr>`;
+    if (gainersBody) gainersBody.innerHTML = renderRows(gainers, `当前没有 RSI14 增长达到 ${RSI_GAIN_THRESHOLD} 点的板块或行业 ETF`);
+    if (losersBody) losersBody.innerHTML = renderRows(losers, `当前没有 RSI14 减少达到 ${RSI_GAIN_THRESHOLD} 点的板块或行业 ETF`);
+    if (meta) meta.textContent = `日增 ${gainers.length} 项 · 日减 ${losers.length} 项`;
+    if (gainersMeta) gainersMeta.textContent = gainers.length ? `共 ${gainers.length} 项 · 门槛 +${RSI_GAIN_THRESHOLD} 点` : `暂无达到 +${RSI_GAIN_THRESHOLD} 点的标的`;
+    if (losersMeta) losersMeta.textContent = losers.length ? `共 ${losers.length} 项 · 门槛 −${RSI_GAIN_THRESHOLD} 点` : `暂无达到 −${RSI_GAIN_THRESHOLD} 点的标的`;
   }
   function formatPrice(value) { return Number(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
   function applyMarketSnapshot(snapshot) {

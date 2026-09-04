@@ -73,12 +73,16 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn('data-target="rsi-gainers"', self.page)
         self.assertIn('id="rsi-gainers"', self.page)
         self.assertIn("RSI 日增榜", self.page)
+        self.assertIn("RSI 日减榜", self.page)
+        self.assertIn('id="rsi-losers-body"', self.page)
         for label in ("板块/行业", "当前 RSI14", "前一日 RSI14", "RSI 变化"):
             self.assertIn(label, self.page)
         self.assertIn("const RSI_GAIN_THRESHOLD = 6;", self.app)
         self.assertIn("function rsiDailyChangeFor(ticker)", self.app)
         self.assertIn("function renderRsiGainers()", self.app)
         self.assertIn("delta >= RSI_GAIN_THRESHOLD", self.app)
+        self.assertIn("delta <= -RSI_GAIN_THRESHOLD", self.app)
+        self.assertIn("rsi-losers-body", self.app)
         self.assertIn("renderRsiGainers()", self.app)
 
     def test_market_overview_starts_with_indices_breadth_and_rsi_rankings(self):
