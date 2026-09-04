@@ -256,10 +256,13 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn('function tradingViewSymbolUrl(ticker)', self.app)
         self.assertIn('href="${tradingViewSymbolUrl(row.ticker)}"', self.app)
 
-    def test_deployed_data_reads_github_data_state_and_refreshes_all_sources_hourly(self):
+    def test_deployed_data_reads_github_data_state_and_refreshes_on_schedule(self):
         self.assertIn('const DATA_STATE_BASE_URL = "https://raw.githubusercontent.com/bravo-189/StockTest/data-state/data/";', self.app)
         self.assertIn('const isVercelDeployment = /(?:^|\\.)vercel\\.app$/i.test(window.location.hostname);', self.app)
-        self.assertIn('hydrateStockbee(); hydrateStockbeeMomentum(); hydrateMarketSnapshot(); hydrateRefreshStatus();', self.app)
+        self.assertIn('window.setInterval(() => { hydrateMarketSnapshot(); hydrateRefreshStatus(); }, BTC_REFRESH_INTERVAL_MS);', self.app)
+        self.assertIn('if (shouldHydrateDaily) {', self.app)
+        self.assertIn('hydrateStockbee();', self.app)
+        self.assertIn('hydrateStockbeeMomentum();', self.app)
 
     def test_file_preview_redirects_to_local_runtime_for_real_snapshots(self):
         self.assertIn("function redirectFilePreview()", self.app)

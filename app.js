@@ -903,5 +903,8 @@
   [".sector-table-scroll", ".industry-table-scroll"].forEach((selector) => { const shell = $(selector); if (shell) shell.addEventListener("scroll", () => requestAnimationFrame(syncPinnedRowCovers), { passive: true }); });
   window.addEventListener("scroll", () => { $$(".index-hover-bubble:not([hidden])").forEach((bubble) => positionIndexHoverBubble(bubble.__ownerCard || bubble.closest(".index-card"))); }, { passive: true });
   renderAll(); initTheme(); updateClocks(); window.setInterval(updateClocks, 1000); hydrateStockbee(); hydrateStockbeeMomentum(); hydrateMarketSnapshot(); hydrateRefreshStatus();
-  window.setInterval(() => { hydrateStockbee(); hydrateStockbeeMomentum(); hydrateMarketSnapshot(); hydrateRefreshStatus(); }, BTC_REFRESH_INTERVAL_MS);
+  // Market/BTC snapshots and refresh status are checked hourly. Daily
+  // Stockbee and breadth snapshots are rehydrated by applyRefreshStatus when
+  // a new full post-close refresh is detected.
+  window.setInterval(() => { hydrateMarketSnapshot(); hydrateRefreshStatus(); }, BTC_REFRESH_INTERVAL_MS);
 })();
