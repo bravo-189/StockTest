@@ -742,7 +742,7 @@
       note = "BTC 每小时更新 · 其余盘后日更";
     } else if (state.marketSnapshotLoaded && ageMs != null && ageMs <= STALE_AFTER_MS) {
       tone = "is-loaded";
-      label = `数据新鲜 · ${stamp ? stamp.clock : "已更新"} ET`;
+      label = `快照已同步 · ${stamp ? stamp.clock : "已更新"} ET`;
       note = "BTC 每小时更新 · 其余盘后日更";
     } else if (state.marketSnapshotLoaded && ageMs != null) {
       const hours = Math.max(1, Math.floor(ageMs / 3_600_000));
