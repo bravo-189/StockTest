@@ -173,13 +173,17 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn("buildIntradayBars", self.app)
         self.assertIn("drawLineAreaChart", self.app)
         self.assertIn("drawBubbleCandlestickChart", self.app)
+        self.assertIn("calendarBarsForDisplay", self.app)
+        self.assertIn('status: "weekend"', self.app)
+        self.assertIn('周末空档', self.app)
         self.assertIn("emaSeries", self.app)
         self.assertIn("drawEma(9", self.app)
         self.assertIn("drawEma(21", self.app)
         self.assertIn("const US_INTRADAY_BARS = 79;", self.app)
         self.assertIn("const BTC_INTRADAY_BARS = 12;", self.app)
         self.assertIn('const count = ticker === "BTC" ? BTC_INTRADAY_BARS : US_INTRADAY_BARS;', self.app)
-        self.assertIn('ticker === "BTC" ? "当日 · 2H（24H）K 线" : "当日 · 5M 面积图"', self.app)
+        self.assertIn('ticker === "BTC" ? "当日 · 2H（24H）K 线"', self.app)
+        self.assertIn('hasIntraday ? "当日 · 5M 面积图" : "近 1 个月日线（周末含空档）"', self.app)
         self.assertIn("mouseenter", self.app)
         self.assertIn("mouseleave", self.app)
         self.assertIn("updateIndexHoverBubble", self.app)
@@ -201,6 +205,10 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn("min(640px", self.styles)
         self.assertIn("height: 220px", self.styles)
         self.assertNotIn("60 日预览", self.page)
+
+    def test_rsi_mover_change_cells_are_numeric_without_point_suffix(self):
+        self.assertIn("signedNumber(change.delta, 1)", self.app)
+        self.assertNotIn("signedNumber(change.delta, 1)} 点", self.app)
 
     def test_topbar_has_live_us_and_beijing_clocks(self):
         self.assertIn('id="us-clock"', self.page)
