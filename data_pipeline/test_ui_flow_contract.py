@@ -59,6 +59,16 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn('state.industryView === "top"', self.app)
         self.assertIn('industrySort', self.app)
 
+    def test_change_columns_use_numeric_day_labels_and_percent_suffix(self):
+        for label in ("1日变化", "5日变化", "20日变化"):
+            self.assertIn(label, self.page)
+        self.assertNotIn(">Δ1<", self.page)
+        self.assertNotIn(">Δ5<", self.page)
+        self.assertNotIn(">Δ20<", self.page)
+        self.assertIn("const signed = (value, digits) => `${signedNumber(value, digits)}%`;", self.app)
+        self.assertIn('<span class="drawer-metric-label">5日变化</span>', self.app)
+        self.assertIn('<span class="drawer-metric-label">20日变化</span>', self.app)
+
     def test_industry_table_has_no_redundant_rsi_callout(self):
         self.assertIn('class="industry-layout"', self.page)
         self.assertNotIn('class="industry-callout', self.page)
