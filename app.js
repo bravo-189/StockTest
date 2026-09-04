@@ -27,6 +27,13 @@
   const BTC_REFRESH_INTERVAL_MS = 60 * 60 * 1000;
   const STALE_AFTER_MS = 90 * 60 * 1000;
   const STORAGE_KEY = "stocktest-theme";
+  // Vercel serves the UI from the main branch, while the hourly GitHub
+  // workflow publishes validated snapshots to data-state. Read that branch
+  // directly so the deployed page can receive fresh data without rebuilding
+  // the static UI on every refresh.
+  const DATA_STATE_BASE_URL = "https://raw.githubusercontent.com/bravo-189/StockTest/data-state/data/";
+  const isVercelDeployment = /(?:^|\.)vercel\.app$/i.test(window.location.hostname);
+  const snapshotUrl = (filename) => `${isVercelDeployment ? DATA_STATE_BASE_URL : "data/"}${filename}?v=${Date.now()}`;
   const sectorDefs = [
     ["XLV", "医疗保健", 64, 0.86], ["XLP", "必需消费", 62, 0.72], ["XLU", "公用事业", 61, 0.68],
     ["XLF", "金融", 57, 0.42], ["XLI", "工业", 55, 0.3], ["XLE", "能源", 54, 0.25],
@@ -671,7 +678,7 @@
   async function hydrateMarketSnapshot() {
     if (window.location.protocol === "file:") return;
     try {
-      const response = await fetch("data/market_snapshot.json", { cache: "no-store" });
+      const response = await fetch(snapshotUrl("market_snapshot.json"), { cache: "no-store" });
       if (!response.ok) return;
       const snapshot = await response.json();
       const applied = applyMarketSnapshot(snapshot);
@@ -737,7 +744,7 @@
   async function hydrateRefreshStatus() {
     if (window.location.protocol === "file:") return;
     try {
-      const response = await fetch("data/refresh_status.json", { cache: "no-store" });
+      const response = await fetch(snapshotUrl("refresh_status.json"), { cache: "no-store" });
       if (!response.ok) return;
       applyRefreshStatus(await response.json());
     } catch (_) {
@@ -747,7 +754,7 @@
   async function hydrateStockbee() {
     if (window.location.protocol === "file:") return;
     try {
-      const response = await fetch("data/stockbee.json", { cache: "no-store" });
+      const response = await fetch(snapshotUrl("stockbee.json"), { cache: "no-store" });
       if (!response.ok) return;
       const snapshot = await response.json();
       if (!Array.isArray(snapshot.rows) || !snapshot.rows.length) return;
@@ -765,7 +772,7 @@
   async function hydrateStockbeeMomentum() {
     if (window.location.protocol === "file:") return;
     try {
-      const response = await fetch("data/stockbee_momentum.json", { cache: "no-store" });
+      const response = await fetch(snapshotUrl("stockbee_momentum.json"), { cache: "no-store" });
       if (!response.ok) return;
       const snapshot = await response.json();
       if (!Array.isArray(snapshot.rows)) return;
@@ -896,5 +903,5 @@
   [".sector-table-scroll", ".industry-table-scroll"].forEach((selector) => { const shell = $(selector); if (shell) shell.addEventListener("scroll", () => requestAnimationFrame(syncPinnedRowCovers), { passive: true }); });
   window.addEventListener("scroll", () => { $$(".index-hover-bubble:not([hidden])").forEach((bubble) => positionIndexHoverBubble(bubble.__ownerCard || bubble.closest(".index-card"))); }, { passive: true });
   renderAll(); initTheme(); updateClocks(); window.setInterval(updateClocks, 1000); hydrateStockbee(); hydrateStockbeeMomentum(); hydrateMarketSnapshot(); hydrateRefreshStatus();
-  window.setInterval(() => { hydrateMarketSnapshot(); hydrateRefreshStatus(); }, BTC_REFRESH_INTERVAL_MS);
+  window.setInterval(() => { hydrateStockbee(); hydrateStockbeeMomentum(); hydrateMarketSnapshot(); hydrateRefreshStatus(); }, BTC_REFRESH_INTERVAL_MS);
 })();

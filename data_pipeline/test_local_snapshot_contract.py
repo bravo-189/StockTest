@@ -5,9 +5,10 @@ from pathlib import Path
 class LocalSnapshotContractTests(unittest.TestCase):
     def test_browser_reads_only_pipeline_snapshot(self):
         app = Path("StockTest/app.js").read_text(encoding="utf-8")
-        self.assertIn('fetch("data/stockbee.json", { cache: "no-store" })', app)
-        self.assertIn('fetch("data/market_snapshot.json", { cache: "no-store" })', app)
-        self.assertIn('fetch("data/refresh_status.json", { cache: "no-store" })', app)
+        self.assertIn('fetch(snapshotUrl("stockbee.json"), { cache: "no-store" })', app)
+        self.assertIn('fetch(snapshotUrl("market_snapshot.json"), { cache: "no-store" })', app)
+        self.assertIn('fetch(snapshotUrl("refresh_status.json"), { cache: "no-store" })', app)
+        self.assertIn('const DATA_STATE_BASE_URL = "https://raw.githubusercontent.com/bravo-189/StockTest/data-state/data/";', app)
         self.assertIn('setInterval', app)
         self.assertIn('pendingBars', app)
         self.assertIn("hydrateMarketSnapshot", app)
