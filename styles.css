@@ -373,6 +373,12 @@ h2 { font-size: 22px; letter-spacing: -.025em; line-height: 1.2; }
 .rsi-daily-ranking-panel .overview-panel-heading { min-height: 68px; }
 .rsi-daily-ranking-panel .rsi-gainers-table { min-width: 0; }
 .rsi-daily-ranking-panel .rsi-gainers-table th, .rsi-daily-ranking-panel .rsi-gainers-table td { padding-inline: 9px; }
+.rsi-gainers-table .col-rank { width: 9%; }
+.rsi-gainers-table .col-etf { width: 23%; }
+.rsi-gainers-table .col-industry { width: 22%; }
+.rsi-gainers-table .col-rsi { width: 15%; }
+.rsi-gainers-table .col-delta { width: 16%; }
+.rsi-gainers-table th:nth-child(2), .rsi-gainers-table td:nth-child(2), .rsi-gainers-table th:nth-child(3), .rsi-gainers-table td:nth-child(3) { white-space: normal; }
 .rsi-gainers-table-shell { overflow-x: auto; }
 .rsi-gainers-table { min-width: 760px; }
 .rsi-gainers-table th, .rsi-gainers-table td { padding: 11px 15px; }
