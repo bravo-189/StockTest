@@ -577,7 +577,8 @@
   }
   function renderRsiHistoryControls() { renderRsiHistory("sector"); renderRsiHistory("industry"); }
   function rsiDailyChangeFor(ticker) {
-    const bars = Array.isArray(marketBars[ticker]) ? marketBars[ticker] : [];
+    const snapshotBars = DashboardData.marketSnapshot?.instruments?.[ticker]?.bars;
+    const bars = Array.isArray(marketBars[ticker]) && marketBars[ticker].length ? marketBars[ticker] : (Array.isArray(snapshotBars) ? snapshotBars : []);
     if (bars.length < 16) return null;
     const current = rsi14FromBars(bars); const previous = rsi14FromBars(bars.slice(0, -1));
     if (current == null || previous == null) return null;
@@ -593,12 +594,12 @@
       if (!change) return;
       const existing = changesByTicker.get(row.ticker);
       if (existing) { existing.labels.push(`${row.scope} · ${row.name}`); return; }
-      changesByTicker.set(row.ticker, { row: { ...row, labels: [`${row.scope} · ${row.name}`] }, change });
+      changesByTicker.set(row.ticker, { ...row, labels: [`${row.scope} · ${row.name}`], change });
     });
     const changes = [...changesByTicker.values()];
-    const gainers = changes.filter((entry) => entry.change.delta >= RSI_GAIN_THRESHOLD).sort((a, b) => b.change.delta - a.change.delta || a.row.ticker.localeCompare(b.row.ticker));
-    const losers = changes.filter((entry) => entry.change.delta <= -RSI_GAIN_THRESHOLD).sort((a, b) => a.change.delta - b.change.delta || a.row.ticker.localeCompare(b.row.ticker));
-    const renderRows = (rows, emptyCopy) => rows.length ? rows.map(({ row, change }, index) => `<tr><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="etf-button tradingview-link" href="${tradingViewUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${row.ticker}">${row.ticker}</a></td><td><span class="rsi-scope-list">${row.labels.map((label) => html(label)).join("<br>")}</span></td><td class="rsi-history-value">${change.current.toFixed(1)}</td><td class="rsi-history-value">${change.previous.toFixed(1)}</td><td>${deltaDisplay(change.delta)}</td></tr>`).join("") : `<tr><td colspan="6"><div class="drawer-empty">${emptyCopy}</div></td></tr>`;
+    const gainers = changes.filter((entry) => entry.change.delta >= RSI_GAIN_THRESHOLD).sort((a, b) => b.change.delta - a.change.delta || a.ticker.localeCompare(b.ticker));
+    const losers = changes.filter((entry) => entry.change.delta <= -RSI_GAIN_THRESHOLD).sort((a, b) => a.change.delta - b.change.delta || a.ticker.localeCompare(b.ticker));
+    const renderRows = (rows, emptyCopy) => rows.length ? rows.map(({ change, ...row }, index) => `<tr><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="etf-button tradingview-link" href="${tradingViewUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${row.ticker}">${row.ticker}</a></td><td><span class="rsi-scope-list">${row.labels.map((label) => html(label)).join("<br>")}</span></td><td class="rsi-history-value">${change.current.toFixed(1)}</td><td class="rsi-history-value">${change.previous.toFixed(1)}</td><td>${deltaDisplay(change.delta)}</td></tr>`).join("") : `<tr><td colspan="6"><div class="drawer-empty">${emptyCopy}</div></td></tr>`;
     if (gainersBody) gainersBody.innerHTML = renderRows(gainers, `当前没有 RSI14 增长达到 ${RSI_GAIN_THRESHOLD} 点的板块或行业 ETF`);
     if (losersBody) losersBody.innerHTML = renderRows(losers, `当前没有 RSI14 减少达到 ${RSI_GAIN_THRESHOLD} 点的板块或行业 ETF`);
     if (meta) meta.textContent = `日增 ${gainers.length} 项 · 日减 ${losers.length} 项 · 同一代码已合并`;
@@ -671,9 +672,18 @@
       const response = await fetch("data/market_snapshot.json", { cache: "no-store" });
       if (!response.ok) return;
       const snapshot = await response.json();
-      if (!applyMarketSnapshot(snapshot)) return;
+      const applied = applyMarketSnapshot(snapshot);
+      if (!applied) return;
       const hoveredTicker = $(".index-card:hover .sparkline")?.dataset.sparkTicker;
-      renderIndices(); renderMarketOverview(); renderSectors(); renderIndustries(); renderRsiHistoryControls(); renderRsiGainers(); renderStockbeeMomentum();
+      // Render the RSI mover tables before the other snapshot-driven sections.
+      // A failure in an unrelated section must not leave these tables at their
+      // initial empty state after the market bars have loaded.
+      renderRsiGainers();
+      try {
+        renderIndices(); renderMarketOverview(); renderSectors(); renderIndustries(); renderRsiHistoryControls(); renderRsiGainers(); renderStockbeeMomentum();
+      } catch (error) {
+        console.error("snapshot render failed", error);
+      }
       if (hoveredTicker) {
         const hoveredCanvas = $$(".sparkline", $("#index-grid")).find((canvas) => canvas.dataset.sparkTicker === hoveredTicker);
         if (hoveredCanvas) updateIndexHoverBubble(hoveredCanvas.closest(".index-card"));
