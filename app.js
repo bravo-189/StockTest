@@ -435,8 +435,14 @@
     updateRsiRankingSortButtons();
   }
   function renderMarketOverview() {
-    const breadthRoot = $("#market-overview-breadth"); const meta = $("#market-overview-meta");
+    const breadthRoot = $("#market-overview-breadth"); const meta = $("#market-overview-meta"); const leaderRoot = $("#market-rsi-leader");
     if (!breadthRoot) return;
+    if (leaderRoot) {
+      const leader = [...sectors.map((row) => ({ ...row, scope: "板块" })), ...industries.map((row) => ({ ...row, scope: "行业" }))]
+        .filter((row) => Number.isFinite(Number(row.rsi)))
+        .sort((a, b) => Number(b.rsi) - Number(a.rsi) || a.ticker.localeCompare(b.ticker))[0];
+      leaderRoot.innerHTML = leader ? `<div class="market-rsi-leader-copy"><small>AFTER-HOURS RSI LEADER</small><strong>盘后 RSI 最强标的</strong><span class="market-rsi-leader-detail">${html(leader.scope)} · ${html(leader.name)} · 当前可用板块与行业 ETF 中 RSI14 最高</span></div><a class="market-rsi-leader-symbol tradingview-link" href="${tradingViewUrl(leader.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${leader.ticker}">${html(leader.ticker)}</a><div class="market-rsi-leader-score"><small>RSI14</small><strong>${Number(leader.rsi).toFixed(1)}</strong></div>` : `<div class="market-rsi-leader-copy"><small>AFTER-HOURS RSI LEADER</small><strong>盘后 RSI 最强标的</strong><span class="market-rsi-leader-detail">暂无可用的板块或行业 RSI 数据</span></div>`;
+    }
     const latestBreadth = breadth.slice().sort((a, b) => String(a.date).localeCompare(String(b.date))).at(-1) || {};
     const breadthCards = [["T2108", Number(latestBreadth.t2108), "%", "neutral", "40MA 以上股票占比"], ["4%上涨 · 今日", Number(latestBreadth.up), "", "positive", "今日涨幅 ≥ 4% 的股票数"], ["4%下跌 · 今日", Number(latestBreadth.down), "", "negative", "今日跌幅 ≤ −4% 的股票数"], ["5日比率", Number(latestBreadth.ratio5), "", "neutral", "5 日上涨 / 下跌比"], ["10日比率", Number(latestBreadth.ratio10), "", "neutral", "10 日上涨 / 下跌比"], ["25%上涨 · 季度", Number(latestBreadth.up25Quarter), "", "positive", "季度涨幅 ≥ 25% 的股票数"], ["25%下跌 · 季度", Number(latestBreadth.down25Quarter), "", "negative", "季度跌幅 ≤ −25% 的股票数"]];
     breadthRoot.innerHTML = breadthCards.map(([label, value, suffix, tone, description]) => `<article class="market-overview-breadth-card"><small>${label}</small><strong class="${tone}">${Number.isFinite(value) ? value.toLocaleString("en-US", { minimumFractionDigits: suffix === "%" ? 1 : value % 1 ? 2 : 0, maximumFractionDigits: suffix === "%" ? 1 : value % 1 ? 2 : 0 }) : "—"}${suffix}</strong><span class="breadth-card-description">${description}</span><span class="breadth-card-source">Stockbee 市场宽度</span></article>`).join("");

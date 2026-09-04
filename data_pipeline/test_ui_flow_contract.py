@@ -89,7 +89,7 @@ class UiFlowContractTests(unittest.TestCase):
     def test_market_overview_starts_with_indices_breadth_and_rsi_rankings(self):
         self.assertIn('id="market-overview"', self.page)
         self.assertIn("市场一览", self.page)
-        for element_id in ("index-grid", "market-overview-breadth", "rsi-top-body", "rsi-bottom-body"):
+        for element_id in ("market-rsi-leader", "index-grid", "market-overview-breadth", "rsi-top-body", "rsi-bottom-body"):
             self.assertIn(f'id="{element_id}"', self.page)
         for label in ("RSI Top 20", "RSI Bottom 20", "市场宽度", "4%上涨", "4%下跌", "5日比率"):
             self.assertIn(label, self.page)
@@ -103,6 +103,8 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn('data-rsi-sort="bottom"', self.page)
         self.assertIn('data-target="market-overview"', self.page)
         self.assertIn("breadth-card-description", self.app)
+        self.assertIn("AFTER-HOURS RSI LEADER", self.app)
+        self.assertIn("盘后 RSI 最强标的", self.app)
         self.assertNotIn("MARKET REGIME · 盘后状态", self.page)
         self.assertNotIn('id="indices"', self.page)
 
