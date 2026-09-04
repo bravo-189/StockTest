@@ -318,6 +318,12 @@ h2 { font-size: 22px; letter-spacing: -.025em; line-height: 1.2; }
 .data-table tbody tr:hover { background: var(--surface-2); }
 .data-table tbody tr.is-pinned { background: color-mix(in srgb, var(--blue) 7%, var(--surface)); }
 .data-table tbody tr.is-pinned:hover { background: color-mix(in srgb, var(--blue) 12%, var(--surface)); }
+.delta-display { display: inline-flex; align-items: center; justify-content: flex-end; gap: 5px; min-width: 62px; color: var(--muted); font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.delta-display .delta-triangle { font-family: var(--sans); font-size: 10px; line-height: 1; }
+.delta-display.is-positive { color: var(--green); }
+.delta-display.is-negative { color: var(--red); }
+.delta-display.is-neutral { color: var(--muted); }
+.rsi-scope-list { color: var(--muted-2); font-size: 12px; line-height: 1.5; }
 .sector-table-scroll .data-table tbody tr.is-pinned,
 .industry-table-scroll .data-table tbody tr.is-pinned { position: sticky; z-index: 3; top: var(--table-header-height, 40px); background: color-mix(in srgb, var(--blue) 9%, var(--surface)); box-shadow: 0 1px 0 var(--line-strong); }
 .sector-table-scroll .data-table tbody tr.is-pinned td,

@@ -60,15 +60,15 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn('state.industryView === "top"', self.app)
         self.assertIn('industrySort', self.app)
 
-    def test_change_columns_use_numeric_day_labels_and_percent_suffix(self):
-        for label in ("1日变化", "5日变化", "20日变化"):
+    def test_change_columns_use_triangle_delta_labels(self):
+        for label in ("Δ1", "Δ5", "Δ20"):
             self.assertIn(label, self.page)
-        self.assertNotIn(">Δ1<", self.page)
-        self.assertNotIn(">Δ5<", self.page)
-        self.assertNotIn(">Δ20<", self.page)
+        self.assertIn("const deltaDisplay =", self.app)
+        self.assertIn('class=\"delta-triangle\"', self.app)
+        self.assertIn("signedDelta(numeric)", self.app)
         self.assertIn("const signed = (value, digits) => `${signedNumber(value, digits)}%`;", self.app)
-        self.assertIn('<span class="drawer-metric-label">5日变化</span>', self.app)
-        self.assertIn('<span class="drawer-metric-label">20日变化</span>', self.app)
+        self.assertIn('<span class="drawer-metric-label">Δ5</span>', self.app)
+        self.assertIn('<span class="drawer-metric-label">Δ20</span>', self.app)
 
     def test_daily_rsi_gainers_page_filters_six_point_increases(self):
         self.assertIn('data-target="rsi-gainers"', self.page)
@@ -76,7 +76,7 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn("RSI 日增榜", self.page)
         self.assertIn("RSI 日减榜", self.page)
         self.assertIn('id="rsi-losers-body"', self.page)
-        for label in ("板块/行业", "当前 RSI14", "前一日 RSI14", "RSI 变化"):
+        for label in ("板块/行业", "当前 RSI14", "前一日 RSI14", "Δ1"):
             self.assertIn(label, self.page)
         self.assertIn("const RSI_GAIN_THRESHOLD = 6;", self.app)
         self.assertIn("function rsiDailyChangeFor(ticker)", self.app)
@@ -207,7 +207,11 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertNotIn("60 日预览", self.page)
 
     def test_rsi_mover_change_cells_are_numeric_without_point_suffix(self):
-        self.assertIn("signedNumber(change.delta, 1)", self.app)
+        self.assertIn("changesByTicker = new Map()", self.app)
+        self.assertIn("existing.labels.push", self.app)
+        self.assertIn('class="rsi-scope-list"', self.app)
+        self.assertIn("deltaDisplay(change.delta)", self.app)
+        self.assertNotIn("signedNumber(change.delta, 1)", self.app)
         self.assertNotIn("signedNumber(change.delta, 1)} 点", self.app)
 
     def test_topbar_has_live_us_and_beijing_clocks(self):
