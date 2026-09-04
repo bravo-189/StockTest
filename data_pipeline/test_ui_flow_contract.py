@@ -81,6 +81,27 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn("delta >= RSI_GAIN_THRESHOLD", self.app)
         self.assertIn("renderRsiGainers()", self.app)
 
+    def test_market_overview_starts_with_indices_breadth_and_rsi_rankings(self):
+        self.assertIn('id="market-overview"', self.page)
+        self.assertIn("市场一览", self.page)
+        for element_id in ("market-overview-indices", "market-overview-breadth", "rsi-top-body", "rsi-bottom-body"):
+            self.assertIn(f'id="{element_id}"', self.page)
+        for label in ("RSI Top 20", "RSI Bottom 20", "市场宽度", "4%上涨", "4%下跌", "5日比率"):
+            self.assertIn(label, self.page)
+        self.assertIn("function renderMarketOverview()", self.app)
+        self.assertIn("function renderRsiRankings()", self.app)
+        self.assertIn("renderMarketOverview()", self.app)
+        self.assertIn("renderRsiRankings()", self.app)
+        self.assertIn("slice(0, 20)", self.app)
+        self.assertIn("slice(-20).reverse()", self.app)
+
+    def test_market_change_values_use_absolute_deltas_without_percent_suffix(self):
+        self.assertIn("const signedDelta =", self.app)
+        self.assertIn("function closeDelta", self.app)
+        self.assertIn("const d1Delta = closeDelta", self.app)
+        self.assertIn('class="overview-index-delta-label"', self.app)
+        self.assertIn('title="绝对价格变化，不含百分号"', self.app)
+
     def test_industry_table_has_no_redundant_rsi_callout(self):
         self.assertIn('class="industry-layout"', self.page)
         self.assertNotIn('class="industry-callout', self.page)

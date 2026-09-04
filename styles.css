@@ -204,7 +204,8 @@ h2 { font-size: 22px; letter-spacing: -.025em; line-height: 1.2; }
 .briefing-item strong { display: block; font-size: 15px; }
 .briefing-item p { margin-top: 4px; color: var(--muted); font-size: 13px; line-height: 1.65; }
 
-.indices-section, .sector-section, .industry-section, .stockbee-momentum-section, .themes-section, .breadth-section { margin-top: 42px; scroll-margin-top: 86px; animation: reveal .55s ease-out both; }
+.market-overview-section, .indices-section, .sector-section, .industry-section, .stockbee-momentum-section, .themes-section, .breadth-section { margin-top: 42px; scroll-margin-top: 86px; animation: reveal .55s ease-out both; }
+.market-overview-section { margin-top: 0; }
 .indices-section { animation-delay: .08s; }
 .sector-section { animation-delay: .14s; }
 .industry-section { animation-delay: .2s; }
@@ -216,6 +217,36 @@ h2 { font-size: 22px; letter-spacing: -.025em; line-height: 1.2; }
 .section-heading h2 { margin-top: 5px; font-size: clamp(23px, 2.2vw, 28px); letter-spacing: -.035em; }
 .section-heading p { margin-top: 6px; color: var(--muted); font-size: 12px; }
 .section-meta { color: var(--muted-2); font-size: 12px; white-space: nowrap; }
+.market-overview-indices { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.market-overview-index-card, .market-overview-breadth-card { min-width: 0; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.overview-index-heading { display: flex; align-items: start; justify-content: space-between; gap: 8px; }
+.overview-index-heading strong { display: block; color: var(--text-strong); font-family: var(--mono); font-size: 13px; }
+.overview-index-heading span:not(.positive):not(.negative):not(.neutral) { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; }
+.overview-index-price { margin-top: 12px; color: var(--text-strong); font-family: var(--mono); font-size: 19px; font-weight: 550; }
+.overview-index-price span { color: var(--muted); font-size: 11px; font-weight: 400; }
+.overview-index-chart { display: block; width: 100%; height: 56px; margin-top: 8px; }
+.overview-index-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 4px; }
+.overview-index-metrics small, .overview-index-metrics b { display: block; font-family: var(--mono); font-size: 10px; }
+.overview-index-metrics small { color: var(--muted-2); font-family: var(--sans); font-size: 9px; }
+.overview-index-metrics b { margin-top: 3px; font-weight: 550; }
+.market-overview-breadth { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+.market-overview-breadth-card small, .market-overview-breadth-card span { display: block; color: var(--muted-2); font-size: 10px; }
+.market-overview-breadth-card strong { display: block; margin: 8px 0 5px; font-family: var(--mono); font-size: 18px; font-weight: 550; }
+.market-overview-rsi-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
+.market-overview-rsi-panel { min-width: 0; padding: 16px; }
+.overview-panel-heading { display: flex; align-items: start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.overview-panel-heading h3 { color: var(--text-strong); font-size: 15px; }
+.overview-panel-heading p { margin-top: 4px; color: var(--muted); font-size: 10px; }
+.overview-rsi-table-shell { max-height: 420px; overflow-y: auto; overflow-x: hidden; }
+.market-overview-rsi-panel .overview-rsi-table { width: 100%; min-width: 0; }
+.overview-rsi-table th:nth-child(1), .overview-rsi-table td:nth-child(1) { width: 8%; }
+.overview-rsi-table th:nth-child(2), .overview-rsi-table td:nth-child(2) { width: 25%; }
+.overview-rsi-table th:nth-child(3), .overview-rsi-table td:nth-child(3) { width: 29%; }
+.overview-rsi-table th:nth-child(4), .overview-rsi-table td:nth-child(4) { width: 18%; }
+.overview-rsi-table th:nth-child(5), .overview-rsi-table td:nth-child(5) { width: 20%; }
+.overview-rsi-table th, .overview-rsi-table td { padding: 9px 10px; }
+.overview-rsi-table th:nth-child(n+4), .overview-rsi-table td:nth-child(n+4) { text-align: right; }
+.overview-industry-name { display: inline-block; max-width: 150px; overflow: hidden; text-overflow: ellipsis; vertical-align: bottom; }
 .industry-view-meta { margin: -6px 0 10px; text-align: right; }
 .index-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
 .index-card { position: relative; min-width: 0; padding: 21px 18px 17px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); overflow: visible; cursor: pointer; animation: card-in .45s ease-out both; transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
@@ -522,6 +553,8 @@ h2 { font-size: 22px; letter-spacing: -.025em; line-height: 1.2; }
   .topbar { padding-inline: 26px; }
   .content-wrap { padding-inline: 26px; }
   .index-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .market-overview-indices { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .market-overview-breadth { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .theme-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .holdings-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
@@ -541,6 +574,9 @@ h2 { font-size: 22px; letter-spacing: -.025em; line-height: 1.2; }
   .hero-grid { grid-template-columns: 1fr; }
   .industry-layout { grid-template-columns: 1fr; }
   .rsi-history-comparison { grid-template-columns: 1fr; }
+  .market-overview-indices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .market-overview-breadth { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .market-overview-rsi-grid { grid-template-columns: 1fr; }
   .index-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .breadth-chart-toolbar { align-items: start; flex-direction: column; }
   .breadth-metric-switch { justify-content: start; }
@@ -572,6 +608,8 @@ h2 { font-size: 22px; letter-spacing: -.025em; line-height: 1.2; }
   .section-heading { display: block; }
   .subsection-heading { display: block; }
   .section-meta { display: block; margin-top: 10px; }
+  .market-overview-indices, .market-overview-breadth { gap: 8px; }
+  .market-overview-index-card, .market-overview-breadth-card { padding: 11px; }
   .segmented-control, .view-switch { margin-top: 14px; }
   .index-grid { gap: 8px; }
   .index-card { padding: 15px 13px 14px; }

@@ -70,6 +70,13 @@
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const signedNumber = (value, digits) => `${value >= 0 ? "+" : "−"}${Math.abs(value).toFixed(digits == null ? 1 : digits)}`;
   const signed = (value, digits) => `${signedNumber(value, digits)}%`;
+  const signedDelta = (value) => {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) return "—";
+    const rounded = Number(numeric.toFixed(2));
+    const body = Math.abs(rounded).toFixed(2).replace(/\.00$/, "").replace(/(\.\d)0$/, "$1");
+    return `${rounded >= 0 ? "+" : "−"}${body}`;
+  };
   const classFor = (value) => value > 0.08 ? "positive" : value < -0.08 ? "negative" : "neutral";
   const html = (value) => String(value).replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
   const classificationLabel = (value, labels) => labels[value] || value || "未找到可核验分类";
@@ -360,6 +367,29 @@
     root.innerHTML = indexDefs.map(([ticker, name, price, change], index) => { const latestIntraday = marketIntradayBars[ticker]?.[marketIntradayBars[ticker].length - 1]; const incomplete = latestIntraday?.status === "incomplete"; const mode = ticker === "BTC" ? "当日 · 2H（24H）K 线" : "当日 · 5M 面积图"; const note = incomplete ? "未收盘 · 悬停放大近 1 个月" : "悬停放大近 1 个月"; const aria = `${name} ${ticker === "BTC" ? "当日 2 小时 K 线" : "当日 5 分钟折线面积图"}${incomplete ? "（含未收盘柱）" : ""}`; return `<article class="index-card" tabindex="0" role="link" data-index-ticker="${ticker}" aria-label="在 TradingView 查看 ${name}（${ticker}）"><div class="index-card-top"><div><div class="ticker">${ticker}</div><div class="index-name">${name}</div></div><span class="index-change ${classFor(change)}">${signed(change)}</span></div><div class="index-price">${price}</div><canvas class="sparkline" tabindex="0" data-spark-ticker="${ticker}" data-spark-seed="${index + 40}" data-spark-change="${change}" aria-label="${aria}"></canvas><div class="sparkline-caption"><span class="sparkline-mode">${mode}</span><span class="sparkline-note${incomplete ? " is-incomplete" : ""}">${note}</span></div><div class="index-hover-bubble" role="tooltip" hidden><div class="bubble-heading"><div class="bubble-title-group"><strong>放大 · 近 1 个月日线 K 线</strong><span class="bubble-price">价格 —</span></div><span class="bubble-change">—</span></div><div class="bubble-legend" aria-label="图例"><span><i class="legend-candle"></i>K 线</span><span><i class="legend-ema9"></i>EMA9</span><span><i class="legend-ema21"></i>EMA21</span></div><canvas class="bubble-sparkline" width="640" height="220" aria-hidden="true"></canvas><div class="bubble-meta"><span class="bubble-range">近 1 个月日线</span><span class="bubble-refresh">等待盘中快照</span><span>移开关闭</span></div></div></article>`; }).join("");
     $$(".sparkline", root).forEach((canvas) => { setupIndexCardInteractions(canvas); drawIndexCardChart(canvas); });
   }
+  function renderRsiRankings() {
+    const topBody = $("#rsi-top-body"); const bottomBody = $("#rsi-bottom-body");
+    if (!topBody || !bottomBody) return;
+    const rows = industries.filter((row) => Number.isFinite(Number(row.rsi))).slice().sort((a, b) => Number(b.rsi) - Number(a.rsi) || a.ticker.localeCompare(b.ticker));
+    const renderRows = (items) => items.length ? items.map((row, index) => { const delta = closeDelta(marketBars[row.ticker], 1); return `<tr><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="etf-button tradingview-link" href="${tradingViewUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${row.ticker}">${html(row.ticker)}</a></td><td><span class="sub-label overview-industry-name">${html(row.name)}</span></td><td class="rsi-history-value">${Number(row.rsi).toFixed(1)}</td><td class="${classFor(row.d1)}" title="绝对价格变化，不含百分号">${signedDelta(delta)}</td></tr>`; }).join("") : `<tr><td colspan="5"><div class="drawer-empty">暂无可用 RSI 数据</div></td></tr>`;
+    topBody.innerHTML = renderRows(rows.slice(0, 20));
+    bottomBody.innerHTML = renderRows(rows.slice(-20).reverse());
+  }
+  function renderMarketOverview() {
+    const indexRoot = $("#market-overview-indices"); const breadthRoot = $("#market-overview-breadth"); const meta = $("#market-overview-meta");
+    if (!indexRoot || !breadthRoot) return;
+    const overviewRows = indexDefs.map(([ticker, name, fallbackPrice, fallbackChange], index) => {
+      const bars = marketBars[ticker] || []; const latest = bars[bars.length - 1]; const price = Number(latest?.close); const d1 = closeChange(bars, 1); const d5 = closeChange(bars, 5); const d20 = closeChange(bars, 20); const d1Delta = closeDelta(bars, 1); const d5Delta = closeDelta(bars, 5); const d20Delta = closeDelta(bars, 20); const rsi = rsi14FromBars(bars);
+      return { ticker, name, price: Number.isFinite(price) ? price : Number(String(fallbackPrice).replace(/,/g, "")), change: Number.isFinite(d1) ? d1 : fallbackChange, d1, d5, d20, d1Delta, d5Delta, d20Delta, rsi, bars, index };
+    });
+    indexRoot.innerHTML = overviewRows.map((row) => `<article class="market-overview-index-card"><div class="overview-index-heading"><div><strong>${html(row.ticker)}</strong><span>${html(row.name)}</span></div><span class="${classFor(row.change)}">${signed(row.change)}</span></div><div class="overview-index-price">${formatPrice(row.price)} <span>RSI ${row.rsi == null ? "—" : row.rsi.toFixed(1)}</span></div><canvas class="overview-index-chart" data-overview-ticker="${html(row.ticker)}" aria-label="${html(row.name)} 当日走势"></canvas><div class="overview-index-metrics"><span><small class="overview-index-delta-label">1日</small><b class="${classFor(row.d1Delta)}" title="绝对价格变化，不含百分号">${signedDelta(row.d1Delta)}</b></span><span><small class="overview-index-delta-label">5日</small><b class="${classFor(row.d5Delta)}" title="绝对价格变化，不含百分号">${signedDelta(row.d5Delta)}</b></span><span><small class="overview-index-delta-label">20日</small><b class="${classFor(row.d20Delta)}" title="绝对价格变化，不含百分号">${signedDelta(row.d20Delta)}</b></span></div></article>`).join("");
+    $$(".overview-index-chart", indexRoot).forEach((canvas) => { const row = overviewRows.find((item) => item.ticker === canvas.dataset.overviewTicker); if (row) drawLineAreaChart(canvas, row.bars.slice(-21), row.change); });
+    const latestBreadth = breadth.slice().sort((a, b) => String(a.date).localeCompare(String(b.date))).at(-1) || {};
+    const breadthCards = [["T2108", Number(latestBreadth.t2108), "%", "neutral"], ["4%上涨 · 今日", Number(latestBreadth.up), "", "positive"], ["4%下跌 · 今日", Number(latestBreadth.down), "", "negative"], ["5日比率", Number(latestBreadth.ratio5), "", "neutral"], ["10日比率", Number(latestBreadth.ratio10), "", "neutral"], ["25%上涨 · 季度", Number(latestBreadth.up25Quarter), "", "positive"], ["25%下跌 · 季度", Number(latestBreadth.down25Quarter), "", "negative"]];
+    breadthRoot.innerHTML = breadthCards.map(([label, value, suffix, tone]) => `<article class="market-overview-breadth-card"><small>${label}</small><strong class="${tone}">${Number.isFinite(value) ? value.toLocaleString("en-US", { minimumFractionDigits: suffix === "%" ? 1 : value % 1 ? 2 : 0, maximumFractionDigits: suffix === "%" ? 1 : value % 1 ? 2 : 0 }) : "—"}${suffix}</strong><span>Stockbee 市场宽度</span></article>`).join("");
+    if (meta) meta.textContent = latestBreadth.date ? `最新交易日 ${latestBreadth.date} · 变化列为绝对价格差` : "最新交易日 · 变化列为绝对价格差";
+    renderRsiRankings();
+  }
   function sectorScore(sector) { return state.sectorMode === "d1" ? sector.d1 : state.sectorMode === "d5" ? sector.d5 : sector.d20; }
   function tradingViewUrl(ticker) { const exchange = tradingViewExchanges[ticker] || "AMEX"; return `https://tw.tradingview.com/chart/e2o5U28E/?symbol=${encodeURIComponent(`${exchange}:${ticker}`)}`; }
   function tradingViewSymbolUrl(ticker) { return `https://tw.tradingview.com/symbols/${encodeURIComponent(ticker)}/`; }
@@ -381,7 +411,7 @@
   }
   function renderSectors() {
     const body = $("#sector-table-body"); const rows = sectorRows();
-    body.innerHTML = rows.length ? rows.map((row, index) => { const tone = row.trend === "改善" ? "positive" : row.trend === "转弱" ? "negative" : "neutral"; const trendTone = row.trend150 === "上涨" ? "positive" : row.trend150 === "下降" ? "negative" : "neutral"; return `<tr class="${row.ticker === "SPY" ? "is-pinned" : ""}"><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="etf-button tradingview-link" href="${tradingViewUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${row.ticker}">${row.ticker}</a><span class="sub-label">${row.name}${row.ticker === "SPY" ? " · 锁定" : ""}</span></td><td><span class="trend-label is-${trendTone}" title="最新收盘价相对 MA150">${row.trend150 || "数据不足"}</span></td><td>${row.rsi.toFixed(1)}</td><td class="${classFor(row.d1)}">${signed(row.d1)}</td><td class="${classFor(row.d5)}">${signed(row.d5)}</td><td class="${classFor(row.d20)}">${signed(row.d20)}</td><td><span class="status-label is-${tone}">${row.trend}</span></td></tr>`; }).join("") : `<tr><td colspan="8"><div class="drawer-empty">没有匹配的板块或 ETF</div></td></tr>`;
+    body.innerHTML = rows.length ? rows.map((row, index) => { const tone = row.trend === "改善" ? "positive" : row.trend === "转弱" ? "negative" : "neutral"; const trendTone = row.trend150 === "上涨" ? "positive" : row.trend150 === "下降" ? "negative" : "neutral"; const bars = marketBars[row.ticker]; const d1Delta = closeDelta(bars, 1); const d5Delta = closeDelta(bars, 5); const d20Delta = closeDelta(bars, 20); return `<tr class="${row.ticker === "SPY" ? "is-pinned" : ""}"><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="etf-button tradingview-link" href="${tradingViewUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${row.ticker}">${row.ticker}</a><span class="sub-label">${row.name}${row.ticker === "SPY" ? " · 锁定" : ""}</span></td><td><span class="trend-label is-${trendTone}" title="最新收盘价相对 MA150">${row.trend150 || "数据不足"}</span></td><td>${row.rsi.toFixed(1)}</td><td class="${classFor(d1Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d1Delta)}</td><td class="${classFor(d5Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d5Delta)}</td><td class="${classFor(d20Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d20Delta)}</td><td><span class="status-label is-${tone}">${row.trend}</span></td></tr>`; }).join("") : `<tr><td colspan="8"><div class="drawer-empty">没有匹配的板块或 ETF</div></td></tr>`;
     updateSectorSortButtons();
     requestAnimationFrame(syncPinnedRowCovers);
   }
@@ -392,11 +422,11 @@
     const ordered = spy ? [spy, ...sorted.filter((row) => row.ticker !== "SPY")] : sorted;
     const visible = state.industryView === "top" ? ordered.slice(0, 15) : ordered;
     const body = $("#industry-table-body");
-    body.innerHTML = visible.length ? visible.map((row, index) => { const status = row.d5 > .18 ? "改善" : row.d5 < -.18 ? "转弱" : "盘整"; const tone = status === "改善" ? "positive" : status === "转弱" ? "negative" : "neutral"; const trendTone = row.trend150 === "上涨" ? "positive" : row.trend150 === "下降" ? "negative" : "neutral"; return `<tr class="${row.ticker === "SPY" ? "is-pinned" : ""}"><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="etf-button tradingview-link" href="${tradingViewUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${row.ticker}">${row.ticker}</a><span class="sub-label">${row.ticker === "SPY" ? "标普 500 · 锁定" : ""}</span></td><td>${row.name}<span class="sub-label">${row.group}</span></td><td><span class="trend-label is-${trendTone}" title="最新收盘价相对 MA150">${row.trend150 || "数据不足"}</span></td><td>${row.rsi.toFixed(1)}</td><td class="${classFor(row.d5)}">${signed(row.d5)}</td><td class="${classFor(row.d20)}">${signed(row.d20)}</td><td><button class="holding-link" type="button" data-etf="${row.ticker}">前十大 →</button></td><td><span class="status-label is-${tone}">${status}</span></td></tr>`; }).join("") : `<tr><td colspan="9"><div class="drawer-empty">没有匹配的行业 ETF</div></td></tr>`;
+    body.innerHTML = visible.length ? visible.map((row, index) => { const status = row.d5 > .18 ? "改善" : row.d5 < -.18 ? "转弱" : "盘整"; const tone = status === "改善" ? "positive" : status === "转弱" ? "negative" : "neutral"; const trendTone = row.trend150 === "上涨" ? "positive" : row.trend150 === "下降" ? "negative" : "neutral"; const bars = marketBars[row.ticker]; const d5Delta = closeDelta(bars, 5); const d20Delta = closeDelta(bars, 20); return `<tr class="${row.ticker === "SPY" ? "is-pinned" : ""}"><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="etf-button tradingview-link" href="${tradingViewUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${row.ticker}">${row.ticker}</a><span class="sub-label">${row.ticker === "SPY" ? "标普 500 · 锁定" : ""}</span></td><td>${row.name}<span class="sub-label">${row.group}</span></td><td><span class="trend-label is-${trendTone}" title="最新收盘价相对 MA150">${row.trend150 || "数据不足"}</span></td><td>${row.rsi.toFixed(1)}</td><td class="${classFor(d5Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d5Delta)}</td><td class="${classFor(d20Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d20Delta)}</td><td><button class="holding-link" type="button" data-etf="${row.ticker}">前十大 →</button></td><td><span class="status-label is-${tone}">${status}</span></td></tr>`; }).join("") : `<tr><td colspan="9"><div class="drawer-empty">没有匹配的行业 ETF</div></td></tr>`;
     $("#industry-view-meta").textContent = `显示 ${visible.length} / ${filtered.length}`;
     const matrix = $("#industry-matrix");
     matrix.hidden = true;
-    matrix.innerHTML = filtered.map((row) => `<button class="matrix-cell" type="button" data-etf="${row.ticker}" aria-label="查看 ${row.ticker} ${row.name} 详情"><span class="matrix-ticker">${row.ticker}</span><span class="matrix-name">${row.name}</span><span class="matrix-metric ${classFor(row.d5)}">${row.rsi.toFixed(0)} · ${signed(row.d5)}</span></button>`).join("");
+    matrix.innerHTML = filtered.map((row) => { const delta = closeDelta(marketBars[row.ticker], 5); return `<button class="matrix-cell" type="button" data-etf="${row.ticker}" aria-label="查看 ${row.ticker} ${row.name} 详情"><span class="matrix-ticker">${row.ticker}</span><span class="matrix-name">${row.name}</span><span class="matrix-metric ${classFor(delta)}">${row.rsi.toFixed(0)} · ${signedDelta(delta)}</span></button>`; }).join("");
     updateIndustrySortButtons();
     requestAnimationFrame(syncPinnedRowCovers);
   }
@@ -459,6 +489,11 @@
     if (!Array.isArray(bars) || bars.length <= periods) return null;
     const previous = Number(bars[bars.length - periods - 1].close); const latest = Number(bars[bars.length - 1].close);
     return Number.isFinite(previous) && previous !== 0 && Number.isFinite(latest) ? +((latest / previous - 1) * 100).toFixed(2) : null;
+  }
+  function closeDelta(bars, periods) {
+    if (!Array.isArray(bars) || bars.length <= periods) return null;
+    const previous = Number(bars[bars.length - periods - 1].close); const latest = Number(bars[bars.length - 1].close);
+    return Number.isFinite(previous) && Number.isFinite(latest) ? +(latest - previous).toFixed(2) : null;
   }
   function compareMetricRows(a, b, key, direction) {
     const av = Number(a[key]); const bv = Number(b[key]);
@@ -591,7 +626,7 @@
       const snapshot = await response.json();
       if (!applyMarketSnapshot(snapshot)) return;
       const hoveredTicker = $(".index-card:hover .sparkline")?.dataset.sparkTicker;
-      renderIndices(); renderSectors(); renderIndustries(); renderRsiHistoryControls(); renderRsiGainers(); renderHoldings(); renderStockbeeMomentum();
+      renderIndices(); renderMarketOverview(); renderSectors(); renderIndustries(); renderRsiHistoryControls(); renderRsiGainers(); renderHoldings(); renderStockbeeMomentum();
       if (hoveredTicker) {
         const hoveredCanvas = $$(".sparkline", $("#index-grid")).find((canvas) => canvas.dataset.sparkTicker === hoveredTicker);
         if (hoveredCanvas) updateIndexHoverBubble(hoveredCanvas.closest(".index-card"));
@@ -662,7 +697,7 @@
       DashboardData.metadata.sourceStatus = snapshot.metadata && snapshot.metadata.sourceStatus ? snapshot.metadata.sourceStatus : "loaded";
       DashboardData.metadata.dataDate = snapshot.metadata && snapshot.metadata.latestDate ? snapshot.metadata.latestDate : DashboardData.metadata.dataDate;
       DashboardData.metadata.generatedAt = snapshot.metadata && snapshot.metadata.fetchedAt ? snapshot.metadata.fetchedAt : DashboardData.metadata.generatedAt;
-      renderBreadth();
+      renderBreadth(); renderMarketOverview();
       renderLocalMarketAnalysis();
     } catch (_) {
       // Local file previews keep the deterministic fallback when fetch is unavailable.
@@ -717,7 +752,7 @@
     const items = [["板块强势", topSectors], ["行业强势", topIndustries], ["Stockbee 宽度", `${breadthLabel} · 5 日上涨／下跌比 ${Number(latestBreadth.ratio5 || 0).toFixed(2)}`]];
     $$(".briefing-item").forEach((node, index) => { const item = items[index]; if (!item) return; const strong = $("strong", node); const text = $("p", node); if (strong) strong.textContent = item[0]; if (text) text.textContent = item[1]; });
   }
-  function renderAll() { renderIndices(); renderSectors(); renderIndustries(); renderRsiHistoryControls(); renderRsiGainers(); renderThemes(); renderHoldings(); renderStockbeeMomentum(); renderBreadth(); renderLocalMarketAnalysis(); updateModeButtons(); }
+  function renderAll() { renderIndices(); renderMarketOverview(); renderSectors(); renderIndustries(); renderRsiHistoryControls(); renderRsiGainers(); renderThemes(); renderHoldings(); renderStockbeeMomentum(); renderBreadth(); renderLocalMarketAnalysis(); updateModeButtons(); }
   function updateSectorSortButtons() {
     $$('[data-sector-sort]').forEach((button) => { const active = button.dataset.sectorSort === state.sectorSort.key; const glyph = button.querySelector(".sort-glyph"); button.classList.toggle("is-active", active); button.setAttribute("aria-sort", active ? (state.sectorSort.direction === "asc" ? "ascending" : "descending") : "none"); if (glyph) glyph.textContent = active ? (state.sectorSort.direction === "asc" ? "↑" : "↓") : "↕"; });
   }
@@ -740,7 +775,8 @@
     const failureReason = missingEntry && missingEntry.reason ? `原因：${missingEntry.reason}` : coverageStatus === "partial" ? `原因：来源仅返回 ${Array.isArray(entry.holdings) ? entry.holdings.length : 0} 行，未达到前十大` : "来源未返回可验证记录";
     $("#drawer-title").textContent = `${ticker} · ${item.name}`; $("#drawer-subtitle").textContent = `${isSector ? "板块 ETF" : "行业 ETF"} · ${SNAPSHOT_DATE} 收盘 · ${isReal ? "真实前十大名单" : "持仓待核对"}`;
     const holdingsMarkup = list.length ? `<div class="holding-list">${list.map((holding, index) => `<div class="holding-row"><span>${String(index + 1).padStart(2, "0")}</span><div><strong>${html(holding.ticker || "未提供代码")}</strong><small>${html(holding.name)}</small></div></div>`).join("")}</div>` : `<div class="drawer-empty">该 ETF 暂无可验证的前十大名单。${html(failureReason)}</div>`;
-    $("#drawer-content").innerHTML = `<canvas class="drawer-chart" id="drawer-chart" width="360" height="140" aria-label="${ticker} 60 日走势"></canvas><div class="drawer-metrics"><div class="drawer-metric"><span>RSI14</span><strong>${item.rsi.toFixed(1)}</strong></div><div class="drawer-metric"><span class="drawer-metric-label">5日变化</span><strong class="${classFor(item.d5)}">${signed(item.d5)}</strong></div><div class="drawer-metric"><span class="drawer-metric-label">20日变化</span><strong class="${classFor(item.d20)}">${signed(item.d20)}</strong></div></div><div class="drawer-section"><h3>前十大持仓名单</h3><p>来源 · ${html(source)}<br>持仓日期 · ${html(asOf)} · 日更<br>仅展示名单，不展示权重比例。</p>${holdingsMarkup}</div><div class="drawer-section"><h3>研究提示</h3><p>${isSector ? "板块 ETF 的前十大名单来自公开来源，已保留来源与日期，适合盘后研究核对；未使用其他 ETF 数据替代。" : "行业 ETF 的前十大名单来自公开来源，未使用其他 ETF 数据替代；点击 ETF 名称可在 TradingView 查看行情。"}</p></div>`;
+    const d5Delta = closeDelta(marketBars[ticker], 5); const d20Delta = closeDelta(marketBars[ticker], 20);
+    $("#drawer-content").innerHTML = `<canvas class="drawer-chart" id="drawer-chart" width="360" height="140" aria-label="${ticker} 60 日走势"></canvas><div class="drawer-metrics"><div class="drawer-metric"><span>RSI14</span><strong>${item.rsi.toFixed(1)}</strong></div><div class="drawer-metric"><span class="drawer-metric-label">5日变化</span><strong class="${classFor(d5Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d5Delta)}</strong></div><div class="drawer-metric"><span class="drawer-metric-label">20日变化</span><strong class="${classFor(d20Delta)}" title="绝对价格变化，不含百分号">${signedDelta(d20Delta)}</strong></div></div><div class="drawer-section"><h3>前十大持仓名单</h3><p>来源 · ${html(source)}<br>持仓日期 · ${html(asOf)} · 日更<br>仅展示名单，不展示权重比例。</p>${holdingsMarkup}</div><div class="drawer-section"><h3>研究提示</h3><p>${isSector ? "板块 ETF 的前十大名单来自公开来源，已保留来源与日期，适合盘后研究核对；未使用其他 ETF 数据替代。" : "行业 ETF 的前十大名单来自公开来源，未使用其他 ETF 数据替代；点击 ETF 名称可在 TradingView 查看行情。"}</p></div>`;
     drawer.classList.add("is-open"); drawer.setAttribute("aria-hidden", "false"); backdrop.hidden = false; document.body.style.overflow = "hidden"; drawSparkline($("#drawer-chart"), ticker.length * 11, item.d5, DETAIL_TRADING_DAYS, marketBars[ticker]);
     $("#drawer-close").focus();
   }

@@ -6,7 +6,7 @@
     <meta name="description" content="StockTest 美股盘后市场雷达网页原型" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <title>StockTest · 美股盘后雷达</title>
-    <link rel="stylesheet" href="styles.css?v=20260904-rsi-gainers" />
+    <link rel="stylesheet" href="styles.css?v=20260904-market-overview" />
   </head>
   <body>
     <a class="skip-link" href="#overview">跳到主要内容</a>
@@ -50,6 +50,25 @@
         </header>
 
         <div class="content-wrap">
+          <section class="market-overview-section" id="market-overview" aria-labelledby="market-overview-title">
+            <div class="section-heading compact-heading">
+              <div><div class="section-kicker">MARKET OVERVIEW</div><h2 id="market-overview-title">市场一览</h2></div>
+              <span class="section-meta" id="market-overview-meta">最新交易日 · 本地快照</span>
+            </div>
+            <div class="market-overview-indices" id="market-overview-indices" aria-label="核心指数 RSI 与变化"></div>
+            <div class="market-overview-breadth" id="market-overview-breadth" aria-label="市场宽度关键指标"></div>
+            <div class="market-overview-rsi-grid">
+              <article class="market-overview-rsi-panel section-surface" aria-labelledby="rsi-top-title">
+                <div class="overview-panel-heading"><div><h3 id="rsi-top-title">RSI Top 20</h3><p>行业 ETF · RSI14 最高</p></div><span class="section-meta">按 RSI14 降序</span></div>
+                <div class="table-shell overview-rsi-table-shell"><table class="data-table overview-rsi-table"><thead><tr><th scope="col">#</th><th scope="col">代码 · TradingView</th><th scope="col">行业</th><th scope="col">RSI14</th><th scope="col">1日变化</th></tr></thead><tbody id="rsi-top-body"></tbody></table></div>
+              </article>
+              <article class="market-overview-rsi-panel section-surface" aria-labelledby="rsi-bottom-title">
+                <div class="overview-panel-heading"><div><h3 id="rsi-bottom-title">RSI Bottom 20</h3><p>行业 ETF · RSI14 最低</p></div><span class="section-meta">按 RSI14 升序</span></div>
+                <div class="table-shell overview-rsi-table-shell"><table class="data-table overview-rsi-table"><thead><tr><th scope="col">#</th><th scope="col">代码 · TradingView</th><th scope="col">行业</th><th scope="col">RSI14</th><th scope="col">1日变化</th></tr></thead><tbody id="rsi-bottom-body"></tbody></table></div>
+              </article>
+            </div>
+          </section>
+
           <section class="hero-grid" id="overview" aria-labelledby="overview-title">
             <div class="hero-status section-surface">
               <div class="eyebrow">MARKET REGIME · 盘后状态</div>
@@ -232,6 +251,6 @@
     </aside>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="app.js?v=20260904-rsi-gainers"></script>
+    <script src="app.js?v=20260904-market-overview"></script>
   </body>
 </html>
