@@ -40,6 +40,7 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn('data-sector-sort="d1"', self.page)
         self.assertIn('data-sector-sort="d5"', self.page)
         self.assertIn('data-sector-sort="d20"', self.page)
+        self.assertIn('<th scope="col">板块</th>', self.page)
         self.assertNotIn('趋势（MA150）', self.page)
         self.assertNotIn('id="sector-status-filter"', self.page)
         self.assertNotIn('state.sectorStatus', self.app)
@@ -126,7 +127,7 @@ class UiFlowContractTests(unittest.TestCase):
     def test_sector_and_industry_tables_have_internal_scroll_and_pinned_spy_rows(self):
         self.assertIn('class="table-shell sector-table-scroll"', self.page)
         self.assertIn('class="industry-leaderboard table-shell industry-table-scroll"', self.page)
-        self.assertIn('<colgroup><col class="col-rank"><col class="col-etf"><col class="col-rsi"><col class="col-delta"><col class="col-delta"><col class="col-delta"><col class="col-holdings"></colgroup>', self.page)
+        self.assertIn('<colgroup><col class="col-rank"><col class="col-etf"><col class="col-sector"><col class="col-rsi"><col class="col-delta"><col class="col-delta"><col class="col-delta"><col class="col-holdings"></colgroup>', self.page)
         self.assertIn('<colgroup><col class="col-rank"><col class="col-etf"><col class="col-industry"><col class="col-rsi"><col class="col-delta"><col class="col-delta"><col class="col-holdings"></colgroup>', self.page)
         self.assertNotIn('<th scope="col">状态</th>', self.page)
         self.assertIn('<td colspan="7">', self.app)

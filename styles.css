@@ -301,10 +301,11 @@ h2 { font-size: 22px; letter-spacing: -.025em; line-height: 1.2; }
 .data-table th, .data-table td { vertical-align: middle; }
 .sector-table { min-width: 760px; }
 .sector-table .col-rank { width: 8%; }
-.sector-table .col-etf { width: 28%; }
-.sector-table .col-rsi, .sector-table .col-delta { width: 12%; }
-.sector-table .col-holdings { width: 12%; }
-.sector-table th:nth-child(n+3):not(:last-child), .sector-table td:nth-child(n+3):not(:last-child) { text-align: right; }
+.sector-table .col-etf { width: 18%; }
+.sector-table .col-sector { width: 20%; }
+.sector-table .col-rsi, .sector-table .col-delta { width: 11%; }
+.sector-table .col-holdings { width: 10%; }
+.sector-table th:nth-child(n+4):not(:last-child), .sector-table td:nth-child(n+4):not(:last-child) { text-align: right; }
 .sector-table th:last-child, .sector-table td:last-child { text-align: center; }
 .data-table th { position: sticky; z-index: 4; top: 0; padding: 12px 14px; border-bottom: 1px solid var(--line); background: var(--surface); color: var(--muted-2); font-size: 12px; font-weight: 550; letter-spacing: .04em; text-align: left; white-space: nowrap; }
 .table-sort { display: inline-flex; align-items: center; gap: 5px; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; letter-spacing: inherit; cursor: pointer; }
@@ -385,6 +386,7 @@ h2 { font-size: 22px; letter-spacing: -.025em; line-height: 1.2; }
 .industry-table .col-holdings { width: 12%; }
 .industry-table th:nth-child(n+4):not(:last-child), .industry-table td:nth-child(n+4):not(:last-child) { text-align: right; }
 .industry-table th:last-child, .industry-table td:last-child { text-align: center; }
+.sector-table th, .sector-table td, .industry-table th, .industry-table td { padding-inline: 12px; }
 .stockbee-momentum-table { width: 100%; min-width: 0; }
 .stockbee-momentum-table .col-rank { width: 10%; }
 .stockbee-momentum-table .col-stock { width: 44%; }
