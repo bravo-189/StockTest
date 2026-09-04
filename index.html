@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="styles.css?v=20260904-market-overview" />
   </head>
   <body>
-    <a class="skip-link" href="#overview">跳到主要内容</a>
+    <a class="skip-link" href="#market-overview">跳到主要内容</a>
     <div class="app-shell">
       <aside class="sidebar" aria-label="主导航">
         <div class="brand-block">
@@ -24,14 +24,13 @@
           <a class="product-switcher-item" href="long-term.html"><span class="product-switcher-mark">02</span><span><strong>长期投资</strong><small>长期研究空间</small></span></a>
         </div>
         <nav class="nav-list" aria-label="页面区块导航">
-          <button class="nav-item is-active" type="button" data-target="overview" aria-current="location"><span class="nav-index">01</span><span>总览</span></button>
-          <button class="nav-item" type="button" data-target="indices"><span class="nav-index">02</span><span>关键市场</span></button>
-          <button class="nav-item" type="button" data-target="sectors"><span class="nav-index">03</span><span>板块与权重股</span></button>
-          <button class="nav-item" type="button" data-target="industries"><span class="nav-index">04</span><span>行业动能</span></button>
-          <button class="nav-item" type="button" data-target="stockbee-momentum"><span class="nav-index">05</span><span>Stockbee 股票</span></button>
-          <button class="nav-item" type="button" data-target="rsi-history"><span class="nav-index">06</span><span>每日 RSI</span></button>
-          <button class="nav-item" type="button" data-target="rsi-gainers"><span class="nav-index">07</span><span>RSI 日增榜</span></button>
-          <button class="nav-item" type="button" data-target="breadth"><span class="nav-index">08</span><span>市场宽度</span></button>
+          <button class="nav-item is-active" type="button" data-target="market-overview" aria-current="location"><span class="nav-index">01</span><span>总览</span></button>
+          <button class="nav-item" type="button" data-target="sectors"><span class="nav-index">02</span><span>板块与权重股</span></button>
+          <button class="nav-item" type="button" data-target="industries"><span class="nav-index">03</span><span>行业动能</span></button>
+          <button class="nav-item" type="button" data-target="stockbee-momentum"><span class="nav-index">04</span><span>Stockbee 股票</span></button>
+          <button class="nav-item" type="button" data-target="rsi-history"><span class="nav-index">05</span><span>每日 RSI</span></button>
+          <button class="nav-item" type="button" data-target="rsi-gainers"><span class="nav-index">06</span><span>RSI 日增榜</span></button>
+          <button class="nav-item" type="button" data-target="breadth"><span class="nav-index">07</span><span>市场宽度</span></button>
         </nav>
         <div class="sidebar-footer">
           <div class="source-state"><span class="state-dot is-live"></span><span>盘后数据</span></div>
@@ -53,75 +52,22 @@
           <section class="market-overview-section" id="market-overview" aria-labelledby="market-overview-title">
             <div class="section-heading compact-heading">
               <div><div class="section-kicker">MARKET OVERVIEW</div><h2 id="market-overview-title">市场一览</h2></div>
-              <span class="section-meta" id="market-overview-meta">最新交易日 · 本地快照</span>
+              <div class="market-overview-heading-actions"><span class="section-meta" id="market-overview-meta">最新交易日 · 本地快照</span><button class="evidence-open-button" id="evidence-open" type="button">查看数据依据</button></div>
             </div>
-            <div class="market-overview-indices" id="market-overview-indices" aria-label="核心指数 RSI 与变化"></div>
+            <div class="index-grid" id="index-grid" aria-label="核心指数 RSI 与变化"></div>
             <div class="market-overview-breadth" id="market-overview-breadth" aria-label="市场宽度关键指标"></div>
             <div class="market-overview-rsi-grid">
               <article class="market-overview-rsi-panel section-surface" aria-labelledby="rsi-top-title">
                 <div class="overview-panel-heading"><div><h3 id="rsi-top-title">RSI Top 20</h3><p>行业 ETF · RSI14 最高</p></div><span class="section-meta">按 RSI14 降序</span></div>
-                <div class="table-shell overview-rsi-table-shell"><table class="data-table overview-rsi-table"><thead><tr><th scope="col">#</th><th scope="col">代码 · TradingView</th><th scope="col">行业</th><th scope="col">RSI14</th><th scope="col">1日变化</th></tr></thead><tbody id="rsi-top-body"></tbody></table></div>
+                <div class="table-shell overview-rsi-table-shell"><table class="data-table overview-rsi-table"><thead><tr><th scope="col">#</th><th scope="col">代码 · TradingView</th><th scope="col">行业</th><th scope="col">RSI14</th><th scope="col"><button class="table-sort" type="button" data-rsi-sort="top" aria-sort="none">1日变化 <span class="sort-glyph" aria-hidden="true">↕</span></button></th></tr></thead><tbody id="rsi-top-body"></tbody></table></div>
               </article>
               <article class="market-overview-rsi-panel section-surface" aria-labelledby="rsi-bottom-title">
                 <div class="overview-panel-heading"><div><h3 id="rsi-bottom-title">RSI Bottom 20</h3><p>行业 ETF · RSI14 最低</p></div><span class="section-meta">按 RSI14 升序</span></div>
-                <div class="table-shell overview-rsi-table-shell"><table class="data-table overview-rsi-table"><thead><tr><th scope="col">#</th><th scope="col">代码 · TradingView</th><th scope="col">行业</th><th scope="col">RSI14</th><th scope="col">1日变化</th></tr></thead><tbody id="rsi-bottom-body"></tbody></table></div>
+                <div class="table-shell overview-rsi-table-shell"><table class="data-table overview-rsi-table"><thead><tr><th scope="col">#</th><th scope="col">代码 · TradingView</th><th scope="col">行业</th><th scope="col">RSI14</th><th scope="col"><button class="table-sort" type="button" data-rsi-sort="bottom" aria-sort="none">1日变化 <span class="sort-glyph" aria-hidden="true">↕</span></button></th></tr></thead><tbody id="rsi-bottom-body"></tbody></table></div>
               </article>
             </div>
           </section>
 
-          <section class="hero-grid" id="overview" aria-labelledby="overview-title">
-            <div class="hero-status section-surface">
-              <div class="eyebrow">MARKET REGIME · 盘后状态</div>
-              <div class="hero-status-row">
-                <div>
-                  <h1 id="overview-title">震荡 <span class="hero-score">· +1</span></h1>
-                  <p class="hero-date">2026-08-27 收盘 <span class="dot-divider">·</span> 示例数据</p>
-                </div>
-                <div class="regime-meter" aria-label="市场状态偏向震荡，综合分数为正 1">
-                  <div class="meter-track"><span class="meter-negative"></span><span class="meter-neutral"></span><span class="meter-positive"></span><span class="meter-marker"></span></div>
-                  <div class="meter-labels"><span>偏弱</span><span>中性</span><span>偏强</span></div>
-                </div>
-              </div>
-              <p class="hero-copy">指数全天窄幅整理，板块呈现防御与成长切换。上涨家数略占优，但强度尚未扩散至全市场。</p>
-              <div class="signal-row" aria-label="市场五项信号">
-                <span class="signal-chip is-positive"><b>趋势</b> +1</span>
-                <span class="signal-chip is-neutral"><b>宽度</b> 0</span>
-                <span class="signal-chip is-positive"><b>动量</b> +1</span>
-                <span class="signal-chip is-neutral"><b>流动</b> 0</span>
-                <span class="signal-chip is-negative"><b>风险</b> −1</span>
-              </div>
-              <div class="data-status-row" aria-label="数据状态">
-                <span class="data-badge is-loaded"><i></i>已加载</span>
-                <span class="data-badge is-stale"><i></i>数据过期 · 1 项</span>
-                <span class="data-badge is-refresh" id="refresh-status-badge" hidden><i></i>等待刷新状态</span>
-                <button class="evidence-open-button" id="evidence-open" type="button">查看全部依据</button>
-              </div>
-            </div>
-            <aside class="briefing-panel section-surface" aria-labelledby="briefing-title">
-              <div class="section-kicker">AFTER-HOURS READ</div>
-              <h2 id="briefing-title">盘后摘要</h2>
-              <div class="briefing-item">
-                <span class="briefing-number">01</span>
-                <div><strong>防御板块领先</strong><p>公用事业、必需消费和医疗保健相对占优。</p></div>
-              </div>
-              <div class="briefing-item">
-                <span class="briefing-number">02</span>
-                <div><strong>成长板块回调</strong><p>科技与半导体 5 日 RSI 仍高，但短线动能回落。</p></div>
-              </div>
-              <div class="briefing-item">
-                <span class="briefing-number">03</span>
-                <div><strong>宽度仍未扩散</strong><p>市场宽度维持中性，接下来重点观察上涨／下跌比率能否持续改善。</p></div>
-              </div>
-            </aside>
-          </section>
-
-          <section class="indices-section" id="indices" aria-labelledby="indices-title">
-            <div class="section-heading compact-heading">
-              <div><div class="section-kicker">KEY MARKETS</div><h2 id="indices-title">四大指数 + BTC</h2></div>
-              <span class="section-meta">4 指数 + 加密资产 · 近 1 个月交易日</span>
-            </div>
-            <div class="index-grid" id="index-grid"></div>
-          </section>
 
           <section class="sector-section" id="sectors" aria-labelledby="sectors-title">
             <div class="section-heading">

@@ -24,7 +24,7 @@ class ThemePauseContractTests(unittest.TestCase):
         self.assertNotIn("hydrateThemeCatalog()", self.app)
 
     def test_core_sections_remain_reachable(self):
-        for target in ("overview", "sectors", "industries", "breadth"):
+        for target in ("market-overview", "sectors", "industries", "breadth"):
             self.assertIn(f'data-target="{target}"', self.page)
 
 
