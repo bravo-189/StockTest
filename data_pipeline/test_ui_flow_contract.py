@@ -251,6 +251,14 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn('id="stockbee-momentum-body"', self.page)
         self.assertIn('const snapshotUrl = (filename)', self.app)
         self.assertIn('fetch(snapshotUrl("stockbee_momentum.json"), { cache: "no-store" })', self.app)
+        self.assertIn('id="stockbee-momentum-source-link"', self.page)
+        self.assertIn('stockbeeMomentumSource = snapshot.source', self.app)
+
+    def test_stockbee_source_pages_are_linked_from_breadth_and_momentum_sections(self):
+        self.assertIn('id="breadth-source-link"', self.page)
+        self.assertIn('https://stockbee.blogspot.com/p/mm.html', self.page)
+        self.assertIn('https://stockbee.blogspot.com/p/stockbee-50.html', self.page)
+        self.assertIn('stockbeeSource = snapshot.source', self.app)
         self.assertIn('function renderStockbeeMomentum()', self.app)
         self.assertIn('STOCKBEE 50', self.page)
         self.assertIn('function tradingViewSymbolUrl(ticker)', self.app)

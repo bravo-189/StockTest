@@ -213,6 +213,7 @@ h2 { font-size: 22px; letter-spacing: -.025em; line-height: 1.2; }
 .themes-section { animation-delay: .26s; }
 .breadth-section { animation-delay: .32s; }
 .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 16px; }
+.section-heading-actions { display: flex; align-items: center; justify-content: end; gap: 10px; }
 .compact-heading { align-items: center; }
 .section-heading h2 { margin-top: 5px; font-size: clamp(23px, 2.2vw, 28px); letter-spacing: -.035em; }
 .section-heading p { margin-top: 6px; color: var(--muted); font-size: 12px; }
@@ -433,6 +434,7 @@ h2 { font-size: 22px; letter-spacing: -.025em; line-height: 1.2; }
 .subsection-heading p { margin-top: 5px; color: var(--muted); font-size: 11px; }
 
 .outline-button { padding: 8px 12px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface); color: var(--blue); font-size: 12px; }
+.outline-button.source-page-link { text-decoration: none; }
 .outline-button:hover { border-color: var(--blue); }
 .breadth-chart-shell { padding: 18px 20px 14px; }
 .breadth-chart-heading { display: flex; align-items: start; justify-content: space-between; gap: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }

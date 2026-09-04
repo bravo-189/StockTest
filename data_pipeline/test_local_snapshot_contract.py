@@ -15,7 +15,7 @@ class LocalSnapshotContractTests(unittest.TestCase):
         self.assertIn("DashboardData.breadth = breadth", app)
         self.assertIn('comparisonDate', app)
         self.assertIn('BTC 最新', app)
-        for state in ("刷新失败", "局部缺失", "数据过期", "数据新鲜"):
+        for state in ("刷新失败", "局部缺失", "数据过期", "快照已同步"):
             self.assertIn(state, app)
         self.assertIn('if (window.location.protocol === "file:") return;', app)
         self.assertNotIn("query1.finance.yahoo.com", app)

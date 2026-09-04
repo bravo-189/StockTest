@@ -148,6 +148,8 @@
   })]));
   let stockbeeMomentum = [];
   let stockbeeMomentumMeta = { sourceStatus: "unavailable", latestDate: null, rowCount: 0 };
+  let stockbeeMomentumSource = { pageUrl: "https://stockbee.blogspot.com/p/stockbee-50.html" };
+  let stockbeeSource = { pageUrl: "https://stockbee.blogspot.com/p/mm.html" };
   let breadth = Array.from({ length: 126 }, (_, index) => {
     const day = new Date("2026-08-28T00:00:00Z");
     day.setUTCDate(day.getUTCDate() - index);
@@ -503,10 +505,14 @@
       meta.textContent = `${dateLabel}${staleLabel}${coverageLabel}`;
       meta.classList.toggle("is-stale", Boolean(stockbeeMomentumMeta.isStale));
     }
+    const sourceLink = $("#stockbee-momentum-source-link");
+    if (sourceLink && stockbeeMomentumSource.pageUrl) sourceLink.href = stockbeeMomentumSource.pageUrl;
     body.innerHTML = rows.length ? rows.map((row, index) => `<tr><td class="rank">${String(index + 1).padStart(2, "0")}</td><td><a class="stockbee-ticker tradingview-link" href="${tradingViewSymbolUrl(row.ticker)}" target="_blank" rel="noopener noreferrer" aria-label="在 TradingView 查看 ${html(row.ticker)}">${html(row.ticker)}</a></td><td class="stockbee-classification">${html(classificationLabel(row.sector, sectorLabelsZh))}</td><td class="stockbee-classification">${html(classificationLabel(row.industry, industryLabelsZh))}</td></tr>`).join("") : `<tr><td colspan="4"><div class="drawer-empty">暂无可验证的 Stockbee 动能股票名单</div></td></tr>`;
     const shell = $(".stockbee-momentum-table-scroll"); if (shell) shell.scrollLeft = 0;
   }
   function renderBreadth() {
+    const sourceLink = $("#breadth-source-link");
+    if (sourceLink && stockbeeSource.pageUrl) sourceLink.href = stockbeeSource.pageUrl;
     const displayValue = (row, key, digits) => { const value = Number(row[key]); return Number.isFinite(value) ? (digits ? value.toLocaleString("en-US", { minimumFractionDigits: digits, maximumFractionDigits: digits }) : value.toLocaleString("en-US")) : "—"; };
     const breadthGroupFor = (index) => index < 6 ? "primary" : index < 12 ? "secondary" : "context";
     const breadthCellFill = (row, key) => {
@@ -797,6 +803,7 @@
       const snapshot = await response.json();
       if (!Array.isArray(snapshot.rows) || !snapshot.rows.length) return;
       breadth = snapshot.rows.map((row) => ({ ...row, composite: compositeFromSnapshot(row) }));
+      stockbeeSource = snapshot.source || stockbeeSource;
       DashboardData.breadth = breadth;
       DashboardData.metadata.sourceStatus = snapshot.metadata && snapshot.metadata.sourceStatus ? snapshot.metadata.sourceStatus : "loaded";
       DashboardData.metadata.dataDate = snapshot.metadata && snapshot.metadata.latestDate ? snapshot.metadata.latestDate : DashboardData.metadata.dataDate;
@@ -816,6 +823,7 @@
       if (!Array.isArray(snapshot.rows)) return;
       stockbeeMomentum = snapshot.rows.filter((row) => row && row.ticker);
       stockbeeMomentumMeta = snapshot.metadata || stockbeeMomentumMeta;
+      stockbeeMomentumSource = snapshot.source || stockbeeMomentumSource;
       DashboardData.stockbeeMomentum = stockbeeMomentum;
       renderStockbeeMomentum();
     } catch (_) {
