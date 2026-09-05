@@ -46,7 +46,7 @@ stop-local.cmd     只停止由本项目记录并验证过的两个进程
 
 `data_pipeline/fetch_holdings.py` 会从公开来源抓取板块/行业 ETF 前十大持仓，保留来源、抓取时间和 as-of 日期。普通股票 ETF 使用 StockAnalysis（页面列出的来源为 Finnhub）；IBIT 使用 iShares 官方 holdings CSV，USO 使用 USCF 官方 holdings API。当前刷新结果为 71/71 成功，IBIT 显示 BTC/现金，USO 显示期货/国债/掉期头寸，不会用 SPY 或其他 ETF 数据替代。持仓缓存 24 小时，避免每小时行情刷新重复请求。
 
-`data_pipeline/fetch_stockbee_momentum.py` 会读取 Stockbee 50 页面公开的 Google Sheet（工作表 `gid=1499398020`），生成 `data/stockbee_momentum.json`，网页以纯股票代码表格展示并提供 TradingView 跳转。Stockbee 代码使用 TradingView 的 `/symbols/{ticker}/` 自动交易所解析页，避免把未知代码误拼成 `AMEX:`。当前可读的最新列为 2026-08-25，共 50 个代码；页面会根据来源日期自动标记新鲜度。
+`data_pipeline/fetch_stockbee_momentum.py` 会读取 Stockbee 50 页面公开的 Google Sheet（工作表 `gid=1499398020`），生成 `data/stockbee_momentum.json`，网页以纯股票代码表格展示并提供 TradingView 跳转。Stockbee 代码使用 TradingView 的 `/symbols/{ticker}/` 自动交易所解析页，避免把未知代码误拼成 `AMEX:`。快照会保留来源最新日期和 50 个代码；页面根据 `metadata.latestDate` 自动标记新鲜度，避免把固定日期误当成当前数据。
 
 指数卡片的日内层也保存在同一快照中：SPX、NDX、DJI、RUT 直接读取 Yahoo 原生 5 分钟数据，不再做本地 5→10 分钟聚合；BTC 从 Binance 公共 K 线读取 2 小时。页面标签显示 5M；日内请求失败时前端回退到确定性预览。
 
