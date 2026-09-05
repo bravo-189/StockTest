@@ -91,8 +91,15 @@ def _last_us_session_date(now=None):
     return now.date().isoformat()
 
 
-def _daily_refresh_due(previous_market):
-    """Refresh non-BTC data once after close, including missed Friday runs."""
+def _parse_refresh_timestamp(value):
+    try:
+        return datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+
+
+def _daily_refresh_due(previous_market, previous_stockbee=None, previous_momentum=None):
+    """Refresh non-BTC data after close, including late source publication."""
     if not isinstance(previous_market, dict) or not previous_market.get("instruments"):
         return True
     now = _eastern_now()
@@ -104,7 +111,25 @@ def _daily_refresh_due(previous_market):
     # close so an initial pre-close bootstrap cannot suppress today's close run.
     if not metadata.get("dailyRefreshAt"):
         return True
-    return previous_date != _last_us_session_date(now)
+    expected_date = _last_us_session_date(now)
+    if previous_date != expected_date:
+        return True
+    # Stockbee publishes its two sheets asynchronously. If the market snapshot
+    # already has Friday's date but either Stockbee source still lags, allow a
+    # catch-up run after a short cooldown instead of permanently retaining the
+    # older column through the weekend.
+    source_lagging = any(
+        isinstance(snapshot, dict)
+        and (snapshot.get("metadata") or {}).get("latestDate")
+        and (snapshot.get("metadata") or {}).get("latestDate") < expected_date
+        for snapshot in (previous_stockbee, previous_momentum)
+    )
+    if not source_lagging:
+        return False
+    refreshed_at = _parse_refresh_timestamp(metadata.get("dailyRefreshAt"))
+    if refreshed_at is None:
+        return True
+    return (now.astimezone(timezone.utc) - refreshed_at).total_seconds() >= 6 * 60 * 60
 
 
 def _build_live_holdings_snapshot(fetched_at=None):
@@ -303,8 +328,10 @@ def main(argv=None):
     args = parser.parse_args(argv)
     while True:
         previous_market = _read_json(Path(args.output_dir) / "market_snapshot.json")
+        previous_stockbee = _read_json(Path(args.output_dir) / "stockbee.json")
+        previous_momentum = _read_json(Path(args.output_dir) / "stockbee_momentum.json")
         now = _eastern_now()
-        daily_due = _daily_refresh_due(previous_market)
+        daily_due = _daily_refresh_due(previous_market, previous_stockbee, previous_momentum)
         after_close = (now.weekday() < 5 and now.hour >= 17) or now.weekday() >= 5
         status = run_refresh_attempt(
             args.output_dir,

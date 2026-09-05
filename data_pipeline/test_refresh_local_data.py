@@ -37,6 +37,21 @@ class RefreshLocalDataTests(unittest.TestCase):
             self.assertEqual(_last_us_session_date(), "2026-09-04")
             self.assertFalse(_daily_refresh_due(previous))
 
+    def test_weekend_catches_up_late_stockbee_source_publication(self):
+        saturday = datetime(2026, 9, 5, 10, 0, tzinfo=ZoneInfo("America/New_York"))
+        previous_market = {"metadata": {"dailyRefreshDate": "2026-09-04", "dailyRefreshAt": "2026-09-04T21:05:00Z"}, "instruments": {"SPY": {"latestDate": "2026-09-04"}}}
+        previous_stockbee = {"metadata": {"latestDate": "2026-09-03"}}
+        previous_momentum = {"metadata": {"latestDate": "2026-09-04"}}
+        with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=saturday):
+            self.assertTrue(_daily_refresh_due(previous_market, previous_stockbee, previous_momentum))
+
+    def test_late_stockbee_catchup_respects_cooldown(self):
+        saturday = datetime(2026, 9, 5, 12, 0, tzinfo=ZoneInfo("America/New_York"))
+        previous_market = {"metadata": {"dailyRefreshDate": "2026-09-04", "dailyRefreshAt": "2026-09-05T15:05:00Z"}, "instruments": {"SPY": {"latestDate": "2026-09-04"}}}
+        previous_stockbee = {"metadata": {"latestDate": "2026-09-03"}}
+        with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=saturday):
+            self.assertFalse(_daily_refresh_due(previous_market, previous_stockbee))
+
     def test_write_json_replaces_snapshot_atomically(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory) / "snapshot.json"
