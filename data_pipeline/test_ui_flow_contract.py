@@ -107,6 +107,8 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn("盘后 RSI 强势标的", self.app)
         self.assertIn("leadersByTicker", self.app)
         self.assertIn("slice(0, 3)", self.app)
+        self.assertIn('window.history.scrollRestoration = "manual"', self.app)
+        self.assertIn('if (!window.location.hash) window.scrollTo', self.app)
         self.assertNotIn("MARKET REGIME · 盘后状态", self.page)
         self.assertNotIn('id="indices"', self.page)
 

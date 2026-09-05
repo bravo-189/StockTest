@@ -15,6 +15,10 @@
     probe.src = "http://127.0.0.1:8765/favicon.svg?probe=" + Date.now();
   }
   redirectFilePreview();
+  if ("scrollRestoration" in window.history) window.history.scrollRestoration = "manual";
+  window.addEventListener("pageshow", () => {
+    if (!window.location.hash) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  });
 
   const SNAPSHOT_DATE = "2026-08-27";
   const INDEX_TRADING_DAYS = 21;
