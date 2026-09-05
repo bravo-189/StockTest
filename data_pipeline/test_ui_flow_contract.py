@@ -259,6 +259,8 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn('id="stockbee-momentum"', self.page)
         self.assertIn('id="stockbee-momentum-body"', self.page)
         self.assertIn('const snapshotUrl = (filename)', self.app)
+        self.assertIn('const DATA_STATE_REF_URL = "https://api.github.com/repos/bravo-189/StockTest/git/ref/heads/data-state";', self.app)
+        self.assertIn('resolveDataStateRevision().finally', self.app)
         self.assertIn('fetch(snapshotUrl("stockbee_momentum.json"), { cache: "no-store" })', self.app)
         self.assertIn('id="stockbee-momentum-source-link"', self.page)
         self.assertIn('stockbeeMomentumSource = snapshot.source', self.app)

@@ -36,8 +36,24 @@
   // directly so the deployed page can receive fresh data without rebuilding
   // the static UI on every refresh.
   const DATA_STATE_BASE_URL = "https://raw.githubusercontent.com/bravo-189/StockTest/data-state/data/";
+  const DATA_STATE_REF_URL = "https://api.github.com/repos/bravo-189/StockTest/git/ref/heads/data-state";
   const isVercelDeployment = /(?:^|\.)vercel\.app$/i.test(window.location.hostname);
-  const snapshotUrl = (filename) => `${isVercelDeployment ? DATA_STATE_BASE_URL : "data/"}${filename}?v=${Date.now()}`;
+  let dataStateBaseUrl = DATA_STATE_BASE_URL;
+  const snapshotUrl = (filename) => `${isVercelDeployment ? dataStateBaseUrl : "data/"}${filename}?v=${Date.now()}`;
+  async function resolveDataStateRevision() {
+    if (!isVercelDeployment) return;
+    try {
+      const response = await fetch(DATA_STATE_REF_URL, {
+        cache: "no-store",
+        headers: { Accept: "application/vnd.github+json" },
+      });
+      const ref = response.ok ? await response.json() : null;
+      const sha = ref && ref.object && ref.object.type === "commit" ? ref.object.sha : null;
+      if (sha) dataStateBaseUrl = `https://raw.githubusercontent.com/bravo-189/StockTest/${sha}/data/`;
+    } catch (_) {
+      // Keep the branch URL as a safe fallback if GitHub's ref endpoint is unavailable.
+    }
+  }
   const sectorDefs = [
     ["XLV", "医疗保健", 64, 0.86], ["XLP", "必需消费", 62, 0.72], ["XLU", "公用事业", 61, 0.68],
     ["XLF", "金融", 57, 0.42], ["XLI", "工业", 55, 0.3], ["XLE", "能源", 54, 0.25],
@@ -970,7 +986,8 @@
   window.addEventListener("resize", () => { $$(".sparkline", $("#index-grid")).forEach((canvas) => drawIndexCardChart(canvas)); $$(".index-hover-bubble:not([hidden])").forEach((bubble) => updateIndexHoverBubble(bubble.__ownerCard || bubble.closest(".index-card"))); drawBreadthChart(); setupBreadthScroll(); syncPinnedRowCovers(); });
   [".sector-table-scroll", ".industry-table-scroll"].forEach((selector) => { const shell = $(selector); if (shell) shell.addEventListener("scroll", () => requestAnimationFrame(syncPinnedRowCovers), { passive: true }); });
   window.addEventListener("scroll", () => { $$(".index-hover-bubble:not([hidden])").forEach((bubble) => positionIndexHoverBubble(bubble.__ownerCard || bubble.closest(".index-card"))); }, { passive: true });
-  renderAll(); initTheme(); updateClocks(); window.setInterval(updateClocks, 1000); hydrateStockbee(); hydrateStockbeeMomentum(); hydrateMarketSnapshot(); hydrateRefreshStatus();
+  renderAll(); initTheme(); updateClocks(); window.setInterval(updateClocks, 1000);
+  resolveDataStateRevision().finally(() => { hydrateStockbee(); hydrateStockbeeMomentum(); hydrateMarketSnapshot(); hydrateRefreshStatus(); });
   // Market/BTC snapshots and refresh status are checked hourly. Daily
   // Stockbee and breadth snapshots are rehydrated by applyRefreshStatus when
   // a new full post-close refresh is detected.
