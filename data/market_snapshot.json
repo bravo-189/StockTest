@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-09-05T17:06:58Z",
+    "fetchedAt": "2026-09-05T17:59:33Z",
     "latestDate": "2026-09-05",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -81,7 +81,23 @@
       }
     },
     "dailyRefreshDate": "2026-09-04",
-    "dailyRefreshAt": "2026-09-05T17:06:58Z"
+    "dailyRefreshAt": "2026-09-05T17:06:58Z",
+    "btcRefreshAt": "2026-09-05T17:59:33Z",
+    "btcLatestDate": "2026-09-05",
+    "btcIntraday": {
+      "requested": [
+        "SPX",
+        "NDX",
+        "DJI",
+        "RUT",
+        "BTC"
+      ],
+      "loaded": [
+        "BTC"
+      ],
+      "missing": [],
+      "sourceStatus": "loaded"
+    }
   },
   "sources": {
     "equities": {
@@ -76557,7 +76573,7 @@
     "BTC": {
       "symbol": "BTC",
       "provider": "binance-spot",
-      "providerUrl": "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=90",
+      "providerUrl": "https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=90",
       "bars": [
         {
           "date": "2026-06-08",
@@ -77276,14 +77292,14 @@
           "open": 79660.77,
           "high": 80200.0,
           "low": 79442.0,
-          "close": 80047.4,
-          "volume": 5884.01502
+          "close": 80069.94,
+          "volume": 6612.88629
         }
       ],
       "latest": {
         "date": "2026-09-05",
-        "close": 80047.4,
-        "change": 0.4853
+        "close": 80069.94,
+        "change": 0.5136
       },
       "latestDate": "2026-09-05",
       "kind": "crypto",
@@ -77387,21 +77403,17 @@
           "open": 79806.0,
           "high": 80200.0,
           "low": 79754.0,
-          "close": 80105.4,
-          "volume": 905.5596,
+          "close": 80060.1,
+          "volume": 1602.67221,
           "status": "incomplete"
         }
       ],
       "intraday": {
         "provider": "binance-spot",
-        "providerUrl": "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=2h&limit=42",
+        "providerUrl": "https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=2h&limit=42",
         "interval": "2h",
         "timezone": "UTC",
         "latestDate": "2026-09-05"
-      },
-      "relativeStrengthRating": {
-        "sector": {},
-        "industry": {}
       }
     },
     "COPX": {

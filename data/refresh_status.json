@@ -1,9 +1,9 @@
 {
   "schemaVersion": "1.0",
   "status": "ok",
-  "refreshMode": "daily-close",
-  "attemptedAt": "2026-09-05T17:06:58Z",
-  "lastCompletedAt": "2026-09-05T17:06:58Z",
+  "refreshMode": "btc-hourly",
+  "attemptedAt": "2026-09-05T17:59:33Z",
+  "lastCompletedAt": "2026-09-05T17:59:33Z",
   "lastFullSuccessAt": "2026-09-05T17:06:58Z",
   "sources": {
     "market": {
@@ -23,8 +23,8 @@
       "latestDate": "2026-09-04",
       "rowCount": 50,
       "isStale": false,
-      "classificationVerifiedCount": 49,
-      "classificationPartialCount": 1,
+      "classificationVerifiedCount": 50,
+      "classificationPartialCount": 0,
       "classificationUnverifiedCount": 0
     }
   },
