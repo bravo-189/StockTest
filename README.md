@@ -42,6 +42,8 @@ stop-local.cmd     只停止由本项目记录并验证过的两个进程
 
 ## 免费数据管线
 
+数据文件、字段粒度、交易日口径、刷新节奏、质量门禁和失败回退的统一说明见 [docs/DATA_PIPELINE.md](./docs/DATA_PIPELINE.md)。该契约是网页、GitHub Actions 和 Vercel 共用的唯一数据口径。
+
 `data_pipeline/fetch_market_data.py` 会在本地生成 4 个美股指数、14 个板块 ETF（含 IBIT）、60 个行业 ETF 和 BTC 的 OHLCV 快照。Yahoo Chart 为免密钥的非官方接口，Binance 为公开只读 K 线接口；每条记录均保存 provider、来源 URL、抓取时间、最新日期和缺失状态。Yahoo 尚未收盘的当前日线会保留在 `pendingBars`，但不会混入收盘价、RSI 或多周期收益计算。网页只加载生成后的 `data/market_snapshot.json`，不会把行情请求放进浏览器。
 
 `data_pipeline/fetch_holdings.py` 会从公开来源抓取板块/行业 ETF 前十大持仓，保留来源、抓取时间和 as-of 日期。普通股票 ETF 使用 StockAnalysis（页面列出的来源为 Finnhub）；IBIT 使用 iShares 官方 holdings CSV，USO 使用 USCF 官方 holdings API。当前刷新结果为 71/71 成功，IBIT 显示 BTC/现金，USO 显示期货/国债/掉期头寸，不会用 SPY 或其他 ETF 数据替代。持仓缓存 24 小时，避免每小时行情刷新重复请求。

@@ -37,6 +37,20 @@ class RefreshLocalDataTests(unittest.TestCase):
             self.assertEqual(_last_us_session_date(), "2026-09-04")
             self.assertFalse(_daily_refresh_due(previous))
 
+    def test_us_holiday_skips_to_prior_session(self):
+        labor_day = datetime(2026, 9, 7, 10, 0, tzinfo=ZoneInfo("America/New_York"))
+        good_friday = datetime(2026, 4, 3, 10, 0, tzinfo=ZoneInfo("America/New_York"))
+        with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=labor_day):
+            self.assertEqual(_last_us_session_date(), "2026-09-04")
+        with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=good_friday):
+            self.assertEqual(_last_us_session_date(), "2026-04-02")
+
+    def test_completed_holiday_does_not_trigger_a_nonexistent_close(self):
+        labor_day = datetime(2026, 9, 7, 18, 0, tzinfo=ZoneInfo("America/New_York"))
+        previous = {"metadata": {"dailyRefreshDate": "2026-09-04", "dailyRefreshAt": "2026-09-04T21:05:00Z"}, "instruments": {"SPY": {"latestDate": "2026-09-04"}}}
+        with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=labor_day):
+            self.assertFalse(_daily_refresh_due(previous))
+
     def test_weekend_catches_up_late_stockbee_source_publication(self):
         saturday = datetime(2026, 9, 5, 10, 0, tzinfo=ZoneInfo("America/New_York"))
         previous_market = {"metadata": {"dailyRefreshDate": "2026-09-04", "dailyRefreshAt": "2026-09-04T21:05:00Z"}, "instruments": {"SPY": {"latestDate": "2026-09-04"}}}

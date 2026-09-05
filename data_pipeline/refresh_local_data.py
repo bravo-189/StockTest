@@ -5,7 +5,7 @@ import json
 import os
 import tempfile
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -83,12 +83,84 @@ def _eastern_now():
     return datetime.now(timezone.utc).astimezone(ZoneInfo("America/New_York"))
 
 
+def _nth_weekday(year, month, weekday, ordinal):
+    """Return the ordinal weekday in a month (Monday is 0)."""
+    first = date(year, month, 1)
+    return first + timedelta(days=(weekday - first.weekday()) % 7 + (ordinal - 1) * 7)
+
+
+def _last_weekday(year, month, weekday):
+    """Return the last weekday in a month (Monday is 0)."""
+    if month == 12:
+        next_month = date(year + 1, 1, 1)
+    else:
+        next_month = date(year, month + 1, 1)
+    last = next_month - timedelta(days=1)
+    return last - timedelta(days=(last.weekday() - weekday) % 7)
+
+
+def _easter_sunday(year):
+    """Return Western Easter Sunday using the Gregorian computus."""
+    a = year % 19
+    b = year // 100
+    c = year % 100
+    d = b // 4
+    e = b % 4
+    f = (b + 8) // 25
+    g = (b - f + 1) // 3
+    h = (19 * a + b - d - g + 15) % 30
+    i = c // 4
+    k = c % 4
+    l = (32 + 2 * e + 2 * i - h - k) % 7
+    m = (a + 11 * h + 22 * l) // 451
+    month = (h + l - 7 * m + 114) // 31
+    day = ((h + l - 7 * m + 114) % 31) + 1
+    return date(year, month, day)
+
+
+def _observed_fixed_holiday(year, month, day):
+    """Return a US federal holiday's observed date (Sat→Fri, Sun→Mon)."""
+    holiday = date(year, month, day)
+    if holiday.weekday() == 5:
+        return holiday - timedelta(days=1)
+    if holiday.weekday() == 6:
+        return holiday + timedelta(days=1)
+    return holiday
+
+
+def _us_market_holidays(year):
+    """Return the major full-day NYSE holidays for a calendar year.
+
+    The refresh job only needs full-day closures, not early-close schedules.
+    Keeping this small, explicit calendar avoids treating a holiday as a
+    missing quote while remaining dependency-free in GitHub Actions.
+    """
+    return {
+        _observed_fixed_holiday(year, 1, 1),       # New Year's Day
+        _nth_weekday(year, 1, 0, 3),               # Martin Luther King Jr. Day
+        _nth_weekday(year, 2, 0, 3),               # Presidents' Day
+        _easter_sunday(year) - timedelta(days=2), # Good Friday
+        _last_weekday(year, 5, 0),                 # Memorial Day
+        _observed_fixed_holiday(year, 6, 19),      # Juneteenth
+        _observed_fixed_holiday(year, 7, 4),       # Independence Day
+        _nth_weekday(year, 9, 0, 1),               # Labor Day
+        _nth_weekday(year, 11, 3, 4),              # Thanksgiving
+        _observed_fixed_holiday(year, 12, 25),      # Christmas Day
+    }
+
+
+def _is_us_market_holiday(value):
+    value = value.date() if isinstance(value, datetime) else value
+    return any(value in _us_market_holidays(year) for year in (value.year - 1, value.year, value.year + 1))
+
+
 def _last_us_session_date(now=None):
-    """Return the most recent weekday session date in New York time."""
+    """Return the most recent confirmed NYSE session date in New York time."""
     now = now or _eastern_now()
-    if now.weekday() >= 5:
-        return (now.date() - timedelta(days=now.weekday() - 4)).isoformat()
-    return now.date().isoformat()
+    candidate = now.date()
+    while candidate.weekday() >= 5 or _is_us_market_holiday(candidate):
+        candidate -= timedelta(days=1)
+    return candidate.isoformat()
 
 
 def _parse_refresh_timestamp(value):
