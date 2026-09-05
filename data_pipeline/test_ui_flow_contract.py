@@ -119,6 +119,12 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn("const signedDelta =", self.app)
         self.assertIn("function closeDelta", self.app)
         self.assertIn("const d1Delta = closeDelta", self.app)
+
+    def test_rsi_uses_wilder_smoothing_over_the_available_history(self):
+        self.assertIn("function rsi14FromBars(bars)", self.app)
+        self.assertIn("averageGain = (averageGain * 13 + Math.max(change, 0)) / 14", self.app)
+        self.assertIn("averageLoss = (averageLoss * 13 + Math.max(-change, 0)) / 14", self.app)
+        self.assertNotIn("bars.slice(-15).map((bar) => Number(bar.close))", self.app)
         self.assertIn('class="overview-index-delta-label"', self.app)
         self.assertIn('title="绝对价格变化，不含百分号"', self.app)
 

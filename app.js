@@ -603,10 +603,19 @@
   }
   function rsi14FromBars(bars) {
     if (!Array.isArray(bars) || bars.length < 15) return null;
-    const closes = bars.slice(-15).map((bar) => Number(bar.close)); const gains = []; const losses = [];
-    for (let index = 1; index < closes.length; index += 1) { const change = closes[index] - closes[index - 1]; gains.push(Math.max(change, 0)); losses.push(Math.max(-change, 0)); }
-    const averageGain = gains.reduce((sum, value) => sum + value, 0) / gains.length; const averageLoss = losses.reduce((sum, value) => sum + value, 0) / losses.length;
-    if (!Number.isFinite(averageGain) || !Number.isFinite(averageLoss)) return null;
+    const closes = bars.map((bar) => Number(bar.close));
+    if (closes.some((close) => !Number.isFinite(close))) return null;
+    let averageGain = 0; let averageLoss = 0;
+    for (let index = 1; index <= 14; index += 1) {
+      const change = closes[index] - closes[index - 1];
+      averageGain += Math.max(change, 0); averageLoss += Math.max(-change, 0);
+    }
+    averageGain /= 14; averageLoss /= 14;
+    for (let index = 15; index < closes.length; index += 1) {
+      const change = closes[index] - closes[index - 1];
+      averageGain = (averageGain * 13 + Math.max(change, 0)) / 14;
+      averageLoss = (averageLoss * 13 + Math.max(-change, 0)) / 14;
+    }
     return +(averageLoss === 0 ? 100 : (100 - 100 / (1 + averageGain / averageLoss))).toFixed(1);
   }
   function rsiHistoryFor(ticker) {
