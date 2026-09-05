@@ -1,6 +1,7 @@
 import unittest
 
 from StockTest.data_pipeline.fetch_stockbee_momentum import (
+    ETF_CLASSIFICATION_OVERRIDES,
     SHEET_URL,
     build_snapshot,
     enrich_stockbee_rows,
@@ -11,6 +12,11 @@ from StockTest.data_pipeline.fetch_stockbee_momentum import (
 
 
 class StockbeeMomentumTests(unittest.TestCase):
+
+    def test_zcsh_has_an_issuer_backed_digital_asset_classification(self):
+        self.assertEqual(ETF_CLASSIFICATION_OVERRIDES["ZCSH"]["sector"], "Currency")
+        self.assertEqual(ETF_CLASSIFICATION_OVERRIDES["ZCSH"]["industry"], "Digital Assets")
+        self.assertEqual(ETF_CLASSIFICATION_OVERRIDES["ZCSH"]["classificationStatus"], "verified")
     def test_parser_uses_newest_date_column_and_first_50_unique_symbols(self):
         csv_text = "2026-08-29,08/28/2026\nSix Month,Six Month\nAAA,BBB\nAAA,CCC\nDDD,CCC\n"
         parsed = parse_stockbee_momentum_csv(csv_text, limit=50)

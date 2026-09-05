@@ -7,9 +7,9 @@
     "ageDays": 2,
     "fetchedAt": "2026-09-05T17:06:58Z",
     "listName": "Stockbee 50",
-    "classificationSource": "StockAnalysis company and ETF profiles",
-    "classificationVerifiedCount": 49,
-    "classificationPartialCount": 1,
+    "classificationSource": "StockAnalysis company and ETF profiles, plus issuer/SEC overrides",
+    "classificationVerifiedCount": 50,
+    "classificationPartialCount": 0,
     "classificationUnverifiedCount": 0
   },
   "source": {
@@ -71,9 +71,9 @@
       "rank": 7,
       "ticker": "ZCSH",
       "sector": "Currency",
-      "industry": "未找到可核验行业",
-      "classificationStatus": "partial",
-      "classificationSource": "StockAnalysis ETF profile"
+      "industry": "Digital Assets",
+      "classificationStatus": "verified",
+      "classificationSource": "Grayscale / SEC Zcash ETF prospectus"
     },
     {
       "rank": 8,

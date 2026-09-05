@@ -98,6 +98,22 @@ def _parse_refresh_timestamp(value):
         return None
 
 
+def _require_completed_us_equity_snapshot(snapshot, expected_date):
+    """Reject a post-close snapshot unless every US ETF has that close."""
+    instruments = snapshot.get("instruments") if isinstance(snapshot, dict) else {}
+    stale = []
+    for symbol, instrument in (instruments or {}).items():
+        if not isinstance(instrument, dict) or instrument.get("calendar") != "us-equity":
+            continue
+        if instrument.get("latestDate") != expected_date:
+            stale.append(str(symbol))
+    if stale:
+        raise RefreshSourceError(
+            "market",
+            f"post-close snapshot incomplete for {expected_date}: {', '.join(sorted(stale))}",
+        )
+
+
 def _daily_refresh_due(previous_market, previous_stockbee=None, previous_momentum=None):
     """Refresh non-BTC data after close, including late source publication."""
     if not isinstance(previous_market, dict) or not previous_market.get("instruments"):
@@ -164,6 +180,7 @@ def refresh_once(output_dir, market_builder=None, stockbee_csv=None, fetched_at=
                 metadata = market_snapshot.setdefault("metadata", {})
                 metadata["dailyRefreshDate"] = daily_refresh_date
                 metadata["dailyRefreshAt"] = fetched_at
+                _require_completed_us_equity_snapshot(market_snapshot, daily_refresh_date)
     except Exception as exc:
         raise RefreshSourceError("market", str(exc)) from exc
     if btc_only:

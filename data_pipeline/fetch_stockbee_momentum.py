@@ -27,6 +27,18 @@ ETF_CLASSIFICATION_SOURCE_NAME = "StockAnalysis ETF profile"
 CLASSIFICATION_URL = "https://stockanalysis.com/stocks/{ticker}/company/"
 ETF_CLASSIFICATION_URL = "https://stockanalysis.com/etf/{ticker}/"
 
+# A small number of exchange-traded digital-asset trusts do not publish the
+# usual StockAnalysis ETF "Category" field.  Keep the issuer/SEC-backed
+# classification explicit instead of showing a misleading missing industry.
+ETF_CLASSIFICATION_OVERRIDES = {
+    "ZCSH": {
+        "sector": "Currency",
+        "industry": "Digital Assets",
+        "classificationStatus": "verified",
+        "classificationSource": "Grayscale / SEC Zcash ETF prospectus",
+    },
+}
+
 
 def fetch_csv(url=SHEET_URL, timeout=20):
     request = Request(url, headers={"User-Agent": "StockTest data pipeline/1.0"})
@@ -150,6 +162,8 @@ def fetch_stock_classification(ticker, timeout=5):
     symbol = str(ticker or "").strip().upper()
     if not symbol:
         return None
+    if symbol in ETF_CLASSIFICATION_OVERRIDES:
+        return {"ticker": symbol, **ETF_CLASSIFICATION_OVERRIDES[symbol]}
     headers = {"User-Agent": "StockTest data pipeline/1.0"}
     url = CLASSIFICATION_URL.format(ticker=symbol.lower())
     request = Request(url, headers=headers)

@@ -6,7 +6,7 @@ from pathlib import Path
 from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
-from StockTest.data_pipeline.refresh_local_data import _daily_refresh_due, _last_us_session_date, _write_json, refresh_once, run_refresh_attempt
+from StockTest.data_pipeline.refresh_local_data import RefreshSourceError, _daily_refresh_due, _last_us_session_date, _require_completed_us_equity_snapshot, _write_json, refresh_once, run_refresh_attempt
 
 
 class RefreshLocalDataTests(unittest.TestCase):
@@ -51,6 +51,17 @@ class RefreshLocalDataTests(unittest.TestCase):
         previous_stockbee = {"metadata": {"latestDate": "2026-09-03"}}
         with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=saturday):
             self.assertFalse(_daily_refresh_due(previous_market, previous_stockbee))
+
+    def test_post_close_snapshot_requires_every_us_equity_date(self):
+        snapshot = {
+            "instruments": {
+                "SPY": {"calendar": "us-equity", "latestDate": "2026-09-04"},
+                "XOP": {"calendar": "us-equity", "latestDate": "2026-09-03"},
+                "BTC": {"calendar": "crypto-24x7", "latestDate": "2026-09-05"},
+            }
+        }
+        with self.assertRaisesRegex(RefreshSourceError, "XOP"):
+            _require_completed_us_equity_snapshot(snapshot, "2026-09-04")
 
     def test_write_json_replaces_snapshot_atomically(self):
         with tempfile.TemporaryDirectory() as directory:
