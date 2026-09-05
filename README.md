@@ -106,7 +106,7 @@ python StockTest/data_pipeline/validate_fundamentals.py StockTest/data/fundament
 
 ## 版本管理
 
-项目使用私有 GitHub 仓库管理版本：`https://github.com/bravo-189/StockTest`，默认分支为 `main`。
+项目使用公开 GitHub 仓库管理版本：`https://github.com/bravo-189/StockTest`，默认分支为 `main`。
 
 `.runtime/`、浏览器 QA 配置目录、Python 缓存、日志和环境密钥文件不会进入主分支。代码、测试、设计文档、正式 QA 截图和静态配置均纳入版本管理；供 GitHub Pages 使用的最新行情和 Stockbee 快照由 Actions 保存在独立的 `data-state` 分支。
 
