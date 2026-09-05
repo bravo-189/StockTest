@@ -106,6 +106,8 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn("AFTER-HOURS RSI LEADERS", self.app)
         self.assertIn("盘后 RSI 强势标的", self.app)
         self.assertIn("leadersByTicker", self.app)
+        self.assertIn("rsiDailyChangeFor(row.ticker)", self.app)
+        self.assertIn("当日收盘后 RSI14 增加至少", self.app)
         self.assertIn("slice(0, 3)", self.app)
         self.assertIn('window.history.scrollRestoration = "manual"', self.app)
         self.assertIn('if (!window.location.hash) window.scrollTo', self.app)
