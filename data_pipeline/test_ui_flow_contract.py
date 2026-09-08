@@ -133,6 +133,7 @@ class UiFlowContractTests(unittest.TestCase):
             self.assertIn(f'data-risk-rate="{rate}"', self.page)
         self.assertIn('id="calc-fixed-risk-rate"', self.page)
         self.assertIn('data-auto-stop="true"', self.page)
+        self.assertIn('默认下跌 5%', self.page)
         for element_id in ("calc-stock-price", "calc-stop-price", "calc-result-planned", "calc-result-base-shares", "calc-result-used", "calc-result-final-shares"):
             self.assertIn(f'id="{element_id}"', self.page)
         self.assertIn("positionPercent: 0.10", self.app)
@@ -140,6 +141,8 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn("funds * riskRate", self.app)
         self.assertIn("Math.floor(planned / price)", self.app)
         self.assertIn("Math.floor(fixedRisk / perShareRisk)", self.app)
+        self.assertIn("const stopPercent =", self.app)
+        self.assertIn("下跌 ${stopPercentLabel}", self.app)
         self.assertIn("Math.min(baseShares, riskShares)", self.app)
         self.assertIn("is-limited", self.app)
         self.assertIn('addEventListener("input", renderPositionCalculator)', self.app)
