@@ -120,6 +120,24 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn("function closeDelta", self.app)
         self.assertIn("const d1Delta = closeDelta", self.app)
 
+    def test_position_calculator_has_realtime_risk_contract(self):
+        self.assertIn('data-target="position-sizing"', self.page)
+        self.assertIn('id="position-sizing"', self.page)
+        self.assertIn('id="calc-account-funds"', self.page)
+        self.assertIn('value="13000.00"', self.page)
+        self.assertIn('id="calc-fixed-risk"', self.page)
+        self.assertIn('data-position-percent="0.05"', self.page)
+        self.assertIn('data-position-percent="0.10"', self.page)
+        self.assertIn('data-position-percent="0.15"', self.page)
+        for element_id in ("calc-stock-price", "calc-stop-price", "calc-result-planned", "calc-result-base-shares", "calc-result-used", "calc-result-final-shares"):
+            self.assertIn(f'id="{element_id}"', self.page)
+        self.assertIn("positionPercent: 0.10", self.app)
+        self.assertIn("Math.floor(planned / price)", self.app)
+        self.assertIn("Math.floor(fixedRisk / perShareRisk)", self.app)
+        self.assertIn("Math.min(baseShares, riskShares)", self.app)
+        self.assertIn("is-limited", self.app)
+        self.assertIn('addEventListener("input", renderPositionCalculator)', self.app)
+
     def test_rsi_uses_wilder_smoothing_over_the_available_history(self):
         self.assertIn("function rsi14FromBars(bars)", self.app)
         self.assertIn("averageGain = (averageGain * 13 + Math.max(change, 0)) / 14", self.app)

@@ -91,7 +91,7 @@
     ["MSFT", "Microsoft"], ["NVDA", "NVIDIA"], ["AAPL", "Apple"], ["AMZN", "Amazon"], ["META", "Meta Platforms"], ["GOOGL", "Alphabet"], ["AVGO", "Broadcom"], ["LLY", "Eli Lilly"], ["JPM", "JPMorgan Chase"], ["XOM", "Exxon Mobil"], ["V", "Visa"], ["UNH", "UnitedHealth"], ["COST", "Costco"], ["CAT", "Caterpillar"], ["NEE", "NextEra Energy"], ["GE", "GE Aerospace"], ["RTX", "RTX Corp"], ["CRM", "Salesforce"], ["ORCL", "Oracle"], ["AMD", "AMD"], ["LIN", "Linde"], ["WMT", "Walmart"], ["PG", "Procter & Gamble"], ["JNJ", "Johnson & Johnson"], ["HD", "Home Depot"], ["PLTR", "Palantir"], ["TSLA", "Tesla"], ["NFLX", "Netflix"], ["ADBE", "Adobe"], ["GS", "Goldman Sachs"]
   ];
 
-  const state = { sectorMode: "d1", sectorSort: { key: "d1", direction: "desc" }, industryView: "top", industrySort: { key: "rsi", direction: "desc" }, rsiRankingSort: { top: { key: "rsi", direction: "desc" }, bottom: { key: "rsi", direction: "asc" } }, breadthMetric: "ratio5", query: "", drawerTicker: null, toastTimer: null, rsiHistorySelection: { sector: "SPY", industry: "SPY" }, lastFullRefreshAt: null, marketSnapshotLoaded: false, marketSnapshotFailed: false, refreshStatus: null };
+  const state = { sectorMode: "d1", sectorSort: { key: "d1", direction: "desc" }, industryView: "top", industrySort: { key: "rsi", direction: "desc" }, rsiRankingSort: { top: { key: "rsi", direction: "desc" }, bottom: { key: "rsi", direction: "asc" } }, breadthMetric: "ratio5", positionPercent: 0.10, query: "", drawerTicker: null, toastTimer: null, rsiHistorySelection: { sector: "SPY", industry: "SPY" }, lastFullRefreshAt: null, marketSnapshotLoaded: false, marketSnapshotFailed: false, refreshStatus: null };
   const $ = (selector, root) => (root || document).querySelector(selector);
   const $$ = (selector, root) => Array.from((root || document).querySelectorAll(selector));
   const formatSnapshotTime = (value) => {
@@ -675,6 +675,20 @@
     if (losersBody) losersBody.innerHTML = renderRows(losers, `当前没有 RSI14 减少达到 ${RSI_GAIN_THRESHOLD} 点的板块或行业 ETF`);
   }
   function formatPrice(value) { return Number(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function formatUsd(value) { return Number.isFinite(Number(value)) ? `$${Number(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "—"; }
+  function renderPositionCalculator() {
+    const fundsInput = $("#calc-account-funds"); const priceInput = $("#calc-stock-price"); const stopInput = $("#calc-stop-price");
+    if (!fundsInput || !priceInput || !stopInput) return;
+    const numberFrom = (input) => input.value.trim() === "" ? null : Number(input.value);
+    const funds = numberFrom(fundsInput); const price = numberFrom(priceInput); const stop = numberFrom(stopInput); const percent = state.positionPercent;
+    const validFunds = Number.isFinite(funds) && funds >= 0; const fixedRisk = validFunds ? funds * 0.005 : null; const planned = validFunds ? funds * percent : null;
+    const baseShares = Number.isFinite(price) && price > 0 && Number.isFinite(planned) ? Math.floor(planned / price) : null; const actualUsed = Number.isFinite(baseShares) && Number.isFinite(price) ? baseShares * price : null;
+    const stopValid = Number.isFinite(price) && price > 0 && Number.isFinite(stop) && stop >= 0 && stop < price; const perShareRisk = stopValid ? price - stop : null; const riskShares = stopValid && Number.isFinite(fixedRisk) ? Math.floor(fixedRisk / perShareRisk) : null;
+    const finalShares = Number.isFinite(baseShares) ? (Number.isFinite(riskShares) ? Math.min(baseShares, riskShares) : baseShares) : null; const riskLimited = Number.isFinite(riskShares) && Number.isFinite(baseShares) && riskShares < baseShares;
+    $("#calc-fixed-risk").textContent = formatUsd(fixedRisk); $("#calc-result-funds").textContent = formatUsd(funds); $("#calc-result-risk").textContent = formatUsd(fixedRisk); $("#calc-result-price").textContent = formatUsd(price); $("#calc-result-planned").textContent = formatUsd(planned); $("#calc-result-base-shares").textContent = Number.isFinite(baseShares) ? `${baseShares} 股` : "—"; $("#calc-result-used").textContent = formatUsd(actualUsed); $("#calc-result-stop").textContent = Number.isFinite(stop) ? formatUsd(stop) : "未设置"; $("#calc-result-per-share-risk").textContent = stopValid ? formatUsd(perShareRisk) : "未触发"; $("#calc-result-final-shares").textContent = Number.isFinite(finalShares) ? `${finalShares} 股` : "—"; $("#calc-selected-percent").textContent = `已选 ${(percent * 100).toFixed(0)}%`;
+    const message = $("#calc-risk-message"); if (message) { message.hidden = !(riskLimited || (stopInput.value.trim() !== "" && Number.isFinite(price) && !stopValid)); message.className = riskLimited ? "position-risk-message is-limited" : "position-risk-message is-invalid"; message.textContent = riskLimited ? "风险受限，建议减少仓位以匹配 0.5% 总风险。" : "止损价格需为有效数字，且必须低于股票价格；当前未触发风控。"; }
+    $$('[data-position-percent]').forEach((button) => { const active = Number(button.dataset.positionPercent) === percent; button.classList.toggle("is-active", active); button.setAttribute("aria-pressed", String(active)); });
+  }
   function applyMarketSnapshot(snapshot) {
     const instruments = snapshot && snapshot.instruments;
     if (!instruments || typeof instruments !== "object") return false;
@@ -910,7 +924,7 @@
     const items = [["板块强势", topSectors], ["行业强势", topIndustries], ["Stockbee 宽度", `${breadthLabel} · 5 日上涨／下跌比 ${Number(latestBreadth.ratio5 || 0).toFixed(2)}`]];
     $$(".briefing-item").forEach((node, index) => { const item = items[index]; if (!item) return; const strong = $("strong", node); const text = $("p", node); if (strong) strong.textContent = item[0]; if (text) text.textContent = item[1]; });
   }
-  function renderAll() { renderIndices(); renderMarketOverview(); renderSectors(); renderIndustries(); renderRsiHistoryControls(); renderRsiGainers(); renderThemes(); renderStockbeeMomentum(); renderBreadth(); renderLocalMarketAnalysis(); updateModeButtons(); }
+  function renderAll() { renderIndices(); renderMarketOverview(); renderPositionCalculator(); renderSectors(); renderIndustries(); renderRsiHistoryControls(); renderRsiGainers(); renderThemes(); renderStockbeeMomentum(); renderBreadth(); renderLocalMarketAnalysis(); updateModeButtons(); }
   function updateSectorSortButtons() {
     $$('[data-sector-sort]').forEach((button) => { const active = button.dataset.sectorSort === state.sectorSort.key; const glyph = button.querySelector(".sort-glyph"); button.classList.toggle("is-active", active); button.setAttribute("aria-sort", active ? (state.sectorSort.direction === "asc" ? "ascending" : "descending") : "none"); if (glyph) glyph.textContent = active ? (state.sectorSort.direction === "asc" ? "↑" : "↓") : "↕"; });
   }
@@ -985,6 +999,8 @@
     $(`#${kind}-rsi-toggle`).addEventListener("click", (event) => { const button = event.currentTarget; const table = $(`#${kind}-rsi-history`); const expanded = button.getAttribute("aria-expanded") === "true"; button.setAttribute("aria-expanded", String(!expanded)); button.textContent = expanded ? "展开" : "收起"; table.hidden = expanded; if (!expanded) renderRsiHistory(kind); });
   });
   $$('[data-breadth-metric]').forEach((button) => button.addEventListener("click", () => { state.breadthMetric = button.dataset.breadthMetric; renderBreadth(); }));
+  $$('[data-position-percent]').forEach((button) => button.addEventListener("click", () => { state.positionPercent = Number(button.dataset.positionPercent); renderPositionCalculator(); }));
+  ["#calc-account-funds", "#calc-stock-price", "#calc-stop-price"].forEach((selector) => { const input = $(selector); if (input) input.addEventListener("input", renderPositionCalculator); });
   $("#theme-toggle").addEventListener("click", () => setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
   $("#breadth-toggle").addEventListener("click", (event) => { const table = $("#breadth-data"); const expanded = event.currentTarget.getAttribute("aria-expanded") === "true"; event.currentTarget.setAttribute("aria-expanded", String(!expanded)); event.currentTarget.textContent = expanded ? "展开半年数据" : "收起半年数据"; table.hidden = expanded; if (!expanded) setupBreadthScroll(); });
   $("#breadth-guide-toggle").addEventListener("click", (event) => { const guide = $("#breadth-guide"); const expanded = event.currentTarget.getAttribute("aria-expanded") === "true"; event.currentTarget.setAttribute("aria-expanded", String(!expanded)); event.currentTarget.textContent = expanded ? "字段说明" : "收起说明"; guide.hidden = expanded; });

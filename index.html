@@ -31,6 +31,7 @@
           <button class="nav-item" type="button" data-target="rsi-history"><span class="nav-index">05</span><span>每日 RSI</span></button>
           <button class="nav-item" type="button" data-target="rsi-gainers"><span class="nav-index">06</span><span>RSI 日增/减榜</span></button>
           <button class="nav-item" type="button" data-target="breadth"><span class="nav-index">07</span><span>市场宽度</span></button>
+          <button class="nav-item" type="button" data-target="position-sizing"><span class="nav-index">08</span><span>仓位计算</span></button>
         </nav>
         <div class="sidebar-footer">
           <div class="source-state data-badge is-stale" id="refresh-status-badge" aria-live="polite"><i></i><span>正在加载快照</span></div>
@@ -67,6 +68,51 @@
                 <div class="table-shell overview-rsi-table-shell"><table class="data-table overview-rsi-table"><thead><tr><th scope="col">#</th><th scope="col">代码 · TradingView</th><th scope="col">行业</th><th scope="col">RSI14</th><th scope="col"><button class="table-sort" type="button" data-rsi-sort="bottom" aria-sort="none">Δ1 <span class="sort-glyph" aria-hidden="true">↕</span></button></th></tr></thead><tbody id="rsi-bottom-body"></tbody></table></div>
               </article>
             </div>
+          </section>
+
+          <section class="position-sizing-section" id="position-sizing" aria-labelledby="position-sizing-title">
+            <div class="section-heading">
+              <div><div class="section-kicker">POSITION RISK</div><h2 id="position-sizing-title">仓位风险计算</h2><p>输入账户与交易参数，结果会随每次修改即时更新。</p></div>
+            </div>
+            <article class="position-calculator section-surface">
+              <div class="position-calculator-inputs">
+                <div class="position-input-group">
+                  <label for="calc-account-funds">总账户资金（USD）</label>
+                  <div class="position-input-wrap"><span>$</span><input id="calc-account-funds" type="number" min="0" step="0.01" value="13000.00" inputmode="decimal" /></div>
+                </div>
+                <div class="position-risk-fixed"><span>每笔交易固定风险</span><strong id="calc-fixed-risk">$65.00</strong><small>总资金 × 0.5%</small></div>
+                <fieldset class="position-input-group position-percentage-group">
+                  <legend>仓位比例</legend>
+                  <div class="position-percentage-options" role="group" aria-label="选择仓位比例">
+                    <button type="button" data-position-percent="0.05" aria-pressed="false">5%</button><button type="button" data-position-percent="0.10" aria-pressed="true" class="is-active">10%</button><button type="button" data-position-percent="0.15" aria-pressed="false">15%</button>
+                  </div>
+                </fieldset>
+                <div class="position-input-group">
+                  <label for="calc-stock-price">股票价格（美元/股）</label>
+                  <div class="position-input-wrap"><span>$</span><input id="calc-stock-price" type="number" min="0" step="0.01" placeholder="例如 45.23" inputmode="decimal" /></div>
+                </div>
+                <div class="position-input-group">
+                  <label for="calc-stop-price">止损价格（美元/股）</label>
+                  <div class="position-input-wrap"><span>$</span><input id="calc-stop-price" type="number" min="0" step="0.01" placeholder="可选" inputmode="decimal" /></div>
+                  <small class="position-input-help">留空则不触发风控；必须低于股票价格。</small>
+                </div>
+              </div>
+              <div class="position-calculator-results" aria-live="polite">
+                <div class="position-results-heading"><div><span>CALCULATION</span><h3>计算结果</h3></div><span id="calc-selected-percent">已选 10%</span></div>
+                <div class="position-result-grid">
+                  <div class="position-result-item"><span>总账户资金</span><strong id="calc-result-funds">$13,000.00</strong></div>
+                  <div class="position-result-item"><span>固定风险金额</span><strong id="calc-result-risk">$65.00</strong></div>
+                  <div class="position-result-item"><span>股票价格</span><strong id="calc-result-price">—</strong></div>
+                  <div class="position-result-item"><span>计划投入金额</span><strong id="calc-result-planned">$1,300.00</strong></div>
+                  <div class="position-result-item"><span>基础可买股数</span><strong id="calc-result-base-shares">—</strong></div>
+                  <div class="position-result-item"><span>实际占用资金</span><strong id="calc-result-used">—</strong></div>
+                  <div class="position-result-item"><span>止损价格</span><strong id="calc-result-stop">未设置</strong></div>
+                  <div class="position-result-item"><span>每股最大亏损</span><strong id="calc-result-per-share-risk">未触发</strong></div>
+                  <div class="position-result-item position-result-final"><span>最终建议股数</span><strong id="calc-result-final-shares">—</strong></div>
+                </div>
+                <div class="position-risk-message" id="calc-risk-message" hidden></div>
+              </div>
+            </article>
           </section>
 
 
