@@ -91,7 +91,7 @@
     ["MSFT", "Microsoft"], ["NVDA", "NVIDIA"], ["AAPL", "Apple"], ["AMZN", "Amazon"], ["META", "Meta Platforms"], ["GOOGL", "Alphabet"], ["AVGO", "Broadcom"], ["LLY", "Eli Lilly"], ["JPM", "JPMorgan Chase"], ["XOM", "Exxon Mobil"], ["V", "Visa"], ["UNH", "UnitedHealth"], ["COST", "Costco"], ["CAT", "Caterpillar"], ["NEE", "NextEra Energy"], ["GE", "GE Aerospace"], ["RTX", "RTX Corp"], ["CRM", "Salesforce"], ["ORCL", "Oracle"], ["AMD", "AMD"], ["LIN", "Linde"], ["WMT", "Walmart"], ["PG", "Procter & Gamble"], ["JNJ", "Johnson & Johnson"], ["HD", "Home Depot"], ["PLTR", "Palantir"], ["TSLA", "Tesla"], ["NFLX", "Netflix"], ["ADBE", "Adobe"], ["GS", "Goldman Sachs"]
   ];
 
-  const state = { sectorMode: "d1", sectorSort: { key: "d1", direction: "desc" }, industryView: "top", industrySort: { key: "rsi", direction: "desc" }, rsiRankingSort: { top: { key: "rsi", direction: "desc" }, bottom: { key: "rsi", direction: "asc" } }, breadthMetric: "ratio5", positionPercent: 0.10, query: "", drawerTicker: null, toastTimer: null, rsiHistorySelection: { sector: "SPY", industry: "SPY" }, lastFullRefreshAt: null, marketSnapshotLoaded: false, marketSnapshotFailed: false, refreshStatus: null };
+  const state = { sectorMode: "d1", sectorSort: { key: "d1", direction: "desc" }, industryView: "top", industrySort: { key: "rsi", direction: "desc" }, rsiRankingSort: { top: { key: "rsi", direction: "desc" }, bottom: { key: "rsi", direction: "asc" } }, breadthMetric: "ratio5", positionPercent: 0.10, riskRate: 0.005, query: "", drawerTicker: null, toastTimer: null, rsiHistorySelection: { sector: "SPY", industry: "SPY" }, lastFullRefreshAt: null, marketSnapshotLoaded: false, marketSnapshotFailed: false, refreshStatus: null };
   const $ = (selector, root) => (root || document).querySelector(selector);
   const $$ = (selector, root) => Array.from((root || document).querySelectorAll(selector));
   const formatSnapshotTime = (value) => {
@@ -680,14 +680,16 @@
     const fundsInput = $("#calc-account-funds"); const priceInput = $("#calc-stock-price"); const stopInput = $("#calc-stop-price");
     if (!fundsInput || !priceInput || !stopInput) return;
     const numberFrom = (input) => input.value.trim() === "" ? null : Number(input.value);
-    const funds = numberFrom(fundsInput); const price = numberFrom(priceInput); const stop = numberFrom(stopInput); const percent = state.positionPercent;
-    const validFunds = Number.isFinite(funds) && funds >= 0; const fixedRisk = validFunds ? funds * 0.005 : null; const planned = validFunds ? funds * percent : null;
+    const funds = numberFrom(fundsInput); const price = numberFrom(priceInput); const stop = numberFrom(stopInput); const percent = state.positionPercent; const riskRate = state.riskRate;
+    const validFunds = Number.isFinite(funds) && funds >= 0; const fixedRisk = validFunds ? funds * riskRate : null; const planned = validFunds ? funds * percent : null;
     const baseShares = Number.isFinite(price) && price > 0 && Number.isFinite(planned) ? Math.floor(planned / price) : null; const actualUsed = Number.isFinite(baseShares) && Number.isFinite(price) ? baseShares * price : null;
     const stopValid = Number.isFinite(price) && price > 0 && Number.isFinite(stop) && stop >= 0 && stop < price; const perShareRisk = stopValid ? price - stop : null; const riskShares = stopValid && Number.isFinite(fixedRisk) ? Math.floor(fixedRisk / perShareRisk) : null;
     const finalShares = Number.isFinite(baseShares) ? (Number.isFinite(riskShares) ? Math.min(baseShares, riskShares) : baseShares) : null; const riskLimited = Number.isFinite(riskShares) && Number.isFinite(baseShares) && riskShares < baseShares;
-    $("#calc-fixed-risk").textContent = formatUsd(fixedRisk); $("#calc-result-funds").textContent = formatUsd(funds); $("#calc-result-risk").textContent = formatUsd(fixedRisk); $("#calc-result-price").textContent = formatUsd(price); $("#calc-result-planned").textContent = formatUsd(planned); $("#calc-result-base-shares").textContent = Number.isFinite(baseShares) ? `${baseShares} 股` : "—"; $("#calc-result-used").textContent = formatUsd(actualUsed); $("#calc-result-stop").textContent = Number.isFinite(stop) ? formatUsd(stop) : "未设置"; $("#calc-result-per-share-risk").textContent = stopValid ? formatUsd(perShareRisk) : "未触发"; $("#calc-result-final-shares").textContent = Number.isFinite(finalShares) ? `${finalShares} 股` : "—"; $("#calc-selected-percent").textContent = `已选 ${(percent * 100).toFixed(0)}%`;
-    const message = $("#calc-risk-message"); if (message) { message.hidden = !(riskLimited || (stopInput.value.trim() !== "" && Number.isFinite(price) && !stopValid)); message.className = riskLimited ? "position-risk-message is-limited" : "position-risk-message is-invalid"; message.textContent = riskLimited ? "风险受限，建议减少仓位以匹配 0.5% 总风险。" : "止损价格需为有效数字，且必须低于股票价格；当前未触发风控。"; }
+    const riskRateLabel = `${(riskRate * 100).toFixed(2).replace(/0+$/, "").replace(/\.$/, "")}%`;
+    $("#calc-fixed-risk").textContent = formatUsd(fixedRisk); $("#calc-fixed-risk-rate").textContent = `总资金 × ${riskRateLabel}`; $("#calc-result-funds").textContent = formatUsd(funds); $("#calc-result-risk").textContent = formatUsd(fixedRisk); $("#calc-result-price").textContent = formatUsd(price); $("#calc-result-planned").textContent = formatUsd(planned); $("#calc-result-base-shares").textContent = Number.isFinite(baseShares) ? `${baseShares} 股` : "—"; $("#calc-result-used").textContent = formatUsd(actualUsed); $("#calc-result-stop").textContent = Number.isFinite(stop) ? formatUsd(stop) : "未设置"; $("#calc-result-per-share-risk").textContent = stopValid ? formatUsd(perShareRisk) : "未触发"; $("#calc-result-final-shares").textContent = Number.isFinite(finalShares) ? `${finalShares} 股` : "—"; $("#calc-selected-percent").textContent = `已选 ${(percent * 100).toFixed(0)}%`;
+    const message = $("#calc-risk-message"); if (message) { message.hidden = !(riskLimited || (stopInput.value.trim() !== "" && Number.isFinite(price) && !stopValid)); message.className = riskLimited ? "position-risk-message is-limited" : "position-risk-message is-invalid"; message.textContent = riskLimited ? `风险受限，建议减少仓位以匹配 ${riskRateLabel} 总风险。` : "止损价格需为有效数字，且必须低于股票价格；当前未触发风控。"; }
     $$('[data-position-percent]').forEach((button) => { const active = Number(button.dataset.positionPercent) === percent; button.classList.toggle("is-active", active); button.setAttribute("aria-pressed", String(active)); });
+    $$('[data-risk-rate]').forEach((button) => { const active = Number(button.dataset.riskRate) === riskRate; button.classList.toggle("is-active", active); button.setAttribute("aria-pressed", String(active)); });
   }
   function applyMarketSnapshot(snapshot) {
     const instruments = snapshot && snapshot.instruments;
@@ -1000,7 +1002,14 @@
   });
   $$('[data-breadth-metric]').forEach((button) => button.addEventListener("click", () => { state.breadthMetric = button.dataset.breadthMetric; renderBreadth(); }));
   $$('[data-position-percent]').forEach((button) => button.addEventListener("click", () => { state.positionPercent = Number(button.dataset.positionPercent); renderPositionCalculator(); }));
-  ["#calc-account-funds", "#calc-stock-price", "#calc-stop-price"].forEach((selector) => { const input = $(selector); if (input) input.addEventListener("input", renderPositionCalculator); });
+  $$('[data-risk-rate]').forEach((button) => button.addEventListener("click", () => { state.riskRate = Number(button.dataset.riskRate); renderPositionCalculator(); }));
+  const accountFundsInput = $("#calc-account-funds"); if (accountFundsInput) accountFundsInput.addEventListener("input", renderPositionCalculator);
+  const stockPriceInput = $("#calc-stock-price"); if (stockPriceInput) stockPriceInput.addEventListener("input", () => {
+    const stopInput = $("#calc-stop-price"); const price = Number(stockPriceInput.value);
+    if (stopInput && stopInput.dataset.autoStop !== "false") stopInput.value = Number.isFinite(price) && price > 0 ? (price * 0.95).toFixed(2) : "";
+    renderPositionCalculator();
+  });
+  const stopPriceInput = $("#calc-stop-price"); if (stopPriceInput) stopPriceInput.addEventListener("input", () => { stopPriceInput.dataset.autoStop = "false"; renderPositionCalculator(); });
   $("#theme-toggle").addEventListener("click", () => setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
   $("#breadth-toggle").addEventListener("click", (event) => { const table = $("#breadth-data"); const expanded = event.currentTarget.getAttribute("aria-expanded") === "true"; event.currentTarget.setAttribute("aria-expanded", String(!expanded)); event.currentTarget.textContent = expanded ? "展开半年数据" : "收起半年数据"; table.hidden = expanded; if (!expanded) setupBreadthScroll(); });
   $("#breadth-guide-toggle").addEventListener("click", (event) => { const guide = $("#breadth-guide"); const expanded = event.currentTarget.getAttribute("aria-expanded") === "true"; event.currentTarget.setAttribute("aria-expanded", String(!expanded)); event.currentTarget.textContent = expanded ? "字段说明" : "收起说明"; guide.hidden = expanded; });

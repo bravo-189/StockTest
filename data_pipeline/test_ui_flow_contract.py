@@ -129,14 +129,21 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn('data-position-percent="0.05"', self.page)
         self.assertIn('data-position-percent="0.10"', self.page)
         self.assertIn('data-position-percent="0.15"', self.page)
+        for rate in ("0.0025", "0.005", "0.0075", "0.01"):
+            self.assertIn(f'data-risk-rate="{rate}"', self.page)
+        self.assertIn('id="calc-fixed-risk-rate"', self.page)
+        self.assertIn('data-auto-stop="true"', self.page)
         for element_id in ("calc-stock-price", "calc-stop-price", "calc-result-planned", "calc-result-base-shares", "calc-result-used", "calc-result-final-shares"):
             self.assertIn(f'id="{element_id}"', self.page)
         self.assertIn("positionPercent: 0.10", self.app)
+        self.assertIn("riskRate: 0.005", self.app)
+        self.assertIn("funds * riskRate", self.app)
         self.assertIn("Math.floor(planned / price)", self.app)
         self.assertIn("Math.floor(fixedRisk / perShareRisk)", self.app)
         self.assertIn("Math.min(baseShares, riskShares)", self.app)
         self.assertIn("is-limited", self.app)
         self.assertIn('addEventListener("input", renderPositionCalculator)', self.app)
+        self.assertIn('stopInput.dataset.autoStop !== "false"', self.app)
 
     def test_rsi_uses_wilder_smoothing_over_the_available_history(self):
         self.assertIn("function rsi14FromBars(bars)", self.app)

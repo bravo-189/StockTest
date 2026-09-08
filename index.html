@@ -80,7 +80,13 @@
                   <label for="calc-account-funds">总账户资金（USD）</label>
                   <div class="position-input-wrap"><span>$</span><input id="calc-account-funds" type="number" min="0" step="0.01" value="13000.00" inputmode="decimal" /></div>
                 </div>
-                <div class="position-risk-fixed"><span>每笔交易固定风险</span><strong id="calc-fixed-risk">$65.00</strong><small>总资金 × 0.5%</small></div>
+                <div class="position-risk-fixed">
+                  <div class="position-risk-fixed-head"><span>每笔交易固定风险</span><strong id="calc-fixed-risk">$65.00</strong></div>
+                  <div class="position-risk-options" role="group" aria-label="选择每笔交易固定风险比例">
+                    <button type="button" data-risk-rate="0.0025" aria-pressed="false">0.25%</button><button type="button" data-risk-rate="0.005" aria-pressed="true" class="is-active">0.5%</button><button type="button" data-risk-rate="0.0075" aria-pressed="false">0.75%</button><button type="button" data-risk-rate="0.01" aria-pressed="false">1%</button>
+                  </div>
+                  <small id="calc-fixed-risk-rate">总资金 × 0.5%</small>
+                </div>
                 <fieldset class="position-input-group position-percentage-group">
                   <legend>仓位比例</legend>
                   <div class="position-percentage-options" role="group" aria-label="选择仓位比例">
@@ -93,8 +99,8 @@
                 </div>
                 <div class="position-input-group">
                   <label for="calc-stop-price">止损价格（美元/股）</label>
-                  <div class="position-input-wrap"><span>$</span><input id="calc-stop-price" type="number" min="0" step="0.01" placeholder="可选" inputmode="decimal" /></div>
-                  <small class="position-input-help">留空则不触发风控；必须低于股票价格。</small>
+                  <div class="position-input-wrap"><span>$</span><input id="calc-stop-price" type="number" min="0" step="0.01" placeholder="输入股价后默认下方 5%" inputmode="decimal" data-auto-stop="true" /></div>
+                  <small class="position-input-help">输入股价后默认设为股价下方 5%，也可手动调整；留空则不触发风控。</small>
                 </div>
               </div>
               <div class="position-calculator-results" aria-live="polite">
