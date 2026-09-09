@@ -397,7 +397,7 @@ def run_refresh_attempt(output_dir, market_builder=None, stockbee_csv=None, atte
         status = {
             "schemaVersion": "1.0",
             "status": status_name,
-            "refreshMode": "btc-hourly" if btc_only else "daily-close",
+            "refreshMode": "btc-2hourly" if btc_only else "daily-close",
             "attemptedAt": attempted_at,
             "lastCompletedAt": attempted_at,
             "lastFullSuccessAt": attempted_at if status_name == "ok" and not btc_only else previous.get("lastFullSuccessAt"),
@@ -431,7 +431,7 @@ def run_refresh_attempt(output_dir, market_builder=None, stockbee_csv=None, atte
         status = {
             "schemaVersion": "1.0",
             "status": "failed",
-            "refreshMode": "btc-hourly" if btc_only else "daily-close",
+            "refreshMode": "btc-2hourly" if btc_only else "daily-close",
             "attemptedAt": attempted_at,
             "lastCompletedAt": previous.get("lastCompletedAt"),
             "lastFullSuccessAt": previous.get("lastFullSuccessAt"),
@@ -445,7 +445,7 @@ def run_refresh_attempt(output_dir, market_builder=None, stockbee_csv=None, atte
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Refresh StockTest local data snapshots")
     parser.add_argument("--output-dir", default="data")
-    parser.add_argument("--interval-minutes", type=float, default=60)
+    parser.add_argument("--interval-minutes", type=float, default=120)
     parser.add_argument("--once", action="store_true")
     args = parser.parse_args(argv)
     while True:

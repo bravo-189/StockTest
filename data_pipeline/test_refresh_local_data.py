@@ -222,6 +222,21 @@ class RefreshLocalDataTests(unittest.TestCase):
             self.assertEqual(saved["instruments"]["BTC"]["latestDate"], "2026-09-02")
             self.assertEqual(result["stockbee"]["metadata"]["latestDate"], "2026-09-01")
 
+    def test_btc_only_status_identifies_two_hour_refresh_mode(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output_dir = Path(directory)
+            previous_market = {
+                "metadata": {"sourceStatus": "loaded", "dailyRefreshDate": "2026-09-01"},
+                "instruments": {"SPY": {"latestDate": "2026-09-01"}, "BTC": {"latestDate": "2026-09-01"}},
+            }
+            (output_dir / "market_snapshot.json").write_text(json.dumps(previous_market), encoding="utf-8")
+            (output_dir / "stockbee.json").write_text(json.dumps({"metadata": {"latestDate": "2026-09-01"}}), encoding="utf-8")
+            (output_dir / "stockbee_momentum.json").write_text(json.dumps({"metadata": {"latestDate": "2026-09-01"}}), encoding="utf-8")
+            btc = {"metadata": {"latestDate": "2026-09-02"}, "instruments": {"BTC": {"latestDate": "2026-09-02"}}}
+            with patch("StockTest.data_pipeline.refresh_local_data._build_live_btc_snapshot", return_value=btc):
+                status = run_refresh_attempt(output_dir, attempted_at="2026-09-02T01:00:00Z", btc_only=True)
+            self.assertEqual(status["refreshMode"], "btc-2hourly")
+
 
 if __name__ == "__main__":
     unittest.main()

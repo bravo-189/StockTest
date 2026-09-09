@@ -28,10 +28,10 @@
   const DETAIL_TRADING_DAYS = 60;
   const RSI_HISTORY_DAYS = 42;
   const RSI_GAIN_THRESHOLD = 6;
-  const BTC_REFRESH_INTERVAL_MS = 60 * 60 * 1000;
-  const STALE_AFTER_MS = 90 * 60 * 1000;
+  const BTC_REFRESH_INTERVAL_MS = 2 * 60 * 60 * 1000;
+  const STALE_AFTER_MS = 150 * 60 * 1000;
   const STORAGE_KEY = "stocktest-theme";
-  // Vercel serves the UI from the main branch, while the hourly GitHub
+  // Vercel serves the UI from the main branch, while the two-hourly GitHub
   // workflow publishes validated snapshots to data-state. Read that branch
   // directly so the deployed page can receive fresh data without rebuilding
   // the static UI on every refresh.
@@ -375,7 +375,7 @@
     const hasWeekendBars = visibleBars.some((bar) => { const day = new Date(`${bar.date}T00:00:00Z`).getUTCDay(); return day === 0 || day === 6; });
     if (bubbleTitle) bubbleTitle.textContent = calendar === "us-equity" ? (hasWeekendBars ? "放大 · 近 1 个月日线 K 线（含周末数据）" : "放大 · 近 1 个月美股交易日日线 K 线") : "放大 · 近 1 个月日线 K 线（24/7）";
     const refreshNote = bubble.querySelector(".bubble-refresh");
-    if (refreshNote) refreshNote.textContent = pending ? (calendar === "us-equity" ? "盘中价格每小时刷新 · 含未收盘日线" : "盘中价格每小时刷新 · 含未收盘日线") : latestIntraday ? (calendar === "us-equity" ? (hasWeekendBars ? "盘中价格每小时刷新 · 周末数据源已提供" : "盘中价格每小时刷新 · 美股周末无指数成交") : "盘中价格每小时刷新 · 24/7") : "等待盘中快照";
+    if (refreshNote) refreshNote.textContent = pending ? (calendar === "us-equity" ? "盘后更新 · 含未收盘日线" : "BTC 每 2 小时更新 · 含未收盘日线") : latestIntraday ? (calendar === "us-equity" ? (hasWeekendBars ? "盘后更新 · 周末数据源已提供" : "盘后更新 · 美股周末无指数成交") : "BTC 每 2 小时更新 · 24/7") : "等待盘中快照";
     bubble.dataset.pendingDate = pending?.date || "";
     drawBubbleCandlestickChart(chart, chartBars, calendar);
     bubble.hidden = false;
@@ -803,16 +803,16 @@
     } else if (state.marketSnapshotLoaded && refresh && refresh.status === "failed") {
       tone = "is-missing";
       label = "刷新失败 · 保留上次数据";
-      note = "BTC 每小时更新 · 其余盘后日更";
+      note = "BTC 每 2 小时更新 · 其余盘后日更";
     } else if (state.marketSnapshotLoaded && refresh && refresh.status === "partial") {
       const missing = Number(refresh.sources && refresh.sources.market && refresh.sources.market.missingCount) || 0;
       tone = "is-missing";
       label = `局部缺失 · ${missing} 项`;
-      note = "BTC 每小时更新 · 其余盘后日更";
+      note = "BTC 每 2 小时更新 · 其余盘后日更";
     } else if (state.marketSnapshotLoaded && ageMs != null && ageMs <= STALE_AFTER_MS) {
       tone = "is-loaded";
       label = `快照已同步 · ${stamp ? stamp.clock : "已更新"} ET`;
-      note = "BTC 每小时更新 · 其余盘后日更";
+      note = "BTC 每 2 小时更新 · 其余盘后日更";
     } else if (state.marketSnapshotLoaded && ageMs != null) {
       const hours = Math.max(1, Math.floor(ageMs / 3_600_000));
       label = `数据过期 · ${hours} 小时`;
@@ -1023,7 +1023,7 @@
   window.addEventListener("scroll", () => { $$(".index-hover-bubble:not([hidden])").forEach((bubble) => positionIndexHoverBubble(bubble.__ownerCard || bubble.closest(".index-card"))); }, { passive: true });
   renderAll(); initTheme(); updateClocks(); window.setInterval(updateClocks, 1000);
   resolveDataStateRevision().finally(() => { hydrateStockbee(); hydrateStockbeeMomentum(); hydrateMarketSnapshot(); hydrateRefreshStatus(); });
-  // Market/BTC snapshots and refresh status are checked hourly. Daily
+  // Market/BTC snapshots and refresh status are checked every two hours. Daily
   // Stockbee and breadth snapshots are rehydrated by applyRefreshStatus when
   // a new full post-close refresh is detected.
   window.setInterval(() => { hydrateMarketSnapshot(); hydrateRefreshStatus(); }, BTC_REFRESH_INTERVAL_MS);

@@ -1,4 +1,4 @@
-"""Manage the StockTest local web server and hourly refresh loop."""
+"""Manage the StockTest local web server and two-hour refresh loop."""
 
 import argparse
 import json
@@ -188,7 +188,7 @@ def parse_args(argv=None):
     parser.add_argument("action", choices=("start", "status", "stop"))
     parser.add_argument("--project-root", type=Path, default=default_root)
     parser.add_argument("--port", type=int, default=8765)
-    parser.add_argument("--interval-minutes", type=float, default=60)
+    parser.add_argument("--interval-minutes", type=float, default=120)
     return parser.parse_args(argv)
 
 

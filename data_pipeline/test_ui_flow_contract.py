@@ -327,7 +327,7 @@ class UiFlowContractTests(unittest.TestCase):
         self.assertIn(".index-card:hover, .index-card:focus-within { z-index: 100; }", self.styles)
         self.assertIn(".index-hover-bubble { position: fixed; z-index: 101;", self.styles)
         self.assertIn("document.body.appendChild(bubble)", self.app)
-        self.assertIn("盘中价格每小时刷新", self.app)
+        self.assertIn("BTC 每 2 小时更新", self.app)
         self.assertIn("latestIntraday", self.app)
         self.assertIn("marketPendingBars", self.app)
         self.assertIn("含未收盘日线", self.app)
