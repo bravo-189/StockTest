@@ -60,14 +60,14 @@ stop-local.cmd     只停止由本项目记录并验证过的两个进程
 python StockTest/data_pipeline/fetch_market_data.py --output StockTest/data/market_snapshot.json
 ```
 
-需要同时刷新行情和 Stockbee 时，使用本地半实时刷新器；默认每 60 分钟运行一次，也可以用 `--once` 做单次刷新：
+需要同时刷新行情和 Stockbee 时，使用本地刷新器；默认每 120 分钟运行一次，也可以用 `--once` 做单次刷新：
 
 ```text
-python StockTest/data_pipeline/refresh_local_data.py --output-dir StockTest/data --interval-minutes 60
+python StockTest/data_pipeline/refresh_local_data.py --output-dir StockTest/data --interval-minutes 120
 python StockTest/data_pipeline/refresh_local_data.py --output-dir StockTest/data --once
 ```
 
-刷新器会在每次尝试后写入 `data/refresh_status.json`。抓取失败时保留上一份行情与 Stockbee 快照，并记录失败来源；完整刷新、局部缺失和失败分别标记为 `ok`、`partial`、`failed`。网页每小时重新读取本地快照与刷新状态，并以 90 分钟为过期阈值显示“数据新鲜”“数据过期”“局部缺失”或“刷新失败 · 保留上次数据”。
+刷新器会在每次尝试后写入 `data/refresh_status.json`。抓取失败时保留上一份行情与 Stockbee 快照，并记录失败来源；完整刷新、局部缺失和失败分别标记为 `ok`、`partial`、`failed`。网页每两小时重新读取本地快照与刷新状态，并以 150 分钟为过期阈值显示“数据新鲜”“数据过期”“局部缺失”或“刷新失败 · 保留上次数据”。
 
 当前快照已通过结构、日期顺序、重复记录、OHLC 边界、成交量非负、行业覆盖和最少 21 根日线检查。美股最近交易日与 BTC 7×24 日历可能不同，页面会保留日期提示。
 
