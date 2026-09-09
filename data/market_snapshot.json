@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-09-09T12:56:06Z",
+    "fetchedAt": "2026-09-09T17:47:04Z",
     "latestDate": "2026-09-09",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -85,7 +85,7 @@
     },
     "dailyRefreshDate": "2026-09-08",
     "dailyRefreshAt": "2026-09-09T07:32:08Z",
-    "btcRefreshAt": "2026-09-09T12:56:06Z",
+    "btcRefreshAt": "2026-09-09T17:47:04Z",
     "btcLatestDate": "2026-09-09",
     "btcIntraday": {
       "requested": [
@@ -77150,15 +77150,15 @@
           "date": "2026-09-09",
           "open": 78455.8,
           "high": 79760.0,
-          "low": 78455.79,
-          "close": 79626.26,
-          "volume": 7213.93149
+          "low": 78060.03,
+          "close": 78720.01,
+          "volume": 11595.73274
         }
       ],
       "latest": {
         "date": "2026-09-09",
-        "close": 79626.26,
-        "change": 1.4919
+        "close": 78720.01,
+        "change": 0.3368
       },
       "latestDate": "2026-09-09",
       "kind": "crypto",
@@ -77238,10 +77238,32 @@
           "date": "2026-09-09",
           "time": "12:00",
           "open": 79324.75,
-          "high": 79662.56,
-          "low": 79281.51,
-          "close": 79626.25,
-          "volume": 1107.03847,
+          "high": 79678.84,
+          "low": 79103.19,
+          "close": 79140.69,
+          "volume": 1837.14356,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-09-09T14:00:00Z",
+          "date": "2026-09-09",
+          "time": "14:00",
+          "open": 79140.69,
+          "high": 79413.74,
+          "low": 78060.03,
+          "close": 78596.7,
+          "volume": 2765.35874,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-09-09T16:00:00Z",
+          "date": "2026-09-09",
+          "time": "16:00",
+          "open": 78596.7,
+          "high": 78938.55,
+          "low": 78460.34,
+          "close": 78738.84,
+          "volume": 887.14363,
           "status": "incomplete"
         }
       ],
