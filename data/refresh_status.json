@@ -2,8 +2,8 @@
   "schemaVersion": "1.0",
   "status": "ok",
   "refreshMode": "btc-hourly",
-  "attemptedAt": "2026-09-09T06:36:00Z",
-  "lastCompletedAt": "2026-09-09T06:36:00Z",
+  "attemptedAt": "2026-09-09T06:39:23Z",
+  "lastCompletedAt": "2026-09-09T06:39:23Z",
   "lastFullSuccessAt": "2026-09-05T17:06:58Z",
   "sources": {
     "market": {
