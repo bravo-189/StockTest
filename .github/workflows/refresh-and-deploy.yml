@@ -56,7 +56,23 @@ jobs:
         run: python -m unittest discover -s StockTest/data_pipeline -p 'test_*.py'
 
       - name: Refresh market and Stockbee snapshots
-        run: python data_pipeline/refresh_local_data.py --output-dir data --once
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            if python data_pipeline/refresh_local_data.py --output-dir data --once; then
+              exit 0
+            fi
+            echo "Refresh attempt ${attempt}/3 failed; post-close sources may still be publishing." >&2
+            if [ "${attempt}" -lt 3 ]; then
+              sleep 60
+            fi
+          done
+          echo "Refresh failed after 3 attempts. Inspecting the persisted status:" >&2
+          if [ -f data/refresh_status.json ]; then
+            cat data/refresh_status.json >&2
+          fi
+          exit 1
 
       - name: Validate the generated market snapshot
         run: >-

@@ -313,9 +313,42 @@ def refresh_once(output_dir, market_builder=None, stockbee_csv=None, fetched_at=
                 market_snapshot.setdefault("metadata", {})["holdings"] = {**previous_holdings_meta, "sourceStatus": "retained"}
             else:
                 holdings_snapshot = holdings_builder(fetched_at)
-                market_snapshot["holdings"] = holdings_snapshot.get("holdings", {})
+                fresh_holdings = holdings_snapshot.get("holdings", {})
+                holdings_metadata = holdings_snapshot.get("metadata", {})
+                if not isinstance(fresh_holdings, dict):
+                    fresh_holdings = {}
+                if not isinstance(holdings_metadata, dict):
+                    holdings_metadata = {}
+
+                # Holdings pages can briefly omit one ETF while the issuer is
+                # publishing its post-close file. Reuse only a structurally
+                # valid prior top-10 record for that exact ticker, and keep
+                # the retained symbols visible in metadata for auditability.
+                unresolved = []
+                retained_symbols = []
+                if isinstance(previous_holdings, dict):
+                    for item in holdings_metadata.get("missing") or []:
+                        ticker = item.get("ticker") if isinstance(item, dict) else None
+                        prior_record = previous_holdings.get(str(ticker).strip().upper()) if ticker else None
+                        prior_rows = prior_record.get("holdings") if isinstance(prior_record, dict) else None
+                        if isinstance(prior_rows, list) and len(prior_rows) >= 10:
+                            fresh_holdings[str(ticker).strip().upper()] = prior_record
+                            retained_symbols.append(str(ticker).strip().upper())
+                        else:
+                            unresolved.append(item)
+
+                holdings_metadata = {
+                    **holdings_metadata,
+                    "loadedCount": len(fresh_holdings),
+                    "missing": unresolved,
+                }
+                if retained_symbols:
+                    holdings_metadata["retainedSymbols"] = retained_symbols
+                    if not unresolved:
+                        holdings_metadata["sourceStatus"] = "retained"
+                market_snapshot["holdings"] = fresh_holdings
                 normalize_holdings_units(market_snapshot["holdings"])
-                market_snapshot.setdefault("metadata", {})["holdings"] = holdings_snapshot.get("metadata", {})
+                market_snapshot.setdefault("metadata", {})["holdings"] = holdings_metadata
     except Exception as exc:
         previous_holdings = previous_market.get("holdings") if isinstance(previous_market, dict) else {}
         if previous_holdings:

@@ -163,6 +163,47 @@ class RefreshLocalDataTests(unittest.TestCase):
             self.assertEqual(result["market"]["metadata"]["retainedSymbols"], ["COPX"])
             self.assertEqual(result["market"]["instruments"]["COPX"]["bars"], [2])
 
+    def test_partial_holdings_refresh_retains_previous_valid_records(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output_dir = Path(directory)
+            prior_rows = [{"rank": index, "ticker": f"OLD{index}", "name": "Prior holding"} for index in range(1, 11)]
+            previous = {
+                "metadata": {
+                    "sourceStatus": "loaded",
+                    "holdings": {"fetchedAt": "2026-08-28T01:00:00Z", "requestedCount": 2, "loadedCount": 2, "missing": []},
+                },
+                "instruments": {"SPY": {"bars": []}},
+                "holdings": {"AAA": {"holdings": prior_rows}, "BBB": {"holdings": prior_rows}},
+            }
+            (output_dir / "market_snapshot.json").write_text(json.dumps(previous), encoding="utf-8")
+            market = {"metadata": {"sourceStatus": "loaded"}, "instruments": {"SPY": {"bars": []}}}
+            csv_text = "Date,Number of stocks up 4% plus today,Number of stocks down 4% plus today,5 day ratio,10 day ratio,T2108,S&P\n08/28/2026,84,382,0.98,1.09,41.91,7711.23\n"
+
+            def partial_holdings(_fetched_at):
+                return {
+                    "holdings": {"AAA": {"holdings": prior_rows}},
+                    "metadata": {
+                        "sourceStatus": "partial",
+                        "requestedCount": 2,
+                        "loadedCount": 1,
+                        "missing": [{"ticker": "BBB", "reason": "source timeout"}],
+                    },
+                }
+
+            result = refresh_once(
+                output_dir,
+                market_builder=lambda: market,
+                stockbee_csv=csv_text,
+                holdings_builder=partial_holdings,
+                fetched_at="2026-08-30T01:00:00Z",
+            )
+
+            holdings_meta = result["market"]["metadata"]["holdings"]
+            self.assertEqual(holdings_meta["loadedCount"], 2)
+            self.assertEqual(holdings_meta["missing"], [])
+            self.assertEqual(holdings_meta["retainedSymbols"], ["BBB"])
+            self.assertEqual(len(result["market"]["holdings"]["BBB"]["holdings"]), 10)
+
     def test_btc_only_refresh_replaces_btc_and_retains_daily_snapshots(self):
         with tempfile.TemporaryDirectory() as directory:
             output_dir = Path(directory)
