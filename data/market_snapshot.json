@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-09-09T06:39:23Z",
+    "fetchedAt": "2026-09-09T06:57:25Z",
     "latestDate": "2026-09-05",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -82,7 +82,7 @@
     },
     "dailyRefreshDate": "2026-09-04",
     "dailyRefreshAt": "2026-09-05T17:06:58Z",
-    "btcRefreshAt": "2026-09-09T06:39:23Z",
+    "btcRefreshAt": "2026-09-09T06:57:25Z",
     "btcLatestDate": "2026-09-09",
     "btcIntraday": {
       "requested": [
@@ -77292,14 +77292,14 @@
           "open": 78455.8,
           "high": 79370.01,
           "low": 78455.79,
-          "close": 79216.53,
-          "volume": 3075.24298
+          "close": 79127.77,
+          "volume": 3140.32802
         }
       ],
       "latest": {
         "date": "2026-09-09",
-        "close": 79216.53,
-        "change": 0.9696
+        "close": 79127.77,
+        "change": 0.8565
       },
       "latestDate": "2026-09-09",
       "kind": "crypto",
@@ -77348,8 +77348,8 @@
           "open": 78923.43,
           "high": 79290.63,
           "low": 78865.71,
-          "close": 79216.53,
-          "volume": 234.03299,
+          "close": 79127.77,
+          "volume": 299.11838,
           "status": "incomplete"
         }
       ],
