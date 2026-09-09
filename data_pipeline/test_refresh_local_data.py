@@ -23,6 +23,11 @@ class RefreshLocalDataTests(unittest.TestCase):
         with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=after_close):
             self.assertTrue(_daily_refresh_due(previous))
 
+    def test_preclose_force_catchup_targets_prior_completed_session(self):
+        before_open = datetime(2026, 9, 9, 3, 30, tzinfo=ZoneInfo("America/New_York"))
+        with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=before_open):
+            self.assertEqual(_last_us_session_date(), "2026-09-08")
+
     def test_weekend_catches_up_missed_friday_daily_refresh(self):
         saturday = datetime(2026, 9, 5, 10, 0, tzinfo=ZoneInfo("America/New_York"))
         previous = {"metadata": {"dailyRefreshDate": "2026-09-03", "dailyRefreshAt": "2026-09-03T21:05:00Z"}, "instruments": {"SPY": {"latestDate": "2026-09-03"}}}

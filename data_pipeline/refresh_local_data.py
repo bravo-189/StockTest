@@ -158,6 +158,11 @@ def _last_us_session_date(now=None):
     """Return the most recent confirmed NYSE session date in New York time."""
     now = now or _eastern_now()
     candidate = now.date()
+    # Before the 17:00 ET post-close boundary, today's session is not a
+    # confirmed daily close yet.  Manual catch-up runs can happen before the
+    # open, so start from the prior calendar day in that case.
+    if now.weekday() < 5 and now.hour < 17:
+        candidate -= timedelta(days=1)
     while candidate.weekday() >= 5 or _is_us_market_holiday(candidate):
         candidate -= timedelta(days=1)
     return candidate.isoformat()
