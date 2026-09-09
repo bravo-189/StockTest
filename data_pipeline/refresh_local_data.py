@@ -447,18 +447,19 @@ def main(argv=None):
     parser.add_argument("--output-dir", default="data")
     parser.add_argument("--interval-minutes", type=float, default=120)
     parser.add_argument("--once", action="store_true")
+    parser.add_argument("--force-daily", action="store_true", help="force one complete post-close refresh for the latest US session")
     args = parser.parse_args(argv)
     while True:
         previous_market = _read_json(Path(args.output_dir) / "market_snapshot.json")
         previous_stockbee = _read_json(Path(args.output_dir) / "stockbee.json")
         previous_momentum = _read_json(Path(args.output_dir) / "stockbee_momentum.json")
         now = _eastern_now()
-        daily_due = _daily_refresh_due(previous_market, previous_stockbee, previous_momentum)
+        daily_due = args.force_daily or _daily_refresh_due(previous_market, previous_stockbee, previous_momentum)
         after_close = (now.weekday() < 5 and now.hour >= 17) or now.weekday() >= 5
         status = run_refresh_attempt(
             args.output_dir,
             btc_only=not daily_due,
-            daily_refresh_date=_last_us_session_date(now) if daily_due and after_close else None,
+            daily_refresh_date=_last_us_session_date(now) if daily_due and (after_close or args.force_daily) else None,
         )
         print(f"refresh {status['status']} at {status['attemptedAt']}")
         if args.once:

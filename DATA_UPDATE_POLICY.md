@@ -16,4 +16,6 @@
 3. 将已校验的 JSON 同步到 `main`，触发 Vercel 更新；
 4. 在 `data/refresh_status.json` 和 `data/market_snapshot_quality.json` 中留下时间、来源覆盖和异常证据。
 
+如果盘后任务因来源暂时不可用而失败，可在 GitHub Actions 的手动运行菜单勾选“强制补刷最近一个美股交易日”。该选项只执行一次完整日更，不会改变平时的两小时 BTC 调度。
+
 持仓源若短暂少返回一个 ETF，只有在上一份记录包含至少 10 行可验证前十大持仓时才会按代码补回，并记录 `retainedSymbols`。无法验证的缺口仍会阻止发布，不会静默显示不完整名单。

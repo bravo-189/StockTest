@@ -2,6 +2,12 @@ name: Refresh data and deploy Pages
 
 on:
   workflow_dispatch:
+    inputs:
+      force_daily:
+        description: "强制补刷最近一个美股交易日的完整数据"
+        required: false
+        default: false
+        type: boolean
   schedule:
     # Run every two hours. The refresh script decides whether the run is
     # BTC-only or the once-per-US-session daily refresh after the US close.
@@ -60,7 +66,11 @@ jobs:
         run: |
           set -euo pipefail
           for attempt in 1 2 3; do
-            if python data_pipeline/refresh_local_data.py --output-dir data --once; then
+            refresh_args=(data_pipeline/refresh_local_data.py --output-dir data --once)
+            if [ "${{ inputs.force_daily }}" = "true" ]; then
+              refresh_args+=(--force-daily)
+            fi
+            if python "${refresh_args[@]}"; then
               exit 0
             fi
             echo "Refresh attempt ${attempt}/3 failed; post-close sources may still be publishing." >&2
