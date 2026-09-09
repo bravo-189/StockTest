@@ -4,7 +4,7 @@
     "loadedCount": 76,
     "coverageRate": 1.0,
     "instrumentCount": 76,
-    "totalBars": 37740,
+    "totalBars": 37665,
     "pendingCount": 0,
     "findingCount": 1
   },
@@ -15,42 +15,42 @@
       "instrumentCount": 1
     },
     "us-equity": {
-      "earliest": "2024-09-05",
-      "latest": "2026-09-04",
+      "earliest": "2024-09-09",
+      "latest": "2026-09-08",
       "instrumentCount": 75
     }
   },
   "intraday": {
     "SPX": {
       "interval": "5m",
-      "latestDate": "2026-09-04",
+      "latestDate": "2026-09-08",
       "barCount": 79,
-      "firstTimestamp": "2026-09-04T13:30:00Z",
-      "lastTimestamp": "2026-09-04T20:00:00Z",
+      "firstTimestamp": "2026-09-08T13:30:00Z",
+      "lastTimestamp": "2026-09-08T20:00:00Z",
       "incompleteCount": 0
     },
     "NDX": {
       "interval": "5m",
-      "latestDate": "2026-09-04",
+      "latestDate": "2026-09-08",
       "barCount": 79,
-      "firstTimestamp": "2026-09-04T13:30:00Z",
-      "lastTimestamp": "2026-09-04T20:00:00Z",
+      "firstTimestamp": "2026-09-08T13:30:00Z",
+      "lastTimestamp": "2026-09-08T20:00:00Z",
       "incompleteCount": 0
     },
     "DJI": {
       "interval": "5m",
-      "latestDate": "2026-09-04",
+      "latestDate": "2026-09-08",
       "barCount": 79,
-      "firstTimestamp": "2026-09-04T13:30:00Z",
-      "lastTimestamp": "2026-09-04T20:00:00Z",
+      "firstTimestamp": "2026-09-08T13:30:00Z",
+      "lastTimestamp": "2026-09-08T20:00:00Z",
       "incompleteCount": 0
     },
     "RUT": {
       "interval": "5m",
-      "latestDate": "2026-09-04",
+      "latestDate": "2026-09-08",
       "barCount": 79,
-      "firstTimestamp": "2026-09-04T13:30:00Z",
-      "lastTimestamp": "2026-09-04T20:00:00Z",
+      "firstTimestamp": "2026-09-08T13:30:00Z",
+      "lastTimestamp": "2026-09-08T20:00:00Z",
       "incompleteCount": 0
     },
     "BTC": {
@@ -66,7 +66,7 @@
     {
       "check": "calendar_note",
       "severity": "info",
-      "evidence": "crypto-24x7: 2026-06-12 → 2026-09-09 | us-equity: 2024-09-05 → 2026-09-04",
+      "evidence": "crypto-24x7: 2026-06-12 → 2026-09-09 | us-equity: 2024-09-09 → 2026-09-08",
       "message": "不同交易日历是预期差异；跨资产比较使用共同观察日，不补造缺失 K 线。"
     }
   ],
