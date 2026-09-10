@@ -65,7 +65,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for attempt in 1 2 3; do
+          # Yahoo's daily bars are sometimes published several minutes after
+          # the exchange close. Keep the job alive long enough to catch the
+          # same session without publishing a stale snapshot.
+          max_attempts=6
+          retry_seconds=300
+          for attempt in $(seq 1 "${max_attempts}"); do
             refresh_args=(data_pipeline/refresh_local_data.py --output-dir data --once)
             if [ "${{ inputs.force_daily }}" = "true" ]; then
               refresh_args+=(--force-daily)
@@ -73,12 +78,12 @@ jobs:
             if python "${refresh_args[@]}"; then
               exit 0
             fi
-            echo "Refresh attempt ${attempt}/3 failed; post-close sources may still be publishing." >&2
-            if [ "${attempt}" -lt 3 ]; then
-              sleep 60
+            echo "Refresh attempt ${attempt}/${max_attempts} failed; post-close sources may still be publishing." >&2
+            if [ "${attempt}" -lt "${max_attempts}" ]; then
+              sleep "${retry_seconds}"
             fi
           done
-          echo "Refresh failed after 3 attempts. Inspecting the persisted status:" >&2
+          echo "Refresh failed after ${max_attempts} attempts. Inspecting the persisted status:" >&2
           if [ -f data/refresh_status.json ]; then
             cat data/refresh_status.json >&2
           fi
