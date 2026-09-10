@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-09-10T10:46:04Z",
+    "fetchedAt": "2026-09-10T12:53:06Z",
     "latestDate": "2026-09-10",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -84,7 +84,23 @@
       ]
     },
     "dailyRefreshDate": "2026-09-09",
-    "dailyRefreshAt": "2026-09-10T10:46:04Z"
+    "dailyRefreshAt": "2026-09-10T10:46:04Z",
+    "btcRefreshAt": "2026-09-10T12:53:06Z",
+    "btcLatestDate": "2026-09-10",
+    "btcIntraday": {
+      "requested": [
+        "SPX",
+        "NDX",
+        "DJI",
+        "RUT",
+        "BTC"
+      ],
+      "loaded": [
+        "BTC"
+      ],
+      "missing": [],
+      "sourceStatus": "loaded"
+    }
   },
   "sources": {
     "equities": {
@@ -77134,15 +77150,15 @@
           "date": "2026-09-10",
           "open": 78306.43,
           "high": 78564.39,
-          "low": 77821.21,
-          "close": 77986.01,
-          "volume": 5097.85546
+          "low": 76676.07,
+          "close": 76968.58,
+          "volume": 8573.36174
         }
       ],
       "latest": {
         "date": "2026-09-10",
-        "close": 77986.01,
-        "change": -0.4092
+        "close": 76968.58,
+        "change": -1.7085
       },
       "latestDate": "2026-09-10",
       "kind": "crypto",
@@ -77211,10 +77227,21 @@
           "date": "2026-09-10",
           "time": "10:00",
           "open": 77992.0,
-          "high": 78044.57,
-          "low": 77821.21,
-          "close": 77996.01,
-          "volume": 438.16435,
+          "high": 78054.84,
+          "low": 77688.0,
+          "close": 77840.8,
+          "volume": 1277.36099,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-09-10T12:00:00Z",
+          "date": "2026-09-10",
+          "time": "12:00",
+          "open": 77840.64,
+          "high": 77959.2,
+          "low": 76676.07,
+          "close": 76968.57,
+          "volume": 2636.22381,
           "status": "incomplete"
         }
       ],
@@ -77224,10 +77251,6 @@
         "interval": "2h",
         "timezone": "UTC",
         "latestDate": "2026-09-10"
-      },
-      "relativeStrengthRating": {
-        "sector": {},
-        "industry": {}
       }
     },
     "COPX": {
