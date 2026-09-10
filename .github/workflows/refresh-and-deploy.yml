@@ -62,9 +62,11 @@ jobs:
         run: python -m unittest discover -s StockTest/data_pipeline -p 'test_*.py'
 
       - name: Refresh market and Stockbee snapshots
+        id: refresh
         shell: bash
         run: |
           set -euo pipefail
+          echo "published=false" >> "$GITHUB_OUTPUT"
           # Yahoo's daily bars are sometimes published several minutes after
           # the exchange close. Keep the job alive long enough to catch the
           # same session without publishing a stale snapshot.
@@ -76,6 +78,7 @@ jobs:
               refresh_args+=(--force-daily)
             fi
             if python "${refresh_args[@]}"; then
+              echo "published=true" >> "$GITHUB_OUTPUT"
               exit 0
             fi
             echo "Refresh attempt ${attempt}/${max_attempts} failed; post-close sources may still be publishing." >&2
@@ -87,9 +90,17 @@ jobs:
           if [ -f data/refresh_status.json ]; then
             cat data/refresh_status.json >&2
           fi
+          # A delayed post-close quote is an expected transient condition,
+          # not a broken workflow. Keep the last valid snapshot and let the
+          # next scheduled run retry, without sending a failure notification.
+          if [ -f data/refresh_status.json ] && grep -q '"message": "post-close snapshot incomplete for ' data/refresh_status.json; then
+            echo "::warning::Post-close market data is still being published; keeping the last valid snapshot and retrying next run."
+            exit 0
+          fi
           exit 1
 
       - name: Validate the generated market snapshot
+        if: steps.refresh.outputs.published == 'true'
         run: >-
           python data_pipeline/validate_market_snapshot.py
           data/market_snapshot.json
@@ -97,6 +108,7 @@ jobs:
           --report data/market_snapshot_quality.json
 
       - name: Prepare the Pages artifact
+        if: steps.refresh.outputs.published == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -111,6 +123,7 @@ jobs:
           touch site/.nojekyll
 
       - name: Save the latest snapshots in the data-state branch
+        if: steps.refresh.outputs.published == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -143,6 +156,7 @@ jobs:
           git worktree remove --force "$state_dir"
 
       - name: Publish validated snapshots to main for Vercel
+        if: steps.refresh.outputs.published == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -157,15 +171,18 @@ jobs:
           fi
 
       - name: Configure GitHub Pages
+        if: steps.refresh.outputs.published == 'true'
         uses: actions/configure-pages@v5
 
       - name: Upload Pages artifact
+        if: steps.refresh.outputs.published == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: site
 
       - name: Deploy Pages
         id: deployment
+        if: steps.refresh.outputs.published == 'true'
         uses: actions/deploy-pages@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
