@@ -192,11 +192,13 @@ def _require_completed_us_equity_snapshot(snapshot, expected_date):
 
 
 def _daily_refresh_due(previous_market, previous_stockbee=None, previous_momentum=None):
-    """Refresh non-BTC data after close, including late source publication."""
+    """Refresh non-BTC data three hours after close, including late publication."""
     if not isinstance(previous_market, dict) or not previous_market.get("instruments"):
         return True
     now = _eastern_now()
-    if now.weekday() < 5 and now.hour < 17:
+    # Allow the data providers a few hours to publish a stable daily bar.
+    # Weekend catch-up remains enabled so a missed Friday can be recovered.
+    if now.weekday() < 5 and now.hour < 19:
         return False
     metadata = previous_market.get("metadata") or {}
     previous_date = metadata.get("dailyRefreshDate")
