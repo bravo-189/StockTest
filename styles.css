@@ -722,3 +722,146 @@ h2 { font-size: 22px; letter-spacing: -.025em; line-height: 1.2; }
   .signal-row { gap: 5px; }
   .signal-chip { padding-inline: 7px; }
 }
+
+/* Readable type scale: stronger hierarchy for fast market scanning. */
+body { font-size: 16px; line-height: 1.6; }
+h1 { font-size: clamp(36px, 4.4vw, 50px); font-weight: 750; letter-spacing: -.045em; }
+h2 { font-size: clamp(27px, 2.5vw, 34px); font-weight: 720; letter-spacing: -.035em; }
+h3 { font-size: 20px; font-weight: 680; }
+.brand-name { font-size: 16px; }
+.brand-subtitle { font-size: 12px; }
+.product-switcher-item strong { font-size: 14px; }
+.product-switcher-item small { font-size: 12px; }
+.nav-item { font-size: 16px; }
+.nav-index { font-size: 12px; }
+.sidebar-footer, .sidebar-time { font-size: 12px; }
+.topbar-context { font-size: 15px; }
+.clock-label, .clock-chip #us-date { font-size: 12px; }
+.clock-chip time { font-size: 14px; }
+.theme-toggle { font-size: 13px; }
+.section-kicker, .eyebrow { font-size: 11px; font-weight: 600; }
+.section-heading h2 { font-size: clamp(28px, 2.6vw, 35px); }
+.section-heading p { font-size: 14px; }
+.section-meta { font-size: 13px; }
+.hero-date { font-size: 14px; }
+.hero-copy { font-size: 17px; }
+.meter-labels { font-size: 12px; }
+.signal-chip { font-size: 13px; }
+.data-badge { font-size: 12px; }
+.briefing-number { font-size: 12px; }
+.briefing-item strong { font-size: 17px; }
+.briefing-item p { font-size: 14px; }
+.market-rsi-leader-copy small, .market-rsi-leader-detail { font-size: 13px; }
+.market-rsi-leader-copy strong { font-size: 18px; }
+.market-rsi-leader-rank { font-size: 12px; }
+.market-rsi-leader-symbol { font-size: 19px; }
+.market-rsi-leader-name { font-size: 12px; }
+.market-rsi-leader-item strong { font-size: 21px; }
+.market-rsi-leader-item strong small { font-size: 11px; }
+.position-input-group label, .position-input-group legend, .position-risk-fixed-head > span { font-size: 14px; }
+.position-input-wrap input { font-size: 18px; }
+.position-risk-fixed strong { font-size: 25px; }
+.position-risk-fixed small, .position-input-help { font-size: 12px; }
+.position-risk-options button { font-size: 13px; }
+.position-percentage-options button { font-size: 16px; }
+.position-results-heading > div > span { font-size: 11px; }
+.position-results-heading h3 { font-size: 21px; }
+.position-results-heading > span { font-size: 13px; }
+.position-result-item span { font-size: 13px; }
+.position-result-item strong { font-size: 20px; }
+.position-result-final strong { font-size: 25px; }
+.position-risk-message { font-size: 14px; }
+.market-overview-breadth-card small, .market-overview-breadth-card span { font-size: 12px; }
+.market-overview-breadth-card strong { font-size: 21px; }
+.index-price .index-rsi { font-size: 13px; }
+.index-overview-metrics small, .index-overview-metrics b { font-size: 12px; }
+.index-overview-metrics small { font-size: 11px; }
+.overview-panel-heading h3 { font-size: 18px; }
+.overview-panel-heading p { font-size: 13px; }
+.data-table th { font-size: 14px; }
+.data-table td { font-size: 16px; }
+.table-sort, .sort-glyph { font-size: 14px; }
+.delta-display .delta-triangle { font-size: 12px; }
+.rsi-scope-list { font-size: 13px; }
+.holding-link { font-size: 12px; }
+.sub-label { font-size: 13px; }
+.status-label { font-size: 12px; }
+.index-card { padding-top: 23px; }
+.ticker { font-size: 16px; }
+.index-name, .index-change { font-size: 14px; }
+.index-price { font-size: 30px; font-weight: 650; }
+.sparkline-caption { font-size: 12px; }
+.file-runtime-notice { font-size: 13px; }
+.bubble-heading { font-size: 14px; }
+.bubble-price { font-size: 14px; }
+.bubble-legend { font-size: 12px; }
+.bubble-meta { font-size: 11px; }
+.segmented-control button, .view-switch button { font-size: 14px; }
+.rsi-history-heading strong { font-size: 16px; }
+.rsi-history-heading span { font-size: 13px; }
+.rsi-history-actions { font-size: 12px; }
+.compact-button { font-size: 12px; }
+.comparison-heading p { font-size: 13px; }
+.stockbee-ticker { font-size: 16px; }
+.stockbee-classification { font-size: 14px !important; }
+.matrix-ticker { font-size: 13px; }
+.matrix-name { font-size: 12px; }
+.matrix-metric { font-size: 13px; }
+.theme-rank { font-size: 12px; }
+.theme-score { font-size: 13px; }
+.theme-name { font-size: 15px; }
+.theme-ticker { font-size: 12px; }
+.factor-line, .factor-line b { font-size: 12px; }
+.subsection-heading h3 { font-size: 18px; }
+.subsection-heading p { font-size: 13px; }
+.outline-button { font-size: 14px; }
+.breadth-chart-heading h3 { font-size: 21px; }
+.breadth-chart-heading p { font-size: 13px; }
+.breadth-latest-readout span, .breadth-latest-readout small { font-size: 12px; }
+.breadth-latest-readout strong { font-size: 26px; }
+.breadth-chart-selection span, .breadth-group-label { font-size: 12px; }
+.breadth-chart-selection strong { font-size: 15px; }
+.breadth-metric-switch button { font-size: 13px; }
+.breadth-chart-foot, .breadth-scroll-control, .breadth-scroll-hint { font-size: 12px; }
+.breadth-guide strong { font-size: 16px; }
+.breadth-guide p, .breadth-guide-grid dd { font-size: 13px; }
+.breadth-guide-grid dt { font-size: 13px; }
+.breadth-raw-table .breadth-group-row th { font-size: 14px; }
+.breadth-raw-table .breadth-column-row th { font-size: 13px; }
+.breadth-raw-table tbody td { font-size: 16px; }
+.site-footer { font-size: 12px; }
+.evidence-item span { font-size: 13px; }
+.drawer-header p, .drawer-section > p { font-size: 13px; }
+.close-button { font-size: 14px; }
+.drawer-metric span { font-size: 12px; }
+.drawer-metric strong { font-size: 15px; }
+.holding-row { font-size: 14px; }
+.holding-row > span:first-child { font-size: 12px; }
+.holding-row small { font-size: 12px; }
+.toast { font-size: 13px; }
+
+@media (max-width: 640px) {
+  body { font-size: 15px; }
+  h1 { font-size: clamp(32px, 9vw, 40px); }
+  h2 { font-size: 26px; }
+  h3 { font-size: 19px; }
+  .nav-item { font-size: 14px; }
+  .section-heading h2 { font-size: 27px; }
+  .section-heading p, .hero-copy { font-size: 15px; }
+  .hero-copy { line-height: 1.7; }
+  .index-price { font-size: 25px; }
+  .data-table th { font-size: 13px; }
+  .data-table td { font-size: 15px; }
+  .overview-panel-heading h3 { font-size: 17px; }
+  .overview-panel-heading p { font-size: 12px; }
+  .market-overview-breadth-card strong { font-size: 19px; }
+  .position-result-item strong { font-size: 18px; }
+  .position-result-final strong { font-size: 23px; }
+  .breadth-raw-table tbody td { font-size: 15px; }
+}
+
+@media (max-width: 360px) {
+  h2 { font-size: 24px; }
+  .section-heading h2 { font-size: 25px; }
+  .nav-item { font-size: 13px; }
+}
