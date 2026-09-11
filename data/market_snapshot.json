@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-09-11T12:24:46Z",
+    "fetchedAt": "2026-09-11T16:23:47Z",
     "latestDate": "2026-09-11",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -84,7 +84,23 @@
       ]
     },
     "dailyRefreshDate": "2026-09-10",
-    "dailyRefreshAt": "2026-09-11T12:24:46Z"
+    "dailyRefreshAt": "2026-09-11T12:24:46Z",
+    "btcRefreshAt": "2026-09-11T16:23:47Z",
+    "btcLatestDate": "2026-09-11",
+    "btcIntraday": {
+      "requested": [
+        "SPX",
+        "NDX",
+        "DJI",
+        "RUT",
+        "BTC"
+      ],
+      "loaded": [
+        "BTC"
+      ],
+      "missing": [],
+      "sourceStatus": "loaded"
+    }
   },
   "sources": {
     "equities": {
@@ -77133,16 +77149,16 @@
         {
           "date": "2026-09-11",
           "open": 76568.73,
-          "high": 77500.0,
-          "low": 76563.01,
-          "close": 76962.56,
-          "volume": 5602.63975
+          "high": 79890.0,
+          "low": 76046.58,
+          "close": 77434.01,
+          "volume": 15283.11657
         }
       ],
       "latest": {
         "date": "2026-09-11",
-        "close": 76962.56,
-        "change": 0.5144
+        "close": 77434.01,
+        "change": 1.1301
       },
       "latestDate": "2026-09-11",
       "kind": "crypto",
@@ -77222,10 +77238,32 @@
           "date": "2026-09-11",
           "time": "12:00",
           "open": 77036.12,
-          "high": 77125.0,
-          "low": 76900.96,
-          "close": 76954.19,
-          "volume": 245.7913,
+          "high": 79333.0,
+          "low": 76046.58,
+          "close": 79242.56,
+          "volume": 5982.80548,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-09-11T14:00:00Z",
+          "date": "2026-09-11",
+          "time": "14:00",
+          "open": 79242.56,
+          "high": 79890.0,
+          "low": 77303.0,
+          "close": 77732.25,
+          "volume": 3351.5047,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-09-11T16:00:00Z",
+          "date": "2026-09-11",
+          "time": "16:00",
+          "open": 77732.25,
+          "high": 78068.01,
+          "low": 77381.88,
+          "close": 77452.29,
+          "volume": 590.54027,
           "status": "incomplete"
         }
       ],
@@ -77235,10 +77273,6 @@
         "interval": "2h",
         "timezone": "UTC",
         "latestDate": "2026-09-11"
-      },
-      "relativeStrengthRating": {
-        "sector": {},
-        "industry": {}
       }
     },
     "COPX": {
