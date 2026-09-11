@@ -794,6 +794,7 @@
     const ageMs = completedAt && Number.isFinite(completedAt.getTime()) ? Math.max(Date.now() - completedAt.getTime(), 0) : null;
     const fullRefreshAt = refresh && refresh.lastFullSuccessAt ? refresh.lastFullSuccessAt : null;
     const fullRefreshStamp = fullRefreshAt ? formatSnapshotTime(fullRefreshAt) : null;
+    const equityDataDate = DashboardData.metadata && DashboardData.metadata.dataDate ? DashboardData.metadata.dataDate : null;
     const btcOnlyRefresh = refresh && refresh.refreshMode === "btc-2hourly";
     const stamp = formatSnapshotTime(lastCompleted || DashboardData.metadata.generatedAt);
     let tone = "is-stale";
@@ -815,7 +816,7 @@
     } else if (state.marketSnapshotLoaded && btcOnlyRefresh) {
       tone = "is-loaded";
       label = `BTC 已更新 · ${stamp ? stamp.clock : "已更新"} ET`;
-      note = fullRefreshStamp ? `美股与 Stockbee 完整数据：${fullRefreshStamp.date} ${fullRefreshStamp.clock} ET` : "美股与 Stockbee 完整日更待发布";
+      note = fullRefreshStamp ? `美股与 Stockbee 完整日更最后成功：${fullRefreshStamp.date} ${fullRefreshStamp.clock} ET · 数据截至 ${equityDataDate || "—"}` : "美股与 Stockbee 完整日更待发布";
     } else if (state.marketSnapshotLoaded && ageMs != null && ageMs <= STALE_AFTER_MS) {
       tone = "is-loaded";
       label = `快照已同步 · ${stamp ? stamp.clock : "已更新"} ET`;
