@@ -9,9 +9,10 @@ on:
         default: false
         type: boolean
   schedule:
-    # Run every two hours for BTC. The extra 23:05 UTC slot is about three
-    # hours after the US close during daylight time; the refresh script still
-    # guards the daily job with the New York clock for DST and holidays.
+    # Run every two hours for BTC. The refresh script also uses the morning
+    # slots to catch up a delayed prior-session close. The extra 23:05 UTC
+    # slot is about three hours after the US close during daylight time; the
+    # New York clock keeps both windows correct across DST and holidays.
     - cron: "5 */2 * * *"
     - cron: "5 23 * * 1-5"
 

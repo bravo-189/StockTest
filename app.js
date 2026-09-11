@@ -792,6 +792,9 @@
     const lastCompleted = refresh && (refresh.lastCompletedAt || refresh.lastFullSuccessAt);
     const completedAt = lastCompleted ? new Date(lastCompleted) : null;
     const ageMs = completedAt && Number.isFinite(completedAt.getTime()) ? Math.max(Date.now() - completedAt.getTime(), 0) : null;
+    const fullRefreshAt = refresh && refresh.lastFullSuccessAt ? refresh.lastFullSuccessAt : null;
+    const fullRefreshStamp = fullRefreshAt ? formatSnapshotTime(fullRefreshAt) : null;
+    const btcOnlyRefresh = refresh && refresh.refreshMode === "btc-2hourly";
     const stamp = formatSnapshotTime(lastCompleted || DashboardData.metadata.generatedAt);
     let tone = "is-stale";
     let label = "正在加载快照";
@@ -809,6 +812,10 @@
       tone = "is-missing";
       label = `局部缺失 · ${missing} 项`;
       note = "BTC 每 2 小时更新 · 其余盘后日更";
+    } else if (state.marketSnapshotLoaded && btcOnlyRefresh) {
+      tone = "is-loaded";
+      label = `BTC 已更新 · ${stamp ? stamp.clock : "已更新"} ET`;
+      note = fullRefreshStamp ? `美股与 Stockbee 完整数据：${fullRefreshStamp.date} ${fullRefreshStamp.clock} ET` : "美股与 Stockbee 完整日更待发布";
     } else if (state.marketSnapshotLoaded && ageMs != null && ageMs <= STALE_AFTER_MS) {
       tone = "is-loaded";
       label = `快照已同步 · ${stamp ? stamp.clock : "已更新"} ET`;
@@ -823,7 +830,7 @@
     }
     badge.className = `source-state data-badge ${tone}`;
     badge.innerHTML = `<i></i><span>${html(label)}</span>`;
-    badge.title = lastCompleted ? `最后成功刷新：${lastCompleted}` : label;
+    badge.title = btcOnlyRefresh && fullRefreshAt ? `BTC 最后更新：${lastCompleted}；完整日线最后更新：${fullRefreshAt}` : (lastCompleted ? `最后成功刷新：${lastCompleted}` : label);
     sidebarTime.innerHTML = stamp ? `${html(stamp.date)}<br />${html(stamp.clock)} ET` : "正在读取<br />已发布数据";
     sidebarNote.textContent = note;
   }

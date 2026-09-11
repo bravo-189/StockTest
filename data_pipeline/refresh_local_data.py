@@ -196,17 +196,22 @@ def _daily_refresh_due(previous_market, previous_stockbee=None, previous_momentu
     if not isinstance(previous_market, dict) or not previous_market.get("instruments"):
         return True
     now = _eastern_now()
-    # Allow the data providers a few hours to publish a stable daily bar.
-    # Weekend catch-up remains enabled so a missed Friday can be recovered.
-    if now.weekday() < 5 and now.hour < 19:
-        return False
     metadata = previous_market.get("metadata") or {}
     previous_date = metadata.get("dailyRefreshDate")
+    expected_date = _last_us_session_date(now)
+    # Allow the data providers a few hours to publish a stable daily bar.
+    # Weekend catch-up remains enabled so a missed Friday can be recovered.
+    # A second window before the next US open catches a close that was delayed
+    # by Yahoo or GitHub Actions scheduling without treating BTC-only runs as
+    # a completed full-market refresh.
+    post_close_window = now.weekday() >= 5 or now.hour >= 19
+    morning_catchup_window = now.weekday() < 5 and 7 <= now.hour < 12 and previous_date != expected_date
+    if not post_close_window and not morning_catchup_window:
+        return False
     # Older snapshots only had dailyRefreshDate. Treat those as due once after
     # close so an initial pre-close bootstrap cannot suppress today's close run.
     if not metadata.get("dailyRefreshAt"):
         return True
-    expected_date = _last_us_session_date(now)
     if previous_date != expected_date:
         return True
     # Stockbee publishes its two sheets asynchronously. If the market snapshot
@@ -463,10 +468,13 @@ def main(argv=None):
         now = _eastern_now()
         daily_due = args.force_daily or _daily_refresh_due(previous_market, previous_stockbee, previous_momentum)
         after_close = (now.weekday() < 5 and now.hour >= 17) or now.weekday() >= 5
+        # If the post-close provider lagged, retry the latest completed US
+        # session before the next open instead of waiting for another close.
+        morning_catchup = now.weekday() < 5 and 7 <= now.hour < 12 and daily_due
         status = run_refresh_attempt(
             args.output_dir,
             btc_only=not daily_due,
-            daily_refresh_date=_last_us_session_date(now) if daily_due and (after_close or args.force_daily) else None,
+            daily_refresh_date=_last_us_session_date(now) if daily_due and (after_close or morning_catchup or args.force_daily) else None,
         )
         print(f"refresh {status['status']} at {status['attemptedAt']}")
         if args.once:
