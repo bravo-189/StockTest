@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "rowCount": 127,
-    "latestDate": "2026-09-11",
+    "rowCount": 126,
+    "latestDate": "2026-09-14",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-09-12T07:06:45Z",
+    "fetchedAt": "2026-09-15T01:42:45Z",
     "historyWindow": "6mo",
     "lookbackDays": 183
   },
@@ -122,13 +122,31 @@
   ],
   "rows": [
     {
+      "date": "2026-09-14",
+      "up": 277,
+      "down": 358,
+      "ratio5": 0.66,
+      "ratio10": 0.85,
+      "t2108": 29.19,
+      "sp500": 7619.77,
+      "up25Quarter": 1072,
+      "down25Quarter": 1207,
+      "up25Month": 64,
+      "down25Month": 157,
+      "up50Month": 14,
+      "down50Month": 26,
+      "up13_34d": 1248,
+      "down13_34d": 1910,
+      "wordenUniverse": 6551
+    },
+    {
       "date": "2026-09-11",
-      "up": 198,
-      "down": 128,
+      "up": 200,
+      "down": 130,
       "ratio5": 0.73,
       "ratio10": 0.76,
-      "t2108": 30.59,
-      "sp500": 7656.13,
+      "t2108": 30.92,
+      "sp500": 7656.98,
       "up25Quarter": 1133,
       "down25Quarter": 1191,
       "up25Month": 66,
@@ -137,7 +155,7 @@
       "down50Month": 26,
       "up13_34d": 1289,
       "down13_34d": 1865,
-      "wordenUniverse": 6549
+      "wordenUniverse": 6551
     },
     {
       "date": "2026-09-10",
@@ -2370,42 +2388,6 @@
       "up13_34d": 1205,
       "down13_34d": 2240,
       "wordenUniverse": 6394
-    },
-    {
-      "date": "2026-03-13",
-      "up": 124,
-      "down": 284,
-      "ratio5": 0.79,
-      "ratio10": 0.8,
-      "t2108": 23.16,
-      "sp500": 6632.19,
-      "up25Quarter": 966,
-      "down25Quarter": 1385,
-      "up25Month": 131,
-      "down25Month": 173,
-      "up50Month": 24,
-      "down50Month": 25,
-      "up13_34d": 1153,
-      "down13_34d": 2379,
-      "wordenUniverse": 6391
-    },
-    {
-      "date": "2026-03-12",
-      "up": 152,
-      "down": 635,
-      "ratio5": 0.74,
-      "ratio10": 0.78,
-      "t2108": 25.47,
-      "sp500": 6672.62,
-      "up25Quarter": 1023,
-      "down25Quarter": 1329,
-      "up25Month": 112,
-      "down25Month": 208,
-      "up50Month": 25,
-      "down50Month": 25,
-      "up13_34d": 1226,
-      "down13_34d": 2289,
-      "wordenUniverse": 6389
     }
   ]
 }
