@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-09-15T18:08:20Z",
+    "fetchedAt": "2026-09-15T22:51:33Z",
     "latestDate": "2026-09-15",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -85,7 +85,7 @@
     },
     "dailyRefreshDate": "2026-09-14",
     "dailyRefreshAt": "2026-09-15T01:42:45Z",
-    "btcRefreshAt": "2026-09-15T18:08:20Z",
+    "btcRefreshAt": "2026-09-15T22:51:33Z",
     "btcLatestDate": "2026-09-15",
     "btcIntraday": {
       "requested": [
@@ -77006,15 +77006,15 @@
           "date": "2026-09-15",
           "open": 78189.2,
           "high": 78250.46,
-          "low": 75605.0,
-          "close": 76854.01,
-          "volume": 14892.12481
+          "low": 74967.97,
+          "close": 75723.25,
+          "volume": 21188.25314
         }
       ],
       "latest": {
         "date": "2026-09-15",
-        "close": 76854.01,
-        "change": -1.7077
+        "close": 75723.25,
+        "change": -3.1538
       },
       "latestDate": "2026-09-15",
       "kind": "crypto",
@@ -77127,10 +77127,32 @@
           "date": "2026-09-15",
           "time": "18:00",
           "open": 76962.0,
-          "high": 76969.2,
-          "low": 76854.0,
-          "close": 76854.0,
-          "volume": 143.88309,
+          "high": 77205.39,
+          "low": 74967.97,
+          "close": 76186.48,
+          "volume": 4813.7455,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-09-15T20:00:00Z",
+          "date": "2026-09-15",
+          "time": "20:00",
+          "open": 76186.48,
+          "high": 76245.98,
+          "low": 75392.35,
+          "close": 75453.85,
+          "volume": 1004.8764,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-09-15T22:00:00Z",
+          "date": "2026-09-15",
+          "time": "22:00",
+          "open": 75453.85,
+          "high": 75723.25,
+          "low": 75140.64,
+          "close": 75723.25,
+          "volume": 621.57083,
           "status": "incomplete"
         }
       ],
