@@ -192,7 +192,7 @@ def _require_completed_us_equity_snapshot(snapshot, expected_date):
 
 
 def _daily_refresh_due(previous_market, previous_stockbee=None, previous_momentum=None):
-    """Refresh non-BTC data three hours after close, including late publication."""
+    """Refresh non-BTC data four hours after close, including late publication."""
     if not isinstance(previous_market, dict) or not previous_market.get("instruments"):
         return True
     now = _eastern_now()
@@ -204,7 +204,7 @@ def _daily_refresh_due(previous_market, previous_stockbee=None, previous_momentu
     # A second window before the next US open catches a close that was delayed
     # by Yahoo or GitHub Actions scheduling without treating BTC-only runs as
     # a completed full-market refresh.
-    post_close_window = now.weekday() >= 5 or now.hour >= 19
+    post_close_window = now.weekday() >= 5 or now.hour >= 20
     morning_catchup_window = now.weekday() < 5 and 7 <= now.hour < 12 and previous_date != expected_date
     if not post_close_window and not morning_catchup_window:
         return False

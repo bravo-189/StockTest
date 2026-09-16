@@ -18,12 +18,15 @@ class RefreshLocalDataTests(unittest.TestCase):
         }
         before_close = datetime(2026, 9, 3, 16, 30, tzinfo=ZoneInfo("America/New_York"))
         two_hours_after_close = datetime(2026, 9, 3, 18, 5, tzinfo=ZoneInfo("America/New_York"))
-        after_close = datetime(2026, 9, 3, 19, 5, tzinfo=ZoneInfo("America/New_York"))
+        three_hours_after_close = datetime(2026, 9, 3, 19, 5, tzinfo=ZoneInfo("America/New_York"))
+        four_hours_after_close = datetime(2026, 9, 3, 20, 5, tzinfo=ZoneInfo("America/New_York"))
         with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=before_close):
             self.assertFalse(_daily_refresh_due(previous))
         with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=two_hours_after_close):
             self.assertFalse(_daily_refresh_due(previous))
-        with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=after_close):
+        with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=three_hours_after_close):
+            self.assertFalse(_daily_refresh_due(previous))
+        with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=four_hours_after_close):
             self.assertTrue(_daily_refresh_due(previous))
 
     def test_morning_catchup_retries_missing_prior_session(self):
