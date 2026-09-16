@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-09-16T16:46:23Z",
+    "fetchedAt": "2026-09-16T21:14:04Z",
     "latestDate": "2026-09-16",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -86,7 +86,7 @@
     },
     "dailyRefreshDate": "2026-09-15",
     "dailyRefreshAt": "2026-09-16T11:24:42Z",
-    "btcRefreshAt": "2026-09-16T16:46:23Z",
+    "btcRefreshAt": "2026-09-16T21:14:04Z",
     "btcLatestDate": "2026-09-16",
     "btcIntraday": {
       "requested": [
@@ -77150,16 +77150,16 @@
         {
           "date": "2026-09-16",
           "open": 75644.48,
-          "high": 76304.01,
-          "low": 75350.0,
-          "close": 75756.3,
-          "volume": 8295.70628
+          "high": 76560.76,
+          "low": 75064.82,
+          "close": 76098.51,
+          "volume": 13637.28145
         }
       ],
       "latest": {
         "date": "2026-09-16",
-        "close": 75756.3,
-        "change": 0.1478
+        "close": 76098.51,
+        "change": 0.6002
       },
       "latestDate": "2026-09-16",
       "kind": "crypto",
@@ -77261,10 +77261,32 @@
           "date": "2026-09-16",
           "time": "16:00",
           "open": 75788.41,
-          "high": 75883.75,
-          "low": 75650.0,
-          "close": 75752.01,
-          "volume": 311.57304,
+          "high": 75937.45,
+          "low": 75353.07,
+          "close": 75768.01,
+          "volume": 1006.26625,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-09-16T18:00:00Z",
+          "date": "2026-09-16",
+          "time": "18:00",
+          "open": 75770.45,
+          "high": 76560.76,
+          "low": 75064.82,
+          "close": 76080.0,
+          "volume": 4055.12904,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-09-16T20:00:00Z",
+          "date": "2026-09-16",
+          "time": "20:00",
+          "open": 76080.0,
+          "high": 76422.01,
+          "low": 76024.0,
+          "close": 76098.5,
+          "volume": 591.66344,
           "status": "incomplete"
         }
       ],
