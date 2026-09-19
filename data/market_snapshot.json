@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-09-19T04:28:44Z",
+    "fetchedAt": "2026-09-19T07:17:14Z",
     "latestDate": "2026-09-19",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -84,7 +84,23 @@
       ]
     },
     "dailyRefreshDate": "2026-09-18",
-    "dailyRefreshAt": "2026-09-19T04:28:44Z"
+    "dailyRefreshAt": "2026-09-19T04:28:44Z",
+    "btcRefreshAt": "2026-09-19T07:17:14Z",
+    "btcLatestDate": "2026-09-19",
+    "btcIntraday": {
+      "requested": [
+        "SPX",
+        "NDX",
+        "DJI",
+        "RUT",
+        "BTC"
+      ],
+      "loaded": [
+        "BTC"
+      ],
+      "missing": [],
+      "sourceStatus": "loaded"
+    }
   },
   "sources": {
     "equities": {
@@ -77135,14 +77151,14 @@
           "open": 80883.86,
           "high": 81741.0,
           "low": 80844.58,
-          "close": 81170.87,
-          "volume": 2070.94106
+          "close": 81244.0,
+          "volume": 2791.4755
         }
       ],
       "latest": {
         "date": "2026-09-19",
-        "close": 81170.87,
-        "change": 0.3548
+        "close": 81244.0,
+        "change": 0.4452
       },
       "latestDate": "2026-09-19",
       "kind": "crypto",
@@ -77179,9 +77195,20 @@
           "time": "04:00",
           "open": 81136.02,
           "high": 81228.03,
-          "low": 81114.08,
-          "close": 81137.4,
-          "volume": 129.578,
+          "low": 80911.12,
+          "close": 81040.01,
+          "volume": 559.71434,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-09-19T06:00:00Z",
+          "date": "2026-09-19",
+          "time": "06:00",
+          "open": 81040.01,
+          "high": 81248.0,
+          "low": 80925.76,
+          "close": 81248.0,
+          "volume": 288.58343,
           "status": "incomplete"
         }
       ],
@@ -77191,10 +77218,6 @@
         "interval": "2h",
         "timezone": "UTC",
         "latestDate": "2026-09-19"
-      },
-      "relativeStrengthRating": {
-        "sector": {},
-        "industry": {}
       }
     },
     "COPX": {
