@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-09-20T20:44:50Z",
+    "fetchedAt": "2026-09-21T00:11:16Z",
     "latestDate": "2026-09-19",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -85,8 +85,8 @@
     },
     "dailyRefreshDate": "2026-09-18",
     "dailyRefreshAt": "2026-09-19T04:28:44Z",
-    "btcRefreshAt": "2026-09-20T20:44:50Z",
-    "btcLatestDate": "2026-09-20",
+    "btcRefreshAt": "2026-09-21T00:11:16Z",
+    "btcLatestDate": "2026-09-21",
     "btcIntraday": {
       "requested": [
         "SPX",
@@ -76435,14 +76435,6 @@
       "providerUrl": "https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=90",
       "bars": [
         {
-          "date": "2026-06-23",
-          "open": 64020.01,
-          "high": 64275.38,
-          "low": 61938.0,
-          "close": 62734.57,
-          "volume": 20222.99292
-        },
-        {
           "date": "2026-06-24",
           "open": 62734.57,
           "high": 63239.06,
@@ -77151,16 +77143,24 @@
           "open": 81249.99,
           "high": 81497.33,
           "low": 80126.04,
-          "close": 81139.73,
-          "volume": 9968.76569
+          "close": 81178.0,
+          "volume": 10993.68293
+        },
+        {
+          "date": "2026-09-21",
+          "open": 81178.01,
+          "high": 81610.7,
+          "low": 81178.01,
+          "close": 81444.0,
+          "volume": 205.62728
         }
       ],
       "latest": {
-        "date": "2026-09-20",
-        "close": 81139.73,
-        "change": -0.1357
+        "date": "2026-09-21",
+        "close": 81444.0,
+        "change": 0.3277
       },
-      "latestDate": "2026-09-20",
+      "latestDate": "2026-09-21",
       "kind": "crypto",
       "querySymbol": "BTCUSDT",
       "calendar": "crypto-24x7",
@@ -77168,124 +77168,14 @@
       "trend150": "数据不足",
       "intradayBars": [
         {
-          "timestamp": "2026-09-20T00:00:00Z",
-          "date": "2026-09-20",
+          "timestamp": "2026-09-21T00:00:00Z",
+          "date": "2026-09-21",
           "time": "00:00",
-          "open": 81249.99,
-          "high": 81330.01,
-          "low": 81027.11,
-          "close": 81097.99,
-          "volume": 720.5547,
-          "status": "complete"
-        },
-        {
-          "timestamp": "2026-09-20T02:00:00Z",
-          "date": "2026-09-20",
-          "time": "02:00",
-          "open": 81098.0,
-          "high": 81175.62,
-          "low": 80126.04,
-          "close": 80486.38,
-          "volume": 2325.66091,
-          "status": "complete"
-        },
-        {
-          "timestamp": "2026-09-20T04:00:00Z",
-          "date": "2026-09-20",
-          "time": "04:00",
-          "open": 80486.38,
-          "high": 80668.15,
-          "low": 80311.01,
-          "close": 80494.31,
-          "volume": 1136.42574,
-          "status": "complete"
-        },
-        {
-          "timestamp": "2026-09-20T06:00:00Z",
-          "date": "2026-09-20",
-          "time": "06:00",
-          "open": 80494.31,
-          "high": 80607.5,
-          "low": 80227.27,
-          "close": 80311.61,
-          "volume": 687.13547,
-          "status": "complete"
-        },
-        {
-          "timestamp": "2026-09-20T08:00:00Z",
-          "date": "2026-09-20",
-          "time": "08:00",
-          "open": 80311.6,
-          "high": 80581.82,
-          "low": 80165.49,
-          "close": 80470.01,
-          "volume": 503.92543,
-          "status": "complete"
-        },
-        {
-          "timestamp": "2026-09-20T10:00:00Z",
-          "date": "2026-09-20",
-          "time": "10:00",
-          "open": 80470.01,
-          "high": 80534.64,
-          "low": 80286.0,
-          "close": 80493.2,
-          "volume": 792.36289,
-          "status": "complete"
-        },
-        {
-          "timestamp": "2026-09-20T12:00:00Z",
-          "date": "2026-09-20",
-          "time": "12:00",
-          "open": 80493.21,
-          "high": 80650.58,
-          "low": 80327.64,
-          "close": 80564.57,
-          "volume": 580.95922,
-          "status": "complete"
-        },
-        {
-          "timestamp": "2026-09-20T14:00:00Z",
-          "date": "2026-09-20",
-          "time": "14:00",
-          "open": 80564.58,
-          "high": 80969.84,
-          "low": 80414.0,
-          "close": 80912.0,
-          "volume": 898.74877,
-          "status": "complete"
-        },
-        {
-          "timestamp": "2026-09-20T16:00:00Z",
-          "date": "2026-09-20",
-          "time": "16:00",
-          "open": 80912.0,
-          "high": 81497.33,
-          "low": 80811.03,
-          "close": 81147.94,
-          "volume": 1724.35852,
-          "status": "complete"
-        },
-        {
-          "timestamp": "2026-09-20T18:00:00Z",
-          "date": "2026-09-20",
-          "time": "18:00",
-          "open": 81147.94,
-          "high": 81314.01,
-          "low": 81030.97,
-          "close": 81177.32,
-          "volume": 427.43076,
-          "status": "complete"
-        },
-        {
-          "timestamp": "2026-09-20T20:00:00Z",
-          "date": "2026-09-20",
-          "time": "20:00",
-          "open": 81177.32,
-          "high": 81224.27,
-          "low": 81082.0,
-          "close": 81139.74,
-          "volume": 171.20513,
+          "open": 81178.01,
+          "high": 81610.7,
+          "low": 81178.01,
+          "close": 81450.0,
+          "volume": 205.85749,
           "status": "incomplete"
         }
       ],
@@ -77294,7 +77184,7 @@
         "providerUrl": "https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=2h&limit=42",
         "interval": "2h",
         "timezone": "UTC",
-        "latestDate": "2026-09-20"
+        "latestDate": "2026-09-21"
       }
     },
     "COPX": {
