@@ -38,6 +38,15 @@ class RefreshLocalDataTests(unittest.TestCase):
         with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=before_open):
             self.assertTrue(_daily_refresh_due(previous))
 
+    def test_overnight_catchup_retries_after_failed_post_close_attempt(self):
+        after_midnight = datetime(2026, 9, 23, 0, 30, tzinfo=ZoneInfo("America/New_York"))
+        previous = {
+            "metadata": {"dailyRefreshDate": "2026-09-21", "dailyRefreshAt": "2026-09-23T00:49:00Z"},
+            "instruments": {"SPY": {"latestDate": "2026-09-21"}},
+        }
+        with patch("StockTest.data_pipeline.refresh_local_data._eastern_now", return_value=after_midnight):
+            self.assertTrue(_daily_refresh_due(previous))
+
     def test_morning_catchup_does_not_repeat_completed_prior_session(self):
         before_open = datetime(2026, 9, 11, 7, 30, tzinfo=ZoneInfo("America/New_York"))
         previous = {

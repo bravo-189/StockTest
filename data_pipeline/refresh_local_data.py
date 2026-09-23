@@ -205,8 +205,11 @@ def _daily_refresh_due(previous_market, previous_stockbee=None, previous_momentu
     # by Yahoo or GitHub Actions scheduling without treating BTC-only runs as
     # a completed full-market refresh.
     post_close_window = now.weekday() >= 5 or now.hour >= 20
+    # If the first four-hour attempt runs before providers publish the close,
+    # keep retrying after midnight instead of falling back to BTC-only mode.
+    overnight_catchup_window = now.weekday() < 5 and now.hour < 7 and previous_date != expected_date
     morning_catchup_window = now.weekday() < 5 and 7 <= now.hour < 12 and previous_date != expected_date
-    if not post_close_window and not morning_catchup_window:
+    if not post_close_window and not overnight_catchup_window and not morning_catchup_window:
         return False
     # Older snapshots only had dailyRefreshDate. Treat those as due once after
     # close so an initial pre-close bootstrap cannot suppress today's close run.
