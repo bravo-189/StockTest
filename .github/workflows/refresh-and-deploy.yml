@@ -76,14 +76,20 @@ jobs:
           # same session without publishing a stale snapshot.
           max_attempts=6
           retry_seconds=300
+          refresh_timeout_seconds=600
           for attempt in $(seq 1 "${max_attempts}"); do
             refresh_args=(data_pipeline/refresh_local_data.py --output-dir data --once)
             if [ "${{ inputs.force_daily }}" = "true" ]; then
               refresh_args+=(--force-daily)
             fi
-            if python "${refresh_args[@]}"; then
+            if timeout --signal=TERM --kill-after=30 "${refresh_timeout_seconds}" python "${refresh_args[@]}"; then
               echo "published=true" >> "$GITHUB_OUTPUT"
               exit 0
+            else
+              refresh_exit=$?
+            fi
+            if [ "$refresh_exit" -eq 124 ]; then
+              echo "Refresh attempt ${attempt}/${max_attempts} timed out after ${refresh_timeout_seconds}s." >&2
             fi
             echo "Refresh attempt ${attempt}/${max_attempts} failed; post-close sources may still be publishing." >&2
             if [ "${attempt}" -lt "${max_attempts}" ]; then
