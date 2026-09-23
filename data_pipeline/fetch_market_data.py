@@ -9,9 +9,9 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 try:
-    from .market_data import normalize_binance_intraday, normalize_binance_klines, normalize_yahoo_chart, normalize_yahoo_intraday, relative_strength_metrics, relative_strength_ratings, select_latest_intraday_session, trend_vs_moving_average, validate_instrument, validate_intraday_bars, validate_market_snapshot
+    from .market_data import aggregate_intraday_bars, normalize_binance_intraday, normalize_binance_klines, normalize_yahoo_chart, normalize_yahoo_intraday, relative_strength_metrics, relative_strength_ratings, select_latest_intraday_session, trend_vs_moving_average, validate_instrument, validate_intraday_bars, validate_market_snapshot
 except ImportError:  # pragma: no cover - supports direct CLI execution
-    from market_data import normalize_binance_intraday, normalize_binance_klines, normalize_yahoo_chart, normalize_yahoo_intraday, relative_strength_metrics, relative_strength_ratings, select_latest_intraday_session, trend_vs_moving_average, validate_instrument, validate_intraday_bars, validate_market_snapshot
+    from market_data import aggregate_intraday_bars, normalize_binance_intraday, normalize_binance_klines, normalize_yahoo_chart, normalize_yahoo_intraday, relative_strength_metrics, relative_strength_ratings, select_latest_intraday_session, trend_vs_moving_average, validate_instrument, validate_intraday_bars, validate_market_snapshot
 
 try:
     from .fetch_holdings import fetch_holdings_snapshot
@@ -122,6 +122,47 @@ def build_snapshot(symbols=None, fetched_at=None, fetcher=fetch_json, include_in
             instruments[ticker] = instrument
         except Exception as exc:  # keep a visible missing list for partial data
             missing.append({"symbol": ticker, "provider": config["provider"], "reason": str(exc)})
+
+    # Yahoo occasionally publishes the latest daily timestamp before filling
+    # its daily close field.  Its 5m feed has the confirmed 16:00 close in
+    # that window, so use a same-provider session aggregate only for symbols
+    # with an explicit pending daily bar.  This keeps the all-symbol gate
+    # strict while avoiding a false one-day lag.
+    if fetcher is fetch_json:
+        for ticker, instrument in list(instruments.items()):
+            config = symbols.get(ticker) or {}
+            pending = instrument.get("pendingBar") if isinstance(instrument, dict) else None
+            if config.get("provider") != "yahoo-chart" or not pending:
+                continue
+            try:
+                intraday_url = _intraday_provider_url(config)
+                intraday_payload, intraday_source_url = _fetch_with_source(intraday_url, fetcher)
+                intraday = normalize_yahoo_intraday(intraday_payload, ticker, intraday_source_url, timezone_name="America/New_York", interval_minutes=5)
+                intraday = select_latest_intraday_session(intraday, minimum_bars=1)
+                if intraday.get("latestDate") != pending.get("date"):
+                    continue
+                daily = aggregate_intraday_bars(intraday, target_minutes=390, timezone_name="America/New_York", session_start_minutes=570, session_bars=2)
+                daily_bars = daily.get("bars") or []
+                if not daily_bars or any(bar.get("status") != "complete" for bar in daily_bars):
+                    continue
+                confirmed = {
+                    "open": daily_bars[0]["open"],
+                    "high": max(bar["high"] for bar in daily_bars),
+                    "low": min(bar["low"] for bar in daily_bars),
+                    "close": daily_bars[-1]["close"],
+                    "volume": sum(bar["volume"] for bar in daily_bars),
+                }
+                confirmed["date"] = pending["date"]
+                instrument["bars"] = sorted([*instrument.get("bars", []), confirmed], key=lambda row: row["date"])
+                instrument["latestDate"] = confirmed["date"]
+                instrument.pop("pendingBar", None)
+                trend = trend_vs_moving_average(instrument.get("bars"), period=150)
+                instrument.update({"ma150": trend["ma"], "trend150": trend["trend"]})
+                validate_instrument(instrument)
+            except Exception:
+                # Keep the pending-bar contract if the intraday confirmation
+                # is unavailable; the caller will retain the last valid close.
+                continue
 
     intraday_missing = []
     intraday_loaded = []
