@@ -1,16 +1,16 @@
 {
   "metadata": {
     "sourceStatus": "loaded",
-    "latestDate": "2026-09-22",
+    "latestDate": "2026-09-23",
     "rowCount": 50,
     "isStale": false,
     "ageDays": 1,
-    "fetchedAt": "2026-09-23T10:34:33Z",
+    "fetchedAt": "2026-09-24T04:35:39Z",
     "listName": "Stockbee 50",
     "classificationSource": "StockAnalysis company and ETF profiles",
     "classificationVerifiedCount": 48,
-    "classificationPartialCount": 2,
-    "classificationUnverifiedCount": 0
+    "classificationPartialCount": 1,
+    "classificationUnverifiedCount": 1
   },
   "source": {
     "name": "Stockbee 50",
@@ -21,62 +21,14 @@
   "rows": [
     {
       "rank": 1,
-      "ticker": "CRMX",
-      "sector": "Equity",
-      "industry": "Trading--Leveraged Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 2,
-      "ticker": "QUBX",
-      "sector": "Equity",
-      "industry": "Trading--Leveraged Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 3,
-      "ticker": "QBTX",
-      "sector": "Equity",
-      "industry": "Trading--Leveraged Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 4,
-      "ticker": "SMU",
-      "sector": "Equity",
-      "industry": "Trading--Leveraged Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 5,
-      "ticker": "NBIZ",
-      "sector": "Equity",
-      "industry": "Trading--Inverse Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 6,
-      "ticker": "LITZ",
-      "sector": "Equity",
-      "industry": "未找到可核验行业",
-      "classificationStatus": "partial",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 7,
-      "ticker": "GRML",
-      "sector": "Materials",
-      "industry": "Other Precious Metals & Mining",
+      "ticker": "SVRN",
+      "sector": "Industrials",
+      "industry": "Marine Shipping",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis company profile"
     },
     {
-      "rank": 8,
+      "rank": 2,
       "ticker": "AEMD",
       "sector": "Healthcare",
       "industry": "Medical Devices",
@@ -84,7 +36,7 @@
       "classificationSource": "StockAnalysis company profile"
     },
     {
-      "rank": 9,
+      "rank": 3,
       "ticker": "MEDS",
       "sector": "Healthcare",
       "industry": "Medical Distribution",
@@ -92,7 +44,15 @@
       "classificationSource": "StockAnalysis company profile"
     },
     {
-      "rank": 10,
+      "rank": 4,
+      "ticker": "GRML",
+      "sector": "Materials",
+      "industry": "Other Precious Metals & Mining",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 5,
       "ticker": "INDP",
       "sector": "Healthcare",
       "industry": "Biotechnology",
@@ -100,47 +60,7 @@
       "classificationSource": "StockAnalysis company profile"
     },
     {
-      "rank": 11,
-      "ticker": "USDE",
-      "sector": "Financials",
-      "industry": "Capital Markets",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 12,
-      "ticker": "PSIG",
-      "sector": "Industrials",
-      "industry": "Integrated Freight & Logistics",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 13,
-      "ticker": "CYPH",
-      "sector": "Financials",
-      "industry": "Asset Management",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 14,
-      "ticker": "TJGC",
-      "sector": "Communication Services",
-      "industry": "Advertising Agencies",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 15,
-      "ticker": "BRR",
-      "sector": "Financials",
-      "industry": "Capital Markets",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 16,
+      "rank": 6,
       "ticker": "SECZ",
       "sector": "Technology",
       "industry": "Software - Application",
@@ -148,7 +68,31 @@
       "classificationSource": "StockAnalysis company profile"
     },
     {
-      "rank": 17,
+      "rank": 7,
+      "ticker": "USDE",
+      "sector": "Financials",
+      "industry": "Capital Markets",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 8,
+      "ticker": "PSIG",
+      "sector": "Industrials",
+      "industry": "Integrated Freight & Logistics",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 9,
+      "ticker": "CYPH",
+      "sector": "Financials",
+      "industry": "Asset Management",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 10,
       "ticker": "ARMG",
       "sector": "Equity",
       "industry": "Trading--Leveraged Equity",
@@ -156,15 +100,7 @@
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 18,
-      "ticker": "BNC",
-      "sector": "Industrials",
-      "industry": "Farm & Heavy Construction Machinery",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 19,
+      "rank": 11,
       "ticker": "EAF",
       "sector": "Industrials",
       "industry": "Electrical Equipment & Parts",
@@ -172,87 +108,7 @@
       "classificationSource": "StockAnalysis company profile"
     },
     {
-      "rank": 20,
-      "ticker": "INTW",
-      "sector": "Equity",
-      "industry": "Trading--Leveraged Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 21,
-      "ticker": "ZCSH",
-      "sector": "Currency",
-      "industry": "Digital Assets",
-      "classificationStatus": "verified",
-      "classificationSource": "Grayscale / SEC Zcash ETF prospectus"
-    },
-    {
-      "rank": 22,
-      "ticker": "AMDL",
-      "sector": "Equity",
-      "industry": "Trading--Leveraged Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 23,
-      "ticker": "MSTX",
-      "sector": "Equity",
-      "industry": "Trading--Leveraged Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 24,
-      "ticker": "MSTU",
-      "sector": "Equity",
-      "industry": "Trading--Leveraged Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 25,
-      "ticker": "IMCC",
-      "sector": "Healthcare",
-      "industry": "Drug Manufacturers - Specialty & Generic",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 26,
-      "ticker": "MRNX",
-      "sector": "Equity",
-      "industry": "Trading--Leveraged Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 27,
-      "ticker": "LABX",
-      "sector": "Equity",
-      "industry": "Trading--Leveraged Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 28,
-      "ticker": "HSDT",
-      "sector": "Financials",
-      "industry": "Asset Management",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 29,
-      "ticker": "GMEU",
-      "sector": "Equity",
-      "industry": "未找到可核验行业",
-      "classificationStatus": "partial",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 30,
+      "rank": 12,
       "ticker": "VNCE",
       "sector": "Consumer Discretionary",
       "industry": "Apparel Manufacturing",
@@ -260,119 +116,63 @@
       "classificationSource": "StockAnalysis company profile"
     },
     {
-      "rank": 31,
-      "ticker": "SDGR",
-      "sector": "Healthcare",
-      "industry": "Health Information Services",
+      "rank": 13,
+      "ticker": "INTW",
+      "sector": "Equity",
+      "industry": "Trading--Leveraged Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 14,
+      "ticker": "BNC",
+      "sector": "Industrials",
+      "industry": "Farm & Heavy Construction Machinery",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis company profile"
     },
     {
-      "rank": 32,
-      "ticker": "MST",
-      "sector": "Equity",
-      "industry": "Trading--Miscellaneous",
+      "rank": 15,
+      "ticker": "ZCSH",
+      "sector": "Currency",
+      "industry": "Digital Assets",
       "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
+      "classificationSource": "Grayscale / SEC Zcash ETF prospectus"
     },
     {
-      "rank": 33,
-      "ticker": "FBL",
-      "sector": "Equity",
-      "industry": "Trading--Leveraged Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 34,
-      "ticker": "METU",
+      "rank": 16,
+      "ticker": "AMDL",
       "sector": "Equity",
       "industry": "Trading--Leveraged Equity",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 35,
-      "ticker": "CD",
-      "sector": "Financials",
-      "industry": "Capital Markets",
-      "classificationStatus": "verified",
+      "rank": 17,
+      "ticker": "SVIA",
+      "sector": "未找到可核验分类",
+      "industry": "未找到可核验分类",
+      "classificationStatus": "unverified",
       "classificationSource": "StockAnalysis company profile"
     },
     {
-      "rank": 36,
-      "ticker": "KEEX",
+      "rank": 18,
+      "ticker": "GMEU",
+      "sector": "Equity",
+      "industry": "未找到可核验行业",
+      "classificationStatus": "partial",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 19,
+      "ticker": "LABX",
       "sector": "Equity",
       "industry": "Trading--Leveraged Equity",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 37,
-      "ticker": "HUTG",
-      "sector": "Equity",
-      "industry": "Trading--Leveraged Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 38,
-      "ticker": "FWDI",
-      "sector": "Financials",
-      "industry": "Capital Markets",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 39,
-      "ticker": "MRAL",
-      "sector": "Equity",
-      "industry": "Trading--Leveraged Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 40,
-      "ticker": "CLSX",
-      "sector": "Equity",
-      "industry": "Trading--Leveraged Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 41,
-      "ticker": "RIOX",
-      "sector": "Equity",
-      "industry": "Trading--Leveraged Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 42,
-      "ticker": "GLOO",
-      "sector": "Technology",
-      "industry": "Software - Application",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 43,
-      "ticker": "PRTH",
-      "sector": "Technology",
-      "industry": "Software - Infrastructure",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 44,
-      "ticker": "GRAL",
-      "sector": "Healthcare",
-      "industry": "Diagnostics & Research",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 45,
+      "rank": 20,
       "ticker": "VICR",
       "sector": "Technology",
       "industry": "Electronic Components",
@@ -380,23 +180,143 @@
       "classificationSource": "StockAnalysis company profile"
     },
     {
-      "rank": 46,
-      "ticker": "SOLT",
-      "sector": "Currency",
-      "industry": "Trading--Miscellaneous",
+      "rank": 21,
+      "ticker": "MRNX",
+      "sector": "Equity",
+      "industry": "Trading--Leveraged Equity",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 47,
-      "ticker": "SLON",
-      "sector": "Currency",
-      "industry": "Trading--Miscellaneous",
+      "rank": 22,
+      "ticker": "FPSX",
+      "sector": "Equity",
+      "industry": "Trading--Leveraged Equity",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 48,
+      "rank": 23,
+      "ticker": "FBL",
+      "sector": "Equity",
+      "industry": "Trading--Leveraged Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 24,
+      "ticker": "METU",
+      "sector": "Equity",
+      "industry": "Trading--Leveraged Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 25,
+      "ticker": "MSTU",
+      "sector": "Equity",
+      "industry": "Trading--Leveraged Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 26,
+      "ticker": "MSTX",
+      "sector": "Equity",
+      "industry": "Trading--Leveraged Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 27,
+      "ticker": "IPDN",
+      "sector": "Industrials",
+      "industry": "Staffing & Employment Services",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 28,
+      "ticker": "GLOO",
+      "sector": "Technology",
+      "industry": "Software - Application",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 29,
+      "ticker": "PRTH",
+      "sector": "Technology",
+      "industry": "Software - Infrastructure",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 30,
+      "ticker": "FTFT",
+      "sector": "Technology",
+      "industry": "Software - Application",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 31,
+      "ticker": "GRAL",
+      "sector": "Healthcare",
+      "industry": "Diagnostics & Research",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 32,
+      "ticker": "SDGR",
+      "sector": "Healthcare",
+      "industry": "Health Information Services",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 33,
+      "ticker": "RIOX",
+      "sector": "Equity",
+      "industry": "Trading--Leveraged Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 34,
+      "ticker": "ARM",
+      "sector": "Technology",
+      "industry": "Semiconductors",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 35,
+      "ticker": "XHLD",
+      "sector": "Communication Services",
+      "industry": "Broadcasting",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 36,
+      "ticker": "NTRB",
+      "sector": "Healthcare",
+      "industry": "Biotechnology",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 37,
+      "ticker": "BWET",
+      "sector": "Commodity",
+      "industry": "Commodities Focused",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 38,
       "ticker": "HSCS",
       "sector": "Healthcare",
       "industry": "Medical Devices",
@@ -404,7 +324,7 @@
       "classificationSource": "StockAnalysis company profile"
     },
     {
-      "rank": 49,
+      "rank": 39,
       "ticker": "PUR",
       "sector": "Equity",
       "industry": "Trading--Leveraged Equity",
@@ -412,10 +332,90 @@
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 50,
-      "ticker": "TTRX",
+      "rank": 40,
+      "ticker": "CD",
+      "sector": "Financials",
+      "industry": "Capital Markets",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 41,
+      "ticker": "FSLY",
+      "sector": "Technology",
+      "industry": "Software - Application",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 42,
+      "ticker": "KEEX",
+      "sector": "Equity",
+      "industry": "Trading--Leveraged Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 43,
+      "ticker": "QCML",
+      "sector": "Equity",
+      "industry": "Trading--Leveraged Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 44,
+      "ticker": "TNMG",
+      "sector": "Communication Services",
+      "industry": "Publishing",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 45,
+      "ticker": "QCMU",
+      "sector": "Equity",
+      "industry": "Trading--Leveraged Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 46,
+      "ticker": "VKTX",
       "sector": "Healthcare",
       "industry": "Biotechnology",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 47,
+      "ticker": "TONX",
+      "sector": "Technology",
+      "industry": "Software - Application",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 48,
+      "ticker": "FWDI",
+      "sector": "Financials",
+      "industry": "Capital Markets",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 49,
+      "ticker": "ACVA",
+      "sector": "Consumer Discretionary",
+      "industry": "Auto & Truck Dealerships",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 50,
+      "ticker": "AOUT",
+      "sector": "Consumer Discretionary",
+      "industry": "Leisure",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis company profile"
     }
