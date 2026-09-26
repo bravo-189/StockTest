@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-09-26T16:17:37Z",
+    "fetchedAt": "2026-09-26T21:03:30Z",
     "latestDate": "2026-09-26",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -85,7 +85,7 @@
     },
     "dailyRefreshDate": "2026-09-25",
     "dailyRefreshAt": "2026-09-26T04:47:03Z",
-    "btcRefreshAt": "2026-09-26T16:17:37Z",
+    "btcRefreshAt": "2026-09-26T21:03:30Z",
     "btcLatestDate": "2026-09-26",
     "btcIntraday": {
       "requested": [
@@ -77151,14 +77151,14 @@
           "open": 84100.0,
           "high": 84336.96,
           "low": 83798.0,
-          "close": 84130.01,
-          "volume": 5027.4838
+          "close": 84044.0,
+          "volume": 6550.08151
         }
       ],
       "latest": {
         "date": "2026-09-26",
-        "close": 84130.01,
-        "change": 0.0357
+        "close": 84044.0,
+        "change": -0.0666
       },
       "latestDate": "2026-09-26",
       "kind": "crypto",
@@ -77260,10 +77260,32 @@
           "date": "2026-09-26",
           "time": "16:00",
           "open": 84156.0,
-          "high": 84164.48,
-          "low": 84110.21,
-          "close": 84130.02,
-          "volume": 74.95408,
+          "high": 84174.33,
+          "low": 84041.92,
+          "close": 84132.4,
+          "volume": 643.72581,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-09-26T18:00:00Z",
+          "date": "2026-09-26",
+          "time": "18:00",
+          "open": 84132.4,
+          "high": 84162.52,
+          "low": 83976.74,
+          "close": 84016.63,
+          "volume": 723.46693,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-09-26T20:00:00Z",
+          "date": "2026-09-26",
+          "time": "20:00",
+          "open": 84016.63,
+          "high": 84097.88,
+          "low": 83838.0,
+          "close": 84044.01,
+          "volume": 230.34488,
           "status": "incomplete"
         }
       ],
