@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-09-27T08:02:34Z",
+    "fetchedAt": "2026-09-27T13:53:52Z",
     "latestDate": "2026-09-26",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -85,7 +85,7 @@
     },
     "dailyRefreshDate": "2026-09-25",
     "dailyRefreshAt": "2026-09-26T04:47:03Z",
-    "btcRefreshAt": "2026-09-27T08:02:34Z",
+    "btcRefreshAt": "2026-09-27T13:53:52Z",
     "btcLatestDate": "2026-09-27",
     "btcIntraday": {
       "requested": [
@@ -77149,16 +77149,16 @@
         {
           "date": "2026-09-27",
           "open": 84433.11,
-          "high": 84800.01,
+          "high": 85159.03,
           "low": 84257.07,
-          "close": 84764.89,
-          "volume": 2428.12059
+          "close": 84895.99,
+          "volume": 6253.43142
         }
       ],
       "latest": {
         "date": "2026-09-27",
-        "close": 84764.89,
-        "change": 0.393
+        "close": 84895.99,
+        "change": 0.5482
       },
       "latestDate": "2026-09-27",
       "kind": "crypto",
@@ -77216,10 +77216,32 @@
           "date": "2026-09-27",
           "time": "08:00",
           "open": 84790.99,
-          "high": 84800.01,
-          "low": 84732.07,
-          "close": 84764.89,
-          "volume": 47.1512,
+          "high": 84958.99,
+          "low": 84590.0,
+          "close": 84944.01,
+          "volume": 2279.41482,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-09-27T10:00:00Z",
+          "date": "2026-09-27",
+          "time": "10:00",
+          "open": 84944.01,
+          "high": 85117.64,
+          "low": 84800.0,
+          "close": 84898.0,
+          "volume": 797.1592,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-09-27T12:00:00Z",
+          "date": "2026-09-27",
+          "time": "12:00",
+          "open": 84898.0,
+          "high": 85159.03,
+          "low": 84637.73,
+          "close": 84895.99,
+          "volume": 795.94207,
           "status": "incomplete"
         }
       ],
