@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-09-27T18:18:19Z",
+    "fetchedAt": "2026-09-27T22:58:46Z",
     "latestDate": "2026-09-26",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -85,7 +85,7 @@
     },
     "dailyRefreshDate": "2026-09-25",
     "dailyRefreshAt": "2026-09-26T04:47:03Z",
-    "btcRefreshAt": "2026-09-27T18:18:19Z",
+    "btcRefreshAt": "2026-09-27T22:58:46Z",
     "btcLatestDate": "2026-09-27",
     "btcIntraday": {
       "requested": [
@@ -77150,15 +77150,15 @@
           "date": "2026-09-27",
           "open": 84433.11,
           "high": 85159.03,
-          "low": 84257.07,
-          "close": 84652.01,
-          "volume": 7916.49754
+          "low": 84135.78,
+          "close": 84225.36,
+          "volume": 9215.98868
         }
       ],
       "latest": {
         "date": "2026-09-27",
-        "close": 84652.01,
-        "change": 0.2593
+        "close": 84225.36,
+        "change": -0.246
       },
       "latestDate": "2026-09-27",
       "kind": "crypto",
@@ -77271,10 +77271,32 @@
           "date": "2026-09-27",
           "time": "18:00",
           "open": 84574.0,
-          "high": 84652.01,
+          "high": 84843.0,
           "low": 84565.9,
-          "close": 84652.01,
-          "volume": 51.71772,
+          "close": 84736.01,
+          "volume": 454.88548,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-09-27T20:00:00Z",
+          "date": "2026-09-27",
+          "time": "20:00",
+          "open": 84736.02,
+          "high": 84813.0,
+          "low": 84458.0,
+          "close": 84688.07,
+          "volume": 470.24583,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-09-27T22:00:00Z",
+          "date": "2026-09-27",
+          "time": "22:00",
+          "open": 84688.07,
+          "high": 84756.01,
+          "low": 84135.78,
+          "close": 84225.36,
+          "volume": 425.52023,
           "status": "incomplete"
         }
       ],
