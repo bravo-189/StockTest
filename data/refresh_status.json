@@ -2,9 +2,9 @@
   "schemaVersion": "1.0",
   "status": "ok",
   "refreshMode": "daily-close",
-  "attemptedAt": "2026-10-01T05:39:41Z",
-  "lastCompletedAt": "2026-10-01T05:39:41Z",
-  "lastFullSuccessAt": "2026-10-01T05:39:41Z",
+  "attemptedAt": "2026-10-01T05:42:27Z",
+  "lastCompletedAt": "2026-10-01T05:42:27Z",
+  "lastFullSuccessAt": "2026-10-01T05:42:27Z",
   "sources": {
     "market": {
       "status": "loaded",
