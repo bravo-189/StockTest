@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-10-01T05:42:27Z",
+    "fetchedAt": "2026-10-01T13:03:21Z",
     "latestDate": "2026-10-01",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -79,7 +79,9 @@
         "IBIT": "iShares issuer holdings CSV",
         "USO": "USCF issuer holdings API"
       }
-    }
+    },
+    "dailyRefreshDate": "2026-09-30",
+    "dailyRefreshAt": "2026-10-01T13:03:21Z"
   },
   "sources": {
     "equities": {
@@ -77128,16 +77130,16 @@
         {
           "date": "2026-10-01",
           "open": 83623.59,
-          "high": 84326.01,
-          "low": 83410.39,
-          "close": 84264.98,
-          "volume": 2329.14603
+          "high": 84419.69,
+          "low": 83186.0,
+          "close": 83668.01,
+          "volume": 7729.40837
         }
       ],
       "latest": {
         "date": "2026-10-01",
-        "close": 84264.98,
-        "change": 0.767
+        "close": 83668.01,
+        "change": 0.0531
       },
       "latestDate": "2026-10-01",
       "kind": "crypto",
@@ -77173,10 +77175,54 @@
           "date": "2026-10-01",
           "time": "04:00",
           "open": 83754.01,
-          "high": 84326.01,
+          "high": 84368.0,
           "low": 83720.4,
-          "close": 84264.99,
-          "volume": 847.28856,
+          "close": 84291.48,
+          "volume": 934.67274,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-01T06:00:00Z",
+          "date": "2026-10-01",
+          "time": "06:00",
+          "open": 84291.49,
+          "high": 84419.69,
+          "low": 83321.71,
+          "close": 83429.93,
+          "volume": 1832.1285,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-01T08:00:00Z",
+          "date": "2026-10-01",
+          "time": "08:00",
+          "open": 83429.93,
+          "high": 83896.01,
+          "low": 83186.0,
+          "close": 83782.01,
+          "volume": 2149.91195,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-01T10:00:00Z",
+          "date": "2026-10-01",
+          "time": "10:00",
+          "open": 83782.01,
+          "high": 84098.01,
+          "low": 83418.23,
+          "close": 83905.76,
+          "volume": 889.7049,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-01T12:00:00Z",
+          "date": "2026-10-01",
+          "time": "12:00",
+          "open": 83905.76,
+          "high": 84054.01,
+          "low": 83643.01,
+          "close": 83668.01,
+          "volume": 440.84005,
           "status": "incomplete"
         }
       ],
