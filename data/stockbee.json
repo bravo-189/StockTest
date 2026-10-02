@@ -3,7 +3,7 @@
     "rowCount": 127,
     "latestDate": "2026-10-01",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-10-02T05:26:32Z",
+    "fetchedAt": "2026-10-02T12:24:10Z",
     "historyWindow": "6mo",
     "lookbackDays": 183
   },
@@ -123,12 +123,12 @@
   "rows": [
     {
       "date": "2026-10-01",
-      "up": 178,
-      "down": 196,
+      "up": 181,
+      "down": 201,
       "ratio5": 0.79,
       "ratio10": 0.84,
-      "t2108": 18.9,
-      "sp500": 7667.96,
+      "t2108": 18.99,
+      "sp500": 7666.45,
       "up25Quarter": 842,
       "down25Quarter": 1356,
       "up25Month": 87,
@@ -136,8 +136,8 @@
       "up50Month": 19,
       "down50Month": 31,
       "up13_34d": 792,
-      "down13_34d": 2150,
-      "wordenUniverse": 6557
+      "down13_34d": 2151,
+      "wordenUniverse": 6558
     },
     {
       "date": "2026-09-30",
