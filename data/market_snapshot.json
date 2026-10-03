@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-10-03T05:10:06Z",
+    "fetchedAt": "2026-10-03T11:33:55Z",
     "latestDate": "2026-10-03",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -82,7 +82,7 @@
     },
     "dailyRefreshDate": "2026-10-02",
     "dailyRefreshAt": "2026-10-03T05:08:01Z",
-    "btcRefreshAt": "2026-10-03T05:10:06Z",
+    "btcRefreshAt": "2026-10-03T11:33:55Z",
     "btcLatestDate": "2026-10-03",
     "btcIntraday": {
       "requested": [
@@ -77148,14 +77148,14 @@
           "open": 84518.0,
           "high": 84725.04,
           "low": 84456.02,
-          "close": 84576.4,
-          "volume": 1160.9937
+          "close": 84649.6,
+          "volume": 2805.29634
         }
       ],
       "latest": {
         "date": "2026-10-03",
-        "close": 84576.4,
-        "change": 0.0691
+        "close": 84649.6,
+        "change": 0.1557
       },
       "latestDate": "2026-10-03",
       "kind": "crypto",
@@ -77193,8 +77193,41 @@
           "open": 84699.56,
           "high": 84725.04,
           "low": 84525.0,
-          "close": 84584.0,
-          "volume": 176.47962,
+          "close": 84652.09,
+          "volume": 300.11638,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-03T06:00:00Z",
+          "date": "2026-10-03",
+          "time": "06:00",
+          "open": 84652.09,
+          "high": 84674.01,
+          "low": 84550.0,
+          "close": 84560.0,
+          "volume": 648.33262,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-03T08:00:00Z",
+          "date": "2026-10-03",
+          "time": "08:00",
+          "open": 84560.0,
+          "high": 84665.88,
+          "low": 84557.36,
+          "close": 84600.01,
+          "volume": 415.78747,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-03T10:00:00Z",
+          "date": "2026-10-03",
+          "time": "10:00",
+          "open": 84600.0,
+          "high": 84651.22,
+          "low": 84570.67,
+          "close": 84649.61,
+          "volume": 456.39513,
           "status": "incomplete"
         }
       ],
