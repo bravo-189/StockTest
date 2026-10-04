@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-10-04T15:18:35Z",
+    "fetchedAt": "2026-10-04T19:33:05Z",
     "latestDate": "2026-10-03",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -82,7 +82,7 @@
     },
     "dailyRefreshDate": "2026-10-02",
     "dailyRefreshAt": "2026-10-03T05:08:01Z",
-    "btcRefreshAt": "2026-10-04T15:18:35Z",
+    "btcRefreshAt": "2026-10-04T19:33:05Z",
     "btcLatestDate": "2026-10-04",
     "btcIntraday": {
       "requested": [
@@ -77146,16 +77146,16 @@
         {
           "date": "2026-10-04",
           "open": 84753.57,
-          "high": 85428.01,
+          "high": 85550.0,
           "low": 84719.99,
-          "close": 85358.37,
-          "volume": 4091.51731
+          "close": 85524.0,
+          "volume": 4914.96471
         }
       ],
       "latest": {
         "date": "2026-10-04",
-        "close": 85358.37,
-        "change": 0.7136
+        "close": 85524.0,
+        "change": 0.909
       },
       "latestDate": "2026-10-04",
       "kind": "crypto",
@@ -77246,10 +77246,32 @@
           "date": "2026-10-04",
           "time": "14:00",
           "open": 85241.15,
-          "high": 85366.66,
+          "high": 85470.0,
           "low": 85094.0,
-          "close": 85358.37,
-          "volume": 347.07251,
+          "close": 85256.01,
+          "volume": 547.34502,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-04T16:00:00Z",
+          "date": "2026-10-04",
+          "time": "16:00",
+          "open": 85256.01,
+          "high": 85454.01,
+          "low": 85178.49,
+          "close": 85319.53,
+          "volume": 354.83697,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-04T18:00:00Z",
+          "date": "2026-10-04",
+          "time": "18:00",
+          "open": 85319.54,
+          "high": 85550.0,
+          "low": 85312.01,
+          "close": 85524.0,
+          "volume": 266.25296,
           "status": "incomplete"
         }
       ],
