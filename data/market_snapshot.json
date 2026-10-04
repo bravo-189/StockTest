@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-10-04T00:32:00Z",
+    "fetchedAt": "2026-10-04T08:21:58Z",
     "latestDate": "2026-10-03",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -82,7 +82,7 @@
     },
     "dailyRefreshDate": "2026-10-02",
     "dailyRefreshAt": "2026-10-03T05:08:01Z",
-    "btcRefreshAt": "2026-10-04T00:32:00Z",
+    "btcRefreshAt": "2026-10-04T08:21:58Z",
     "btcLatestDate": "2026-10-04",
     "btcIntraday": {
       "requested": [
@@ -77146,16 +77146,16 @@
         {
           "date": "2026-10-04",
           "open": 84753.57,
-          "high": 84871.34,
-          "low": 84753.56,
-          "close": 84805.38,
-          "volume": 112.1611
+          "high": 85180.12,
+          "low": 84719.99,
+          "close": 85131.38,
+          "volume": 2065.32632
         }
       ],
       "latest": {
         "date": "2026-10-04",
-        "close": 84805.38,
-        "change": 0.0611
+        "close": 85131.38,
+        "change": 0.4458
       },
       "latestDate": "2026-10-04",
       "kind": "crypto",
@@ -77170,9 +77170,53 @@
           "time": "00:00",
           "open": 84753.57,
           "high": 84871.34,
-          "low": 84753.56,
-          "close": 84805.39,
-          "volume": 112.16156,
+          "low": 84719.99,
+          "close": 84802.59,
+          "volume": 576.44802,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-04T02:00:00Z",
+          "date": "2026-10-04",
+          "time": "02:00",
+          "open": 84802.6,
+          "high": 84890.0,
+          "low": 84781.05,
+          "close": 84840.87,
+          "volume": 504.92497,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-04T04:00:00Z",
+          "date": "2026-10-04",
+          "time": "04:00",
+          "open": 84840.88,
+          "high": 84924.53,
+          "low": 84808.11,
+          "close": 84912.01,
+          "volume": 302.68718,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-04T06:00:00Z",
+          "date": "2026-10-04",
+          "time": "06:00",
+          "open": 84912.01,
+          "high": 85112.65,
+          "low": 84877.18,
+          "close": 85106.0,
+          "volume": 540.19341,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-04T08:00:00Z",
+          "date": "2026-10-04",
+          "time": "08:00",
+          "open": 85106.01,
+          "high": 85180.12,
+          "low": 85096.01,
+          "close": 85131.37,
+          "volume": 141.07907,
           "status": "incomplete"
         }
       ],
