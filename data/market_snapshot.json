@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-10-06T06:11:47Z",
+    "fetchedAt": "2026-10-06T20:55:43Z",
     "latestDate": "2026-10-06",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -79,6 +79,22 @@
         "IBIT": "iShares issuer holdings CSV",
         "USO": "USCF issuer holdings API"
       }
+    },
+    "btcRefreshAt": "2026-10-06T20:55:43Z",
+    "btcLatestDate": "2026-10-06",
+    "btcIntraday": {
+      "requested": [
+        "SPX",
+        "NDX",
+        "DJI",
+        "RUT",
+        "BTC"
+      ],
+      "loaded": [
+        "BTC"
+      ],
+      "missing": [],
+      "sourceStatus": "loaded"
     }
   },
   "sources": {
@@ -76984,16 +77000,16 @@
         {
           "date": "2026-10-06",
           "open": 85766.87,
-          "high": 86130.45,
-          "low": 85222.0,
-          "close": 85280.19,
-          "volume": 2281.17601
+          "high": 86698.99,
+          "low": 85136.11,
+          "close": 85626.01,
+          "volume": 11627.97525
         }
       ],
       "latest": {
         "date": "2026-10-06",
-        "close": 85280.19,
-        "change": -0.5674
+        "close": 85626.01,
+        "change": -0.1642
       },
       "latestDate": "2026-10-06",
       "kind": "crypto",
@@ -77040,10 +77056,87 @@
           "date": "2026-10-06",
           "time": "06:00",
           "open": 85518.36,
-          "high": 85518.36,
-          "low": 85222.0,
-          "close": 85269.36,
-          "volume": 141.34293,
+          "high": 85636.32,
+          "low": 85136.11,
+          "close": 85555.0,
+          "volume": 1372.13017,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-06T08:00:00Z",
+          "date": "2026-10-06",
+          "time": "08:00",
+          "open": 85555.01,
+          "high": 86229.42,
+          "low": 85550.0,
+          "close": 85992.01,
+          "volume": 1326.74231,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-06T10:00:00Z",
+          "date": "2026-10-06",
+          "time": "10:00",
+          "open": 85992.0,
+          "high": 86378.24,
+          "low": 85956.46,
+          "close": 86242.01,
+          "volume": 1048.34967,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-06T12:00:00Z",
+          "date": "2026-10-06",
+          "time": "12:00",
+          "open": 86242.01,
+          "high": 86488.0,
+          "low": 85977.9,
+          "close": 86324.01,
+          "volume": 1189.37126,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-06T14:00:00Z",
+          "date": "2026-10-06",
+          "time": "14:00",
+          "open": 86324.01,
+          "high": 86698.99,
+          "low": 85720.64,
+          "close": 85720.65,
+          "volume": 2193.16096,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-06T16:00:00Z",
+          "date": "2026-10-06",
+          "time": "16:00",
+          "open": 85720.65,
+          "high": 85854.3,
+          "low": 85478.0,
+          "close": 85719.42,
+          "volume": 1188.4552,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-06T18:00:00Z",
+          "date": "2026-10-06",
+          "time": "18:00",
+          "open": 85719.43,
+          "high": 85814.01,
+          "low": 85421.0,
+          "close": 85614.0,
+          "volume": 887.74939,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-06T20:00:00Z",
+          "date": "2026-10-06",
+          "time": "20:00",
+          "open": 85614.0,
+          "high": 85668.01,
+          "low": 85580.0,
+          "close": 85626.0,
+          "volume": 279.81782,
           "status": "incomplete"
         }
       ],
@@ -77053,10 +77146,6 @@
         "interval": "2h",
         "timezone": "UTC",
         "latestDate": "2026-10-06"
-      },
-      "relativeStrengthRating": {
-        "sector": {},
-        "industry": {}
       }
     },
     "COPX": {
