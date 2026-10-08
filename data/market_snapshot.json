@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-10-08T05:52:01Z",
+    "fetchedAt": "2026-10-08T05:53:38Z",
     "latestDate": "2026-10-08",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -73,7 +73,7 @@
       "requestedCount": 71,
       "loadedCount": 71,
       "missing": [],
-      "sourceStatus": "loaded",
+      "sourceStatus": "retained",
       "freshness": "daily",
       "sourceOverrides": {
         "IBIT": "iShares issuer holdings CSV",
@@ -4197,7 +4197,7 @@
           "high": 7792.97998046875,
           "low": 7782.7900390625,
           "close": 7784.0400390625,
-          "volume": 0.0,
+          "volume": 127674933.0,
           "status": "complete"
         },
         {
@@ -14025,7 +14025,7 @@
           "high": 51406.44140625,
           "low": 51092.5,
           "close": 51097.55859375,
-          "volume": 0.0,
+          "volume": 26764548.0,
           "status": "complete"
         },
         {
@@ -77131,7 +77131,7 @@
           "high": 83521.15,
           "low": 82227.56,
           "close": 82800.0,
-          "volume": 4614.58488
+          "volume": 4632.67972
         }
       ],
       "latest": {
@@ -77175,8 +77175,8 @@
           "open": 82757.0,
           "high": 83035.6,
           "low": 82227.56,
-          "close": 82786.01,
-          "volume": 2100.83087,
+          "close": 82795.62,
+          "volume": 2117.20954,
           "status": "incomplete"
         }
       ],
