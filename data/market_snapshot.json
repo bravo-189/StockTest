@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-10-14T01:09:40Z",
+    "fetchedAt": "2026-10-14T04:43:07Z",
     "latestDate": "2026-10-14",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -81,7 +81,23 @@
       }
     },
     "dailyRefreshDate": "2026-10-13",
-    "dailyRefreshAt": "2026-10-14T01:09:40Z"
+    "dailyRefreshAt": "2026-10-14T01:09:40Z",
+    "btcRefreshAt": "2026-10-14T04:43:07Z",
+    "btcLatestDate": "2026-10-14",
+    "btcIntraday": {
+      "requested": [
+        "SPX",
+        "NDX",
+        "DJI",
+        "RUT",
+        "BTC"
+      ],
+      "loaded": [
+        "BTC"
+      ],
+      "missing": [],
+      "sourceStatus": "loaded"
+    }
   },
   "sources": {
     "equities": {
@@ -76413,7 +76429,7 @@
     "BTC": {
       "symbol": "BTC",
       "provider": "binance-spot",
-      "providerUrl": "https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=90",
+      "providerUrl": "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=90",
       "bars": [
         {
           "date": "2026-07-17",
@@ -77130,16 +77146,16 @@
         {
           "date": "2026-10-14",
           "open": 83169.01,
-          "high": 83709.59,
+          "high": 83958.0,
           "low": 83169.0,
-          "close": 83326.0,
-          "volume": 458.15577
+          "close": 83739.37,
+          "volume": 2332.61057
         }
       ],
       "latest": {
         "date": "2026-10-14",
-        "close": 83326.0,
-        "change": 0.1888
+        "close": 83739.37,
+        "change": 0.6858
       },
       "latestDate": "2026-10-14",
       "kind": "crypto",
@@ -77155,21 +77171,39 @@
           "open": 83169.01,
           "high": 83709.59,
           "low": 83169.0,
-          "close": 83319.66,
-          "volume": 458.96364,
+          "close": 83328.01,
+          "volume": 1196.19639,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-14T02:00:00Z",
+          "date": "2026-10-14",
+          "time": "02:00",
+          "open": 83328.0,
+          "high": 83958.0,
+          "low": 83224.01,
+          "close": 83700.01,
+          "volume": 836.64356,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-14T04:00:00Z",
+          "date": "2026-10-14",
+          "time": "04:00",
+          "open": 83700.01,
+          "high": 83880.39,
+          "low": 83618.81,
+          "close": 83739.37,
+          "volume": 299.77071,
           "status": "incomplete"
         }
       ],
       "intraday": {
         "provider": "binance-spot",
-        "providerUrl": "https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=2h&limit=42",
+        "providerUrl": "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=2h&limit=42",
         "interval": "2h",
         "timezone": "UTC",
         "latestDate": "2026-10-14"
-      },
-      "relativeStrengthRating": {
-        "sector": {},
-        "industry": {}
       }
     },
     "COPX": {
