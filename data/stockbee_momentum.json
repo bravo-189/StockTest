@@ -1,15 +1,15 @@
 {
   "metadata": {
     "sourceStatus": "loaded",
-    "latestDate": "2026-10-15",
+    "latestDate": "2026-10-16",
     "rowCount": 50,
     "isStale": false,
     "ageDays": 1,
-    "fetchedAt": "2026-10-16T00:19:19Z",
+    "fetchedAt": "2026-10-17T00:22:23Z",
     "listName": "Stockbee 50",
     "classificationSource": "StockAnalysis company and ETF profiles",
-    "classificationVerifiedCount": 46,
-    "classificationPartialCount": 4,
+    "classificationVerifiedCount": 47,
+    "classificationPartialCount": 3,
     "classificationUnverifiedCount": 0
   },
   "source": {
@@ -21,22 +21,6 @@
   "rows": [
     {
       "rank": 1,
-      "ticker": "BMBL",
-      "sector": "Communication Services",
-      "industry": "Internet Content & Information",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 2,
-      "ticker": "FLYE",
-      "sector": "Consumer Discretionary",
-      "industry": "Auto Manufacturers",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 3,
       "ticker": "IREZ",
       "sector": "Equity",
       "industry": "Trading--Inverse Equity",
@@ -44,47 +28,15 @@
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 4,
-      "ticker": "MRNX",
-      "sector": "Equity",
-      "industry": "Trading--Leveraged Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 5,
-      "ticker": "BSP",
-      "sector": "Technology",
-      "industry": "Software - Application",
+      "rank": 2,
+      "ticker": "BMBL",
+      "sector": "Communication Services",
+      "industry": "Internet Content & Information",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis company profile"
     },
     {
-      "rank": 6,
-      "ticker": "CBRZ",
-      "sector": "Equity",
-      "industry": "未找到可核验行业",
-      "classificationStatus": "partial",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 7,
-      "ticker": "CANG",
-      "sector": "Financials",
-      "industry": "Capital Markets",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 8,
-      "ticker": "ASTN",
-      "sector": "Equity",
-      "industry": "未找到可核验行业",
-      "classificationStatus": "partial",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 9,
+      "rank": 3,
       "ticker": "PMI",
       "sector": "Healthcare",
       "industry": "Medical Devices",
@@ -92,15 +44,31 @@
       "classificationSource": "StockAnalysis company profile"
     },
     {
-      "rank": 10,
-      "ticker": "RGC",
-      "sector": "Healthcare",
-      "industry": "Drug Manufacturers - Specialty & Generic",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
+      "rank": 4,
+      "ticker": "CBRZ",
+      "sector": "Equity",
+      "industry": "未找到可核验行业",
+      "classificationStatus": "partial",
+      "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 11,
+      "rank": 5,
+      "ticker": "ASTN",
+      "sector": "Equity",
+      "industry": "未找到可核验行业",
+      "classificationStatus": "partial",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 6,
+      "ticker": "NBIZ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 7,
       "ticker": "SKDD",
       "sector": "Equity",
       "industry": "Trading--Inverse Equity",
@@ -108,7 +76,7 @@
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 12,
+      "rank": 8,
       "ticker": "RKLZ",
       "sector": "Equity",
       "industry": "Trading--Inverse Equity",
@@ -116,12 +84,44 @@
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 13,
-      "ticker": "FIGS",
-      "sector": "Consumer Discretionary",
-      "industry": "Apparel Manufacturing",
+      "rank": 9,
+      "ticker": "AXTQ",
+      "sector": "Equity",
+      "industry": "未找到可核验行业",
+      "classificationStatus": "partial",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 10,
+      "ticker": "CORD",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 11,
+      "ticker": "PFAI",
+      "sector": "Consumer Staples",
+      "industry": "Farm Products",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 12,
+      "ticker": "AAOZ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 13,
+      "ticker": "SNDQ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
     },
     {
       "rank": 14,
@@ -133,182 +133,6 @@
     },
     {
       "rank": 15,
-      "ticker": "KOD",
-      "sector": "Healthcare",
-      "industry": "Biotechnology",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 16,
-      "ticker": "SNDQ",
-      "sector": "Equity",
-      "industry": "Trading--Inverse Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 17,
-      "ticker": "JDZG",
-      "sector": "Consumer Staples",
-      "industry": "Education & Training Services",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 18,
-      "ticker": "PCRX",
-      "sector": "Healthcare",
-      "industry": "Drug Manufacturers - Specialty & Generic",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 19,
-      "ticker": "VRA",
-      "sector": "Consumer Discretionary",
-      "industry": "Footwear & Accessories",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 20,
-      "ticker": "GMEU",
-      "sector": "Equity",
-      "industry": "未找到可核验行业",
-      "classificationStatus": "partial",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 21,
-      "ticker": "RGTZ",
-      "sector": "Equity",
-      "industry": "Trading--Inverse Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 22,
-      "ticker": "NBIZ",
-      "sector": "Equity",
-      "industry": "Trading--Inverse Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 23,
-      "ticker": "CORD",
-      "sector": "Equity",
-      "industry": "Trading--Inverse Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 24,
-      "ticker": "AXTQ",
-      "sector": "Equity",
-      "industry": "未找到可核验行业",
-      "classificationStatus": "partial",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 25,
-      "ticker": "CBRL",
-      "sector": "Consumer Discretionary",
-      "industry": "Restaurants",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 26,
-      "ticker": "AAOZ",
-      "sector": "Equity",
-      "industry": "Trading--Inverse Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 27,
-      "ticker": "VNCE",
-      "sector": "Consumer Discretionary",
-      "industry": "Apparel Manufacturing",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 28,
-      "ticker": "ZIP",
-      "sector": "Communication Services",
-      "industry": "Internet Content & Information",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 29,
-      "ticker": "PICS",
-      "sector": "Technology",
-      "industry": "Software - Infrastructure",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 30,
-      "ticker": "MRNA",
-      "sector": "Healthcare",
-      "industry": "Biotechnology",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 31,
-      "ticker": "EVH",
-      "sector": "Healthcare",
-      "industry": "Health Information Services",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 32,
-      "ticker": "SG",
-      "sector": "Consumer Discretionary",
-      "industry": "Restaurants",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 33,
-      "ticker": "XP",
-      "sector": "Financials",
-      "industry": "Capital Markets",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 34,
-      "ticker": "RXO",
-      "sector": "Industrials",
-      "industry": "Trucking",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 35,
-      "ticker": "BYRN",
-      "sector": "Industrials",
-      "industry": "Aerospace & Defense",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 36,
-      "ticker": "PTLO",
-      "sector": "Consumer Discretionary",
-      "industry": "Restaurants",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 37,
       "ticker": "SMCZ",
       "sector": "Equity",
       "industry": "Trading--Inverse Equity",
@@ -316,79 +140,79 @@
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 38,
-      "ticker": "NTWK",
-      "sector": "Technology",
-      "industry": "Software - Application",
+      "rank": 16,
+      "ticker": "RGTZ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
       "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
+      "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 39,
-      "ticker": "TBCH",
-      "sector": "Technology",
-      "industry": "Consumer Electronics",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 40,
-      "ticker": "PTC",
-      "sector": "Technology",
-      "industry": "Software - Application",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 41,
-      "ticker": "SUJA",
-      "sector": "Consumer Staples",
-      "industry": "Beverages - Non-Alcoholic",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 42,
-      "ticker": "IOVA",
+      "rank": 17,
+      "ticker": "RGC",
       "sector": "Healthcare",
-      "industry": "Biotechnology",
+      "industry": "Drug Manufacturers - Specialty & Generic",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis company profile"
     },
     {
-      "rank": 43,
-      "ticker": "OPCH",
-      "sector": "Healthcare",
-      "industry": "Medical Care Facilities",
+      "rank": 18,
+      "ticker": "BEZ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
       "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
+      "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 44,
-      "ticker": "ETSY",
+      "rank": 19,
+      "ticker": "SOXS",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 20,
+      "ticker": "FIGS",
       "sector": "Consumer Discretionary",
-      "industry": "Internet Retail",
+      "industry": "Apparel Manufacturing",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis company profile"
     },
     {
-      "rank": 45,
-      "ticker": "SJT",
-      "sector": "Energy",
-      "industry": "Oil & Gas Exploration & Production",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 46,
-      "ticker": "ODD",
+      "rank": 21,
+      "ticker": "JDZG",
       "sector": "Consumer Staples",
-      "industry": "Household & Personal Products",
+      "industry": "Education & Training Services",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis company profile"
     },
     {
-      "rank": 47,
+      "rank": 22,
+      "ticker": "PCRX",
+      "sector": "Healthcare",
+      "industry": "Drug Manufacturers - Specialty & Generic",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 23,
+      "ticker": "CBRL",
+      "sector": "Consumer Discretionary",
+      "industry": "Restaurants",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 24,
+      "ticker": "BMNZ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 25,
       "ticker": "SKHZ",
       "sector": "Equity",
       "industry": "Trading--Inverse Equity",
@@ -396,18 +220,194 @@
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 48,
-      "ticker": "KSS",
-      "sector": "Consumer Discretionary",
-      "industry": "Department Stores",
+      "rank": 26,
+      "ticker": "MUZ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 27,
+      "ticker": "KOD",
+      "sector": "Healthcare",
+      "industry": "Biotechnology",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis company profile"
     },
     {
-      "rank": 49,
-      "ticker": "VEEA",
+      "rank": 28,
+      "ticker": "VRA",
+      "sector": "Consumer Discretionary",
+      "industry": "Footwear & Accessories",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 29,
+      "ticker": "BYRN",
+      "sector": "Industrials",
+      "industry": "Aerospace & Defense",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 30,
+      "ticker": "PICS",
       "sector": "Technology",
-      "industry": "Information Technology Services",
+      "industry": "Software - Infrastructure",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 31,
+      "ticker": "BSP",
+      "sector": "Technology",
+      "industry": "Software - Application",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 32,
+      "ticker": "HPK",
+      "sector": "Energy",
+      "industry": "Oil & Gas Exploration & Production",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 33,
+      "ticker": "LITZ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 34,
+      "ticker": "MRNX",
+      "sector": "Equity",
+      "industry": "Trading--Leveraged Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 35,
+      "ticker": "ENGS",
+      "sector": "Industrials",
+      "industry": "Waste Management",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 36,
+      "ticker": "RXO",
+      "sector": "Industrials",
+      "industry": "Trucking",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 37,
+      "ticker": "HIBS",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 38,
+      "ticker": "PTC",
+      "sector": "Technology",
+      "industry": "Software - Application",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 39,
+      "ticker": "PTLO",
+      "sector": "Consumer Discretionary",
+      "industry": "Restaurants",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 40,
+      "ticker": "XP",
+      "sector": "Financials",
+      "industry": "Capital Markets",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 41,
+      "ticker": "OPCH",
+      "sector": "Healthcare",
+      "industry": "Medical Care Facilities",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 42,
+      "ticker": "SUJA",
+      "sector": "Consumer Staples",
+      "industry": "Beverages - Non-Alcoholic",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 43,
+      "ticker": "WING",
+      "sector": "Consumer Discretionary",
+      "industry": "Restaurants",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 44,
+      "ticker": "VNCE",
+      "sector": "Consumer Discretionary",
+      "industry": "Apparel Manufacturing",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 45,
+      "ticker": "EDZ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 46,
+      "ticker": "DAMD",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 47,
+      "ticker": "BZUN",
+      "sector": "Consumer Discretionary",
+      "industry": "Internet Retail",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 48,
+      "ticker": "LABD",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 49,
+      "ticker": "SJT",
+      "sector": "Energy",
+      "industry": "Oil & Gas Exploration & Production",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis company profile"
     },
