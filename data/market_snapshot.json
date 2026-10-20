@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-10-20T04:40:14Z",
+    "fetchedAt": "2026-10-20T11:26:20Z",
     "latestDate": "2026-10-20",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -150,7 +150,9 @@
         "IHI",
         "IPAY"
       ]
-    }
+    },
+    "dailyRefreshDate": "2026-10-19",
+    "dailyRefreshAt": "2026-10-20T11:26:19Z"
   },
   "sources": {
     "equities": {
@@ -77057,14 +77059,14 @@
           "open": 81938.39,
           "high": 82272.06,
           "low": 81200.0,
-          "close": 82090.39,
-          "volume": 2423.08144
+          "close": 81513.56,
+          "volume": 6004.5346
         }
       ],
       "latest": {
         "date": "2026-10-20",
-        "close": 82090.39,
-        "change": 0.1855
+        "close": 81513.56,
+        "change": -0.5185
       },
       "latestDate": "2026-10-20",
       "kind": "crypto",
@@ -77101,9 +77103,42 @@
           "time": "04:00",
           "open": 82138.43,
           "high": 82272.06,
-          "low": 82058.0,
-          "close": 82090.4,
-          "volume": 325.51911,
+          "low": 81717.68,
+          "close": 81724.0,
+          "volume": 844.83003,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-20T06:00:00Z",
+          "date": "2026-10-20",
+          "time": "06:00",
+          "open": 81724.01,
+          "high": 81886.01,
+          "low": 81468.49,
+          "close": 81567.39,
+          "volume": 1313.21507,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-20T08:00:00Z",
+          "date": "2026-10-20",
+          "time": "08:00",
+          "open": 81567.38,
+          "high": 81623.24,
+          "low": 81331.97,
+          "close": 81497.98,
+          "volume": 1299.67956,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-20T10:00:00Z",
+          "date": "2026-10-20",
+          "time": "10:00",
+          "open": 81497.98,
+          "high": 81664.01,
+          "low": 81453.28,
+          "close": 81512.01,
+          "volume": 446.26871,
           "status": "incomplete"
         }
       ],
