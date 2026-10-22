@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-10-22T11:41:43Z",
+    "fetchedAt": "2026-10-22T17:04:46Z",
     "latestDate": "2026-10-22",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -152,7 +152,23 @@
       ]
     },
     "dailyRefreshDate": "2026-10-21",
-    "dailyRefreshAt": "2026-10-22T11:41:42Z"
+    "dailyRefreshAt": "2026-10-22T11:41:42Z",
+    "btcRefreshAt": "2026-10-22T17:04:46Z",
+    "btcLatestDate": "2026-10-22",
+    "btcIntraday": {
+      "requested": [
+        "SPX",
+        "NDX",
+        "DJI",
+        "RUT",
+        "BTC"
+      ],
+      "loaded": [
+        "BTC"
+      ],
+      "missing": [],
+      "sourceStatus": "loaded"
+    }
   },
   "sources": {
     "equities": {
@@ -77202,15 +77218,15 @@
           "date": "2026-10-22",
           "open": 84093.42,
           "high": 84377.21,
-          "low": 81653.0,
-          "close": 81918.0,
-          "volume": 11065.78258
+          "low": 80939.54,
+          "close": 81180.11,
+          "volume": 16759.59763
         }
       ],
       "latest": {
         "date": "2026-10-22",
-        "close": 81918.0,
-        "change": -2.5869
+        "close": 81180.11,
+        "change": -3.4644
       },
       "latestDate": "2026-10-22",
       "kind": "crypto",
@@ -77280,9 +77296,42 @@
           "time": "10:00",
           "open": 81949.46,
           "high": 82178.2,
-          "low": 81836.47,
-          "close": 81917.99,
-          "volume": 1243.37844,
+          "low": 81750.0,
+          "close": 81750.01,
+          "volume": 1441.98314,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-22T12:00:00Z",
+          "date": "2026-10-22",
+          "time": "12:00",
+          "open": 81750.01,
+          "high": 82086.96,
+          "low": 81376.1,
+          "close": 81700.01,
+          "volume": 2192.17577,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-22T14:00:00Z",
+          "date": "2026-10-22",
+          "time": "14:00",
+          "open": 81700.01,
+          "high": 81922.23,
+          "low": 81328.0,
+          "close": 81681.69,
+          "volume": 2094.01179,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-22T16:00:00Z",
+          "date": "2026-10-22",
+          "time": "16:00",
+          "open": 81681.69,
+          "high": 81764.01,
+          "low": 80939.54,
+          "close": 81177.1,
+          "volume": 1209.08512,
           "status": "incomplete"
         }
       ],
@@ -77292,10 +77341,6 @@
         "interval": "2h",
         "timezone": "UTC",
         "latestDate": "2026-10-22"
-      },
-      "relativeStrengthRating": {
-        "sector": {},
-        "industry": {}
       }
     },
     "COPX": {
