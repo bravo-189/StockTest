@@ -1,9 +1,9 @@
 {
   "metadata": {
     "rowCount": 128,
-    "latestDate": "2026-10-20",
+    "latestDate": "2026-10-21",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-10-21T00:33:53Z",
+    "fetchedAt": "2026-10-22T04:30:19Z",
     "historyWindow": "6mo",
     "lookbackDays": 183
   },
@@ -122,22 +122,40 @@
   ],
   "rows": [
     {
+      "date": "2026-10-21",
+      "up": 222,
+      "down": 168,
+      "ratio5": 1.32,
+      "ratio10": 0.66,
+      "t2108": 36.01,
+      "sp500": 7757.21,
+      "up25Quarter": 730,
+      "down25Quarter": 1471,
+      "up25Month": 66,
+      "down25Month": 210,
+      "up50Month": 7,
+      "down50Month": 38,
+      "up13_34d": 964,
+      "down13_34d": 1886,
+      "wordenUniverse": 6562
+    },
+    {
       "date": "2026-10-20",
-      "up": 363,
-      "down": 108,
-      "ratio5": 0.72,
+      "up": 370,
+      "down": 110,
+      "ratio5": 0.73,
       "ratio10": 0.59,
-      "t2108": 34.63,
-      "sp500": 7714.52,
-      "up25Quarter": 711,
-      "down25Quarter": 1505,
+      "t2108": 34.67,
+      "sp500": 7712.57,
+      "up25Quarter": 712,
+      "down25Quarter": 1507,
       "up25Month": 50,
-      "down25Month": 274,
+      "down25Month": 275,
       "up50Month": 8,
-      "down50Month": 41,
-      "up13_34d": 887,
-      "down13_34d": 1953,
-      "wordenUniverse": 6561
+      "down50Month": 42,
+      "up13_34d": 888,
+      "down13_34d": 1955,
+      "wordenUniverse": 6562
     },
     {
       "date": "2026-10-19",
@@ -2406,24 +2424,6 @@
       "up13_34d": 2378,
       "down13_34d": 984,
       "wordenUniverse": 6416
-    },
-    {
-      "date": "2026-04-20",
-      "up": 262,
-      "down": 108,
-      "ratio5": 3.23,
-      "ratio10": 2.6,
-      "t2108": 62.99,
-      "sp500": 7109.14,
-      "up25Quarter": 1638,
-      "down25Quarter": 920,
-      "up25Month": 451,
-      "down25Month": 46,
-      "up50Month": 89,
-      "down50Month": 16,
-      "up13_34d": 2631,
-      "down13_34d": 886,
-      "wordenUniverse": 6415
     }
   ]
 }
