@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-10-27T17:56:01Z",
+    "fetchedAt": "2026-10-27T22:07:12Z",
     "latestDate": "2026-10-27",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -153,7 +153,7 @@
     },
     "dailyRefreshDate": "2026-10-26",
     "dailyRefreshAt": "2026-10-27T12:01:31Z",
-    "btcRefreshAt": "2026-10-27T17:56:01Z",
+    "btcRefreshAt": "2026-10-27T22:07:12Z",
     "btcLatestDate": "2026-10-27",
     "btcIntraday": {
       "requested": [
@@ -77073,16 +77073,16 @@
         {
           "date": "2026-10-27",
           "open": 80150.56,
-          "high": 80836.01,
+          "high": 81300.0,
           "low": 79506.0,
-          "close": 80547.03,
-          "volume": 10318.32361
+          "close": 80941.32,
+          "volume": 12604.3305
         }
       ],
       "latest": {
         "date": "2026-10-27",
-        "close": 80547.03,
-        "change": 0.4947
+        "close": 80941.32,
+        "change": 0.9866
       },
       "latestDate": "2026-10-27",
       "kind": "crypto",
@@ -77186,8 +77186,41 @@
           "open": 80562.27,
           "high": 80836.01,
           "low": 80451.95,
-          "close": 80547.02,
-          "volume": 1492.72754,
+          "close": 80507.74,
+          "volume": 1512.0408,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-27T18:00:00Z",
+          "date": "2026-10-27",
+          "time": "18:00",
+          "open": 80507.73,
+          "high": 80832.01,
+          "low": 80443.85,
+          "close": 80817.76,
+          "volume": 978.02298,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-27T20:00:00Z",
+          "date": "2026-10-27",
+          "time": "20:00",
+          "open": 80817.75,
+          "high": 81300.0,
+          "low": 80638.0,
+          "close": 80913.37,
+          "volume": 1220.82256,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-27T22:00:00Z",
+          "date": "2026-10-27",
+          "time": "22:00",
+          "open": 80913.37,
+          "high": 81012.79,
+          "low": 80863.1,
+          "close": 80941.32,
+          "volume": 67.66988,
           "status": "incomplete"
         }
       ],
