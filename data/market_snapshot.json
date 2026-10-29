@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-10-29T05:38:03Z",
+    "fetchedAt": "2026-10-29T12:52:11Z",
     "latestDate": "2026-10-29",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -150,7 +150,9 @@
         "IHI",
         "IPAY"
       ]
-    }
+    },
+    "dailyRefreshDate": "2026-10-28",
+    "dailyRefreshAt": "2026-10-29T12:52:10Z"
   },
   "sources": {
     "equities": {
@@ -77201,14 +77203,14 @@
           "open": 81343.51,
           "high": 81380.01,
           "low": 79710.0,
-          "close": 80336.01,
-          "volume": 3178.47395
+          "close": 80084.28,
+          "volume": 6362.2375
         }
       ],
       "latest": {
         "date": "2026-10-29",
-        "close": 80336.01,
-        "change": -1.2386
+        "close": 80084.28,
+        "change": -1.548
       },
       "latestDate": "2026-10-29",
       "kind": "crypto",
@@ -77246,8 +77248,52 @@
           "open": 79858.01,
           "high": 80527.02,
           "low": 79782.0,
-          "close": 80327.16,
-          "volume": 826.07676,
+          "close": 80234.14,
+          "volume": 929.48182,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-29T06:00:00Z",
+          "date": "2026-10-29",
+          "time": "06:00",
+          "open": 80234.14,
+          "high": 80283.55,
+          "low": 79830.01,
+          "close": 79861.89,
+          "volume": 794.99715,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-29T08:00:00Z",
+          "date": "2026-10-29",
+          "time": "08:00",
+          "open": 79861.89,
+          "high": 80345.0,
+          "low": 79852.35,
+          "close": 80207.4,
+          "volume": 1096.88509,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-29T10:00:00Z",
+          "date": "2026-10-29",
+          "time": "10:00",
+          "open": 80207.4,
+          "high": 80374.42,
+          "low": 80116.18,
+          "close": 80170.02,
+          "volume": 820.9127,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-10-29T12:00:00Z",
+          "date": "2026-10-29",
+          "time": "12:00",
+          "open": 80170.03,
+          "high": 80268.2,
+          "low": 80014.18,
+          "close": 80084.28,
+          "volume": 366.93649,
           "status": "incomplete"
         }
       ],
