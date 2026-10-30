@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-10-30T05:34:43Z",
+    "fetchedAt": "2026-10-30T05:37:04Z",
     "latestDate": "2026-10-30",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -69,7 +69,7 @@
     "holdings": {
       "provider": "StockAnalysis (source listed: Finnhub) plus issuer overrides",
       "access": "public read-only",
-      "fetchedAt": "2026-10-29T05:35:37Z",
+      "fetchedAt": "2026-10-30T05:37:04Z",
       "requestedCount": 71,
       "loadedCount": 71,
       "missing": [],
@@ -77199,16 +77199,16 @@
         {
           "date": "2026-10-30",
           "open": 77991.89,
-          "high": 78750.0,
+          "high": 78774.48,
           "low": 76500.11,
-          "close": 78748.53,
-          "volume": 10491.84938
+          "close": 78762.83,
+          "volume": 10534.72446
         }
       ],
       "latest": {
         "date": "2026-10-30",
-        "close": 78748.53,
-        "change": 0.9702
+        "close": 78762.83,
+        "change": 0.9885
       },
       "latestDate": "2026-10-30",
       "kind": "crypto",
@@ -77244,10 +77244,10 @@
           "date": "2026-10-30",
           "time": "04:00",
           "open": 78235.15,
-          "high": 78750.0,
+          "high": 78774.48,
           "low": 77927.0,
-          "close": 78723.61,
-          "volume": 1436.3689,
+          "close": 78758.74,
+          "volume": 1474.17004,
           "status": "incomplete"
         }
       ],
@@ -307606,8 +307606,8 @@
       "ticker": "IBIT",
       "provider": "iShares issuer holdings CSV",
       "providerUrl": "https://www.ishares.com/us/products/333011/ishares-bitcoin-trust-etf/latest-holdings.csv",
-      "fetchedAt": "2026-10-29T05:35:37Z",
-      "asOf": "Oct 27, 2026",
+      "fetchedAt": "2026-10-30T05:37:04Z",
+      "asOf": "Oct 28, 2026",
       "freshness": "daily",
       "updateFrequency": "daily",
       "totalHoldings": 2,
@@ -307621,7 +307621,7 @@
           "name": "BITCOIN",
           "weight": 100.0,
           "weightUnit": "percent",
-          "shares": "813,039.84710"
+          "shares": "814,715.14720"
         },
         {
           "rank": 2,
@@ -307640,12 +307640,12 @@
       "ticker": "USO",
       "provider": "USCF issuer holdings API",
       "providerUrl": "https://secure.alpsinc.com/MarketingAPI/api/v1/holding/USO/full",
-      "fetchedAt": "2026-10-29T05:35:37Z",
-      "asOf": "2026-10-28T05:00:00",
+      "fetchedAt": "2026-10-30T05:37:04Z",
+      "asOf": "2026-10-29T05:00:00",
       "freshness": "daily",
       "updateFrequency": "daily",
       "totalHoldings": 17,
-      "top10Weight": 168.85,
+      "top10Weight": 171.21,
       "weightUnit": "percent",
       "weightBasis": "source-reported gross exposure",
       "holdings": [
@@ -307656,25 +307656,25 @@
           "name": "WTI CRUDE FUTURE Dec26",
           "weight": 83.97,
           "weightUnit": "percent",
-          "shares": "15693.0"
+          "shares": "15695.0"
         },
         {
           "rank": 2,
           "ticker": "DSVXX",
           "sourceTicker": "DSVXX",
           "name": "DREY INST PREF GOV MM INST 6546",
-          "weight": 25.05,
+          "weight": 25.44,
           "weightUnit": "percent",
-          "shares": "481200000.0"
+          "shares": "485000000.0"
         },
         {
           "rank": 3,
           "ticker": "US DOLLARS",
           "sourceTicker": "US DOLLARS",
           "name": "US DOLLARS",
-          "weight": 12.96,
+          "weight": 16.55,
           "weightUnit": "percent",
-          "shares": "249013777.51"
+          "shares": "315559333.68"
         },
         {
           "rank": 4,
@@ -307690,7 +307690,7 @@
           "ticker": "912797VJ3",
           "sourceTicker": "912797VJ3",
           "name": "TREASURY BILL 0 12/31/2026",
-          "weight": 7.76,
+          "weight": 7.82,
           "weightUnit": "percent",
           "shares": "150000000.0"
         },
@@ -307699,7 +307699,7 @@
           "ticker": "912797VV6",
           "sourceTicker": "912797VV6",
           "name": "TREASURY BILL 0 2/4/2027",
-          "weight": 7.73,
+          "weight": 7.79,
           "weightUnit": "percent",
           "shares": "150000000.0"
         },
@@ -307714,28 +307714,28 @@
         },
         {
           "rank": 8,
-          "ticker": "USD",
-          "sourceTicker": "USD",
-          "name": "BNY CASH RESERVE",
-          "weight": 6.51,
-          "weightUnit": "percent",
-          "shares": "125023708.98"
-        },
-        {
-          "rank": 9,
           "ticker": "912797VX2",
           "sourceTicker": "912797VX2",
           "name": "TREASURY BILL 0 11/17/2026",
-          "weight": 5.2,
+          "weight": 5.24,
           "weightUnit": "percent",
           "shares": "100000000.0"
+        },
+        {
+          "rank": 9,
+          "ticker": "USD",
+          "sourceTicker": "USD",
+          "name": "BNY CASH RESERVE",
+          "weight": 4.7,
+          "weightUnit": "percent",
+          "shares": "89678171.5"
         },
         {
           "rank": 10,
           "ticker": "912797VZ7",
           "sourceTicker": "912797VZ7",
           "name": "TREASURY BILL 0 12/1/2026",
-          "weight": 3.63,
+          "weight": 3.66,
           "weightUnit": "percent",
           "shares": "70000000.0"
         }
