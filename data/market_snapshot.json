@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-10-31T05:23:16Z",
+    "fetchedAt": "2026-10-31T05:27:16Z",
     "latestDate": "2026-10-31",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -152,7 +152,23 @@
       ]
     },
     "dailyRefreshDate": "2026-10-30",
-    "dailyRefreshAt": "2026-10-31T05:23:16Z"
+    "dailyRefreshAt": "2026-10-31T05:23:16Z",
+    "btcRefreshAt": "2026-10-31T05:27:16Z",
+    "btcLatestDate": "2026-10-31",
+    "btcIntraday": {
+      "requested": [
+        "SPX",
+        "NDX",
+        "DJI",
+        "RUT",
+        "BTC"
+      ],
+      "loaded": [
+        "BTC"
+      ],
+      "missing": [],
+      "sourceStatus": "loaded"
+    }
   },
   "sources": {
     "equities": {
@@ -77203,14 +77219,14 @@
           "open": 77368.76,
           "high": 77654.44,
           "low": 77114.01,
-          "close": 77249.24,
-          "volume": 1693.43571
+          "close": 77266.01,
+          "volume": 1697.72393
         }
       ],
       "latest": {
         "date": "2026-10-31",
-        "close": 77249.24,
-        "change": -0.1545
+        "close": 77266.01,
+        "change": -0.1328
       },
       "latestDate": "2026-10-31",
       "kind": "crypto",
@@ -77248,8 +77264,8 @@
           "open": 77170.74,
           "high": 77359.74,
           "low": 77114.01,
-          "close": 77249.24,
-          "volume": 376.4605,
+          "close": 77266.01,
+          "volume": 380.65974,
           "status": "incomplete"
         }
       ],
@@ -77259,10 +77275,6 @@
         "interval": "2h",
         "timezone": "UTC",
         "latestDate": "2026-10-31"
-      },
-      "relativeStrengthRating": {
-        "sector": {},
-        "industry": {}
       }
     },
     "COPX": {
