@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-11-01T13:12:01Z",
+    "fetchedAt": "2026-11-01T18:52:17Z",
     "latestDate": "2026-10-31",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -153,7 +153,7 @@
     },
     "dailyRefreshDate": "2026-10-30",
     "dailyRefreshAt": "2026-10-31T05:23:16Z",
-    "btcRefreshAt": "2026-11-01T13:12:01Z",
+    "btcRefreshAt": "2026-11-01T18:52:17Z",
     "btcLatestDate": "2026-11-01",
     "btcIntraday": {
       "requested": [
@@ -77219,14 +77219,14 @@
           "open": 77582.02,
           "high": 78285.0,
           "low": 77517.2,
-          "close": 78002.65,
-          "volume": 3882.40067
+          "close": 77878.04,
+          "volume": 5190.23038
         }
       ],
       "latest": {
         "date": "2026-11-01",
-        "close": 78002.65,
-        "change": 0.5422
+        "close": 77878.04,
+        "change": 0.3816
       },
       "latestDate": "2026-11-01",
       "kind": "crypto",
@@ -77306,10 +77306,43 @@
           "date": "2026-11-01",
           "time": "12:00",
           "open": 77962.63,
-          "high": 78025.53,
+          "high": 78042.31,
           "low": 77749.09,
-          "close": 78002.66,
-          "volume": 455.1257,
+          "close": 78035.45,
+          "volume": 680.39675,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-11-01T14:00:00Z",
+          "date": "2026-11-01",
+          "time": "14:00",
+          "open": 78035.45,
+          "high": 78138.01,
+          "low": 77922.99,
+          "close": 77988.03,
+          "volume": 503.84245,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-11-01T16:00:00Z",
+          "date": "2026-11-01",
+          "time": "16:00",
+          "open": 77988.03,
+          "high": 78172.7,
+          "low": 77964.0,
+          "close": 77980.54,
+          "volume": 444.78516,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-11-01T18:00:00Z",
+          "date": "2026-11-01",
+          "time": "18:00",
+          "open": 77980.54,
+          "high": 77996.89,
+          "low": 77878.03,
+          "close": 77878.03,
+          "volume": 133.91893,
           "status": "incomplete"
         }
       ],
