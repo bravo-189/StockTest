@@ -4,61 +4,61 @@
     "loadedCount": 76,
     "coverageRate": 1.0,
     "instrumentCount": 76,
-    "totalBars": 37665,
+    "totalBars": 37590,
     "pendingCount": 0,
     "findingCount": 2
   },
   "providerDateRanges": {
     "crypto-24x7": {
-      "earliest": "2026-08-05",
-      "latest": "2026-11-02",
+      "earliest": "2026-08-06",
+      "latest": "2026-11-03",
       "instrumentCount": 1
     },
     "us-equity": {
-      "earliest": "2024-10-31",
-      "latest": "2026-10-30",
+      "earliest": "2024-11-04",
+      "latest": "2026-11-02",
       "instrumentCount": 75
     }
   },
   "intraday": {
     "SPX": {
       "interval": "5m",
-      "latestDate": "2026-10-30",
+      "latestDate": "2026-11-02",
       "barCount": 79,
-      "firstTimestamp": "2026-10-30T13:30:00Z",
-      "lastTimestamp": "2026-10-30T20:00:00Z",
+      "firstTimestamp": "2026-11-02T14:30:00Z",
+      "lastTimestamp": "2026-11-02T21:00:00Z",
       "incompleteCount": 0
     },
     "NDX": {
       "interval": "5m",
-      "latestDate": "2026-10-30",
+      "latestDate": "2026-11-02",
       "barCount": 79,
-      "firstTimestamp": "2026-10-30T13:30:00Z",
-      "lastTimestamp": "2026-10-30T20:00:00Z",
+      "firstTimestamp": "2026-11-02T14:30:00Z",
+      "lastTimestamp": "2026-11-02T21:00:00Z",
       "incompleteCount": 0
     },
     "DJI": {
       "interval": "5m",
-      "latestDate": "2026-10-30",
+      "latestDate": "2026-11-02",
       "barCount": 79,
-      "firstTimestamp": "2026-10-30T13:30:00Z",
-      "lastTimestamp": "2026-10-30T20:00:00Z",
+      "firstTimestamp": "2026-11-02T14:30:00Z",
+      "lastTimestamp": "2026-11-02T21:00:00Z",
       "incompleteCount": 0
     },
     "RUT": {
       "interval": "5m",
-      "latestDate": "2026-10-30",
+      "latestDate": "2026-11-02",
       "barCount": 79,
-      "firstTimestamp": "2026-10-30T13:30:00Z",
-      "lastTimestamp": "2026-10-30T20:00:00Z",
+      "firstTimestamp": "2026-11-02T14:30:00Z",
+      "lastTimestamp": "2026-11-02T21:00:00Z",
       "incompleteCount": 0
     },
     "BTC": {
       "interval": "2h",
-      "latestDate": "2026-11-02",
-      "barCount": 12,
-      "firstTimestamp": "2026-11-02T00:00:00Z",
-      "lastTimestamp": "2026-11-02T22:00:00Z",
+      "latestDate": "2026-11-03",
+      "barCount": 4,
+      "firstTimestamp": "2026-11-03T00:00:00Z",
+      "lastTimestamp": "2026-11-03T06:00:00Z",
       "incompleteCount": 1
     }
   },
@@ -66,7 +66,7 @@
     {
       "check": "calendar_note",
       "severity": "info",
-      "evidence": "crypto-24x7: 2026-08-05 → 2026-11-02 | us-equity: 2024-10-31 → 2026-10-30",
+      "evidence": "crypto-24x7: 2026-08-06 → 2026-11-03 | us-equity: 2024-11-04 → 2026-11-02",
       "message": "不同交易日历是预期差异；跨资产比较使用共同观察日，不补造缺失 K 线。"
     }
   ],
