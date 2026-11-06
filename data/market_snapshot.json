@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-11-06T02:18:38Z",
+    "fetchedAt": "2026-11-06T06:24:26Z",
     "latestDate": "2026-11-06",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -152,7 +152,23 @@
       ]
     },
     "dailyRefreshDate": "2026-11-05",
-    "dailyRefreshAt": "2026-11-06T02:18:38Z"
+    "dailyRefreshAt": "2026-11-06T02:18:38Z",
+    "btcRefreshAt": "2026-11-06T06:24:26Z",
+    "btcLatestDate": "2026-11-06",
+    "btcIntraday": {
+      "requested": [
+        "SPX",
+        "NDX",
+        "DJI",
+        "RUT",
+        "BTC"
+      ],
+      "loaded": [
+        "BTC"
+      ],
+      "missing": [],
+      "sourceStatus": "loaded"
+    }
   },
   "sources": {
     "equities": {
@@ -77202,15 +77218,15 @@
           "date": "2026-11-06",
           "open": 76088.01,
           "high": 76416.24,
-          "low": 75900.0,
-          "close": 76148.01,
-          "volume": 1435.98752
+          "low": 75360.81,
+          "close": 75603.98,
+          "volume": 3893.45244
         }
       ],
       "latest": {
         "date": "2026-11-06",
-        "close": 76148.01,
-        "change": 0.0789
+        "close": 75603.98,
+        "change": -0.6361
       },
       "latestDate": "2026-11-06",
       "kind": "crypto",
@@ -77235,10 +77251,32 @@
           "date": "2026-11-06",
           "time": "02:00",
           "open": 76130.01,
-          "high": 76218.86,
-          "low": 76018.0,
-          "close": 76154.9,
-          "volume": 105.46996,
+          "high": 76300.0,
+          "low": 75778.0,
+          "close": 75912.71,
+          "volume": 1092.23975,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-11-06T04:00:00Z",
+          "date": "2026-11-06",
+          "time": "04:00",
+          "open": 75912.71,
+          "high": 75920.01,
+          "low": 75360.81,
+          "close": 75698.0,
+          "volume": 1214.65912,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-11-06T06:00:00Z",
+          "date": "2026-11-06",
+          "time": "06:00",
+          "open": 75698.01,
+          "high": 75698.01,
+          "low": 75459.17,
+          "close": 75603.97,
+          "volume": 254.95574,
           "status": "incomplete"
         }
       ],
@@ -77248,10 +77286,6 @@
         "interval": "2h",
         "timezone": "UTC",
         "latestDate": "2026-11-06"
-      },
-      "relativeStrengthRating": {
-        "sector": {},
-        "industry": {}
       }
     },
     "COPX": {
