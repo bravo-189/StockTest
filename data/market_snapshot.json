@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-11-06T06:24:26Z",
+    "fetchedAt": "2026-11-06T11:59:55Z",
     "latestDate": "2026-11-06",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -153,7 +153,7 @@
     },
     "dailyRefreshDate": "2026-11-05",
     "dailyRefreshAt": "2026-11-06T02:18:38Z",
-    "btcRefreshAt": "2026-11-06T06:24:26Z",
+    "btcRefreshAt": "2026-11-06T11:59:55Z",
     "btcLatestDate": "2026-11-06",
     "btcIntraday": {
       "requested": [
@@ -77218,15 +77218,15 @@
           "date": "2026-11-06",
           "open": 76088.01,
           "high": 76416.24,
-          "low": 75360.81,
-          "close": 75603.98,
-          "volume": 3893.45244
+          "low": 75304.11,
+          "close": 76140.01,
+          "volume": 7558.72526
         }
       ],
       "latest": {
         "date": "2026-11-06",
-        "close": 75603.98,
-        "change": -0.6361
+        "close": 76140.01,
+        "change": 0.0683
       },
       "latestDate": "2026-11-06",
       "kind": "crypto",
@@ -77273,11 +77273,33 @@
           "date": "2026-11-06",
           "time": "06:00",
           "open": 75698.01,
-          "high": 75698.01,
-          "low": 75459.17,
-          "close": 75603.97,
-          "volume": 254.95574,
-          "status": "incomplete"
+          "high": 75841.04,
+          "low": 75304.11,
+          "close": 75615.55,
+          "volume": 1602.61613,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-11-06T08:00:00Z",
+          "date": "2026-11-06",
+          "time": "08:00",
+          "open": 75615.55,
+          "high": 76291.82,
+          "low": 75483.76,
+          "close": 76185.01,
+          "volume": 1643.75807,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-11-06T10:00:00Z",
+          "date": "2026-11-06",
+          "time": "10:00",
+          "open": 76185.0,
+          "high": 76300.0,
+          "low": 75968.2,
+          "close": 76147.73,
+          "volume": 674.03725,
+          "status": "complete"
         }
       ],
       "intraday": {
