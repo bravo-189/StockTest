@@ -10,8 +10,8 @@
   },
   "providerDateRanges": {
     "crypto-24x7": {
-      "earliest": "2026-08-09",
-      "latest": "2026-11-06",
+      "earliest": "2026-08-10",
+      "latest": "2026-11-07",
       "instrumentCount": 1
     },
     "us-equity": {
@@ -55,10 +55,10 @@
     },
     "BTC": {
       "interval": "2h",
-      "latestDate": "2026-11-06",
-      "barCount": 10,
-      "firstTimestamp": "2026-11-06T00:00:00Z",
-      "lastTimestamp": "2026-11-06T18:00:00Z",
+      "latestDate": "2026-11-07",
+      "barCount": 1,
+      "firstTimestamp": "2026-11-07T00:00:00Z",
+      "lastTimestamp": "2026-11-07T00:00:00Z",
       "incompleteCount": 1
     }
   },
@@ -66,7 +66,7 @@
     {
       "check": "calendar_note",
       "severity": "info",
-      "evidence": "crypto-24x7: 2026-08-09 → 2026-11-06 | us-equity: 2024-11-06 → 2026-11-05",
+      "evidence": "crypto-24x7: 2026-08-10 → 2026-11-07 | us-equity: 2024-11-06 → 2026-11-05",
       "message": "不同交易日历是预期差异；跨资产比较使用共同观察日，不补造缺失 K 线。"
     }
   ],
