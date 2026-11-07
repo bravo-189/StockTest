@@ -1,14 +1,14 @@
 {
   "schemaVersion": "1.0",
   "status": "ok",
-  "refreshMode": "btc-2hourly",
-  "attemptedAt": "2026-11-07T00:03:55Z",
-  "lastCompletedAt": "2026-11-07T00:03:55Z",
-  "lastFullSuccessAt": "2026-11-06T02:18:38Z",
+  "refreshMode": "daily-close",
+  "attemptedAt": "2026-11-07T05:47:41Z",
+  "lastCompletedAt": "2026-11-07T05:47:41Z",
+  "lastFullSuccessAt": "2026-11-07T05:47:41Z",
   "sources": {
     "market": {
       "status": "loaded",
-      "latestDate": "2026-11-06",
+      "latestDate": "2026-11-07",
       "loadedCount": 76,
       "requiredCount": 76,
       "missingCount": 0
