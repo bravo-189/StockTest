@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-11-09T06:08:30Z",
+    "fetchedAt": "2026-11-09T18:41:45Z",
     "latestDate": "2026-11-07",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -153,7 +153,7 @@
     },
     "dailyRefreshDate": "2026-11-06",
     "dailyRefreshAt": "2026-11-07T12:52:15Z",
-    "btcRefreshAt": "2026-11-09T06:08:30Z",
+    "btcRefreshAt": "2026-11-09T18:41:45Z",
     "btcLatestDate": "2026-11-09",
     "btcIntraday": {
       "requested": [
@@ -77218,15 +77218,15 @@
           "date": "2026-11-09",
           "open": 74851.44,
           "high": 75599.22,
-          "low": 74320.0,
-          "close": 74607.17,
-          "volume": 3884.41534
+          "low": 73750.0,
+          "close": 74673.51,
+          "volume": 13821.04075
         }
       ],
       "latest": {
         "date": "2026-11-09",
-        "close": 74607.17,
-        "change": -0.3263
+        "close": 74673.51,
+        "change": -0.2377
       },
       "latestDate": "2026-11-09",
       "kind": "crypto",
@@ -77274,9 +77274,75 @@
           "time": "06:00",
           "open": 74472.3,
           "high": 74655.24,
-          "low": 74444.0,
-          "close": 74607.17,
-          "volume": 109.67388,
+          "low": 73772.03,
+          "close": 73870.02,
+          "volume": 2376.08541,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-11-09T08:00:00Z",
+          "date": "2026-11-09",
+          "time": "08:00",
+          "open": 73870.02,
+          "high": 74742.84,
+          "low": 73750.0,
+          "close": 74288.01,
+          "volume": 2121.89437,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-11-09T10:00:00Z",
+          "date": "2026-11-09",
+          "time": "10:00",
+          "open": 74288.01,
+          "high": 74818.26,
+          "low": 74058.45,
+          "close": 74372.01,
+          "volume": 1022.48673,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-11-09T12:00:00Z",
+          "date": "2026-11-09",
+          "time": "12:00",
+          "open": 74372.0,
+          "high": 75103.78,
+          "low": 74366.0,
+          "close": 74726.01,
+          "volume": 1226.98888,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-11-09T14:00:00Z",
+          "date": "2026-11-09",
+          "time": "14:00",
+          "open": 74726.01,
+          "high": 75568.18,
+          "low": 74356.01,
+          "close": 75533.53,
+          "volume": 2039.28918,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-11-09T16:00:00Z",
+          "date": "2026-11-09",
+          "time": "16:00",
+          "open": 75533.54,
+          "high": 75545.71,
+          "low": 74535.97,
+          "close": 74780.01,
+          "volume": 1067.24558,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-11-09T18:00:00Z",
+          "date": "2026-11-09",
+          "time": "18:00",
+          "open": 74780.01,
+          "high": 74884.01,
+          "low": 74416.45,
+          "close": 74673.51,
+          "volume": 192.18587,
           "status": "incomplete"
         }
       ],
