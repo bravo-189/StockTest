@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-11-12T06:59:31Z",
+    "fetchedAt": "2026-11-12T09:42:55Z",
     "latestDate": "2026-11-12",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -77200,15 +77200,15 @@
           "date": "2026-11-12",
           "open": 74015.2,
           "high": 74217.49,
-          "low": 73422.0,
-          "close": 73514.72,
-          "volume": 2458.81289
+          "low": 73260.0,
+          "close": 73411.0,
+          "volume": 3299.76181
         }
       ],
       "latest": {
         "date": "2026-11-12",
-        "close": 73514.72,
-        "change": -0.6762
+        "close": 73411.0,
+        "change": -0.8163
       },
       "latestDate": "2026-11-12",
       "kind": "crypto",
@@ -77257,8 +77257,19 @@
           "open": 73586.02,
           "high": 73738.36,
           "low": 73422.0,
-          "close": 73528.75,
-          "volume": 300.07825,
+          "close": 73660.61,
+          "volume": 633.32752,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-11-12T08:00:00Z",
+          "date": "2026-11-12",
+          "time": "08:00",
+          "open": 73660.6,
+          "high": 73696.86,
+          "low": 73260.0,
+          "close": 73411.0,
+          "volume": 507.56384,
           "status": "incomplete"
         }
       ],
