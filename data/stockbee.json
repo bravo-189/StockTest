@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "rowCount": 128,
-    "latestDate": "2026-11-13",
+    "rowCount": 127,
+    "latestDate": "2026-11-16",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-11-14T06:05:50Z",
+    "fetchedAt": "2026-11-17T02:53:44Z",
     "historyWindow": "6mo",
     "lookbackDays": 183
   },
@@ -122,22 +122,40 @@
   ],
   "rows": [
     {
+      "date": "2026-11-16",
+      "up": 109,
+      "down": 707,
+      "ratio5": 0.47,
+      "ratio10": 0.77,
+      "t2108": 42.72,
+      "sp500": 7418.41,
+      "up25Quarter": 725,
+      "down25Quarter": 1545,
+      "up25Month": 171,
+      "down25Month": 250,
+      "up50Month": 28,
+      "down50Month": 38,
+      "up13_34d": 1374,
+      "down13_34d": 1947,
+      "wordenUniverse": 6557
+    },
+    {
       "date": "2026-11-13",
-      "up": 147,
-      "down": 299,
+      "up": 150,
+      "down": 307,
       "ratio5": 1.13,
       "ratio10": 0.88,
-      "t2108": 46.99,
-      "sp500": 7562.57,
-      "up25Quarter": 806,
-      "down25Quarter": 1451,
+      "t2108": 46.94,
+      "sp500": 7561.67,
+      "up25Quarter": 807,
+      "down25Quarter": 1452,
       "up25Month": 186,
       "down25Month": 171,
       "up50Month": 29,
       "down50Month": 31,
       "up13_34d": 1608,
-      "down13_34d": 1740,
-      "wordenUniverse": 6553
+      "down13_34d": 1742,
+      "wordenUniverse": 6557
     },
     {
       "date": "2026-11-12",
@@ -2388,42 +2406,6 @@
       "up13_34d": 1597,
       "down13_34d": 1749,
       "wordenUniverse": 6439
-    },
-    {
-      "date": "2026-05-15",
-      "up": 146,
-      "down": 502,
-      "ratio5": 0.78,
-      "ratio10": 1.03,
-      "t2108": 39.72,
-      "sp500": 7408.5,
-      "up25Quarter": 1356,
-      "down25Quarter": 1091,
-      "up25Month": 192,
-      "down25Month": 193,
-      "up50Month": 60,
-      "down50Month": 34,
-      "up13_34d": 1713,
-      "down13_34d": 1691,
-      "wordenUniverse": 6438
-    },
-    {
-      "date": "2026-05-14",
-      "up": 340,
-      "down": 221,
-      "ratio5": 1.06,
-      "ratio10": 1.25,
-      "t2108": 47.66,
-      "sp500": 7501.24,
-      "up25Quarter": 1513,
-      "down25Quarter": 987,
-      "up25Month": 259,
-      "down25Month": 131,
-      "up50Month": 72,
-      "down50Month": 27,
-      "up13_34d": 1935,
-      "down13_34d": 1416,
-      "wordenUniverse": 6434
     }
   ]
 }
