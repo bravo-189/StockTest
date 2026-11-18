@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-11-18T07:14:28Z",
+    "fetchedAt": "2026-11-18T17:10:57Z",
     "latestDate": "2026-11-18",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -150,6 +150,22 @@
         "IHI",
         "IPAY"
       ]
+    },
+    "btcRefreshAt": "2026-11-18T17:10:57Z",
+    "btcLatestDate": "2026-11-18",
+    "btcIntraday": {
+      "requested": [
+        "SPX",
+        "NDX",
+        "DJI",
+        "RUT",
+        "BTC"
+      ],
+      "loaded": [
+        "BTC"
+      ],
+      "missing": [],
+      "sourceStatus": "loaded"
     }
   },
   "sources": {
@@ -77200,15 +77216,15 @@
           "date": "2026-11-18",
           "open": 64947.36,
           "high": 65002.0,
-          "low": 64136.0,
-          "close": 64782.0,
-          "volume": 4069.88916
+          "low": 62279.36,
+          "close": 62703.0,
+          "volume": 13464.21427
         }
       ],
       "latest": {
         "date": "2026-11-18",
-        "close": 64782.0,
-        "change": -0.2546
+        "close": 62703.0,
+        "change": -3.4556
       },
       "latestDate": "2026-11-18",
       "kind": "crypto",
@@ -77255,10 +77271,65 @@
           "date": "2026-11-18",
           "time": "06:00",
           "open": 64680.15,
-          "high": 64782.01,
-          "low": 64530.69,
-          "close": 64782.01,
-          "volume": 458.76854,
+          "high": 64952.92,
+          "low": 64475.89,
+          "close": 64884.01,
+          "volume": 906.7971,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-11-18T08:00:00Z",
+          "date": "2026-11-18",
+          "time": "08:00",
+          "open": 64884.0,
+          "high": 64884.0,
+          "low": 64532.44,
+          "close": 64650.84,
+          "volume": 829.82225,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-11-18T10:00:00Z",
+          "date": "2026-11-18",
+          "time": "10:00",
+          "open": 64650.85,
+          "high": 64661.25,
+          "low": 64120.0,
+          "close": 64231.52,
+          "volume": 1074.24051,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-11-18T12:00:00Z",
+          "date": "2026-11-18",
+          "time": "12:00",
+          "open": 64231.53,
+          "high": 64392.01,
+          "low": 63922.66,
+          "close": 63944.13,
+          "volume": 1101.62015,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-11-18T14:00:00Z",
+          "date": "2026-11-18",
+          "time": "14:00",
+          "open": 63944.13,
+          "high": 64090.73,
+          "low": 63000.07,
+          "close": 63122.53,
+          "volume": 3370.65702,
+          "status": "complete"
+        },
+        {
+          "timestamp": "2026-11-18T16:00:00Z",
+          "date": "2026-11-18",
+          "time": "16:00",
+          "open": 63122.53,
+          "high": 63128.61,
+          "low": 62279.36,
+          "close": 62700.8,
+          "volume": 2569.8705,
           "status": "incomplete"
         }
       ],
@@ -77268,10 +77339,6 @@
         "interval": "2h",
         "timezone": "UTC",
         "latestDate": "2026-11-18"
-      },
-      "relativeStrengthRating": {
-        "sector": {},
-        "industry": {}
       }
     },
     "COPX": {
