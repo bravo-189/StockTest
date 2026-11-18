@@ -2,7 +2,7 @@
   "metadata": {
     "schemaVersion": "1.0",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-11-18T07:10:41Z",
+    "fetchedAt": "2026-11-18T07:14:28Z",
     "latestDate": "2026-11-18",
     "requiredCount": 76,
     "loadedCount": 76,
@@ -77201,13 +77201,13 @@
           "open": 64947.36,
           "high": 65002.0,
           "low": 64136.0,
-          "close": 64782.01,
-          "volume": 4052.46566
+          "close": 64782.0,
+          "volume": 4069.88916
         }
       ],
       "latest": {
         "date": "2026-11-18",
-        "close": 64782.01,
+        "close": 64782.0,
         "change": -0.2546
       },
       "latestDate": "2026-11-18",
@@ -77257,8 +77257,8 @@
           "open": 64680.15,
           "high": 64782.01,
           "low": 64530.69,
-          "close": 64782.0,
-          "volume": 441.26016,
+          "close": 64782.01,
+          "volume": 458.76854,
           "status": "incomplete"
         }
       ],
