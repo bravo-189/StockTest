@@ -1,11 +1,11 @@
 {
   "metadata": {
     "sourceStatus": "loaded",
-    "latestDate": "2026-11-19",
+    "latestDate": "2026-11-20",
     "rowCount": 50,
     "isStale": false,
     "ageDays": 1,
-    "fetchedAt": "2026-11-20T03:03:11Z",
+    "fetchedAt": "2026-11-21T03:08:39Z",
     "listName": "Stockbee 50",
     "classificationSource": "StockAnalysis company and ETF profiles",
     "classificationVerifiedCount": 50,
@@ -29,14 +29,6 @@
     },
     {
       "rank": 2,
-      "ticker": "QID",
-      "sector": "Equity",
-      "industry": "Trading--Inverse Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 3,
       "ticker": "AKAN",
       "sector": "Healthcare",
       "industry": "Drug Manufacturers - Specialty & Generic",
@@ -44,95 +36,15 @@
       "classificationSource": "StockAnalysis company profile"
     },
     {
+      "rank": 3,
+      "ticker": "MPU",
+      "sector": "Communication Services",
+      "industry": "Entertainment",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
       "rank": 4,
-      "ticker": "SSG",
-      "sector": "Equity",
-      "industry": "Trading--Inverse Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 5,
-      "ticker": "BITI",
-      "sector": "Currency",
-      "industry": "Trading--Miscellaneous",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 6,
-      "ticker": "BGIN",
-      "sector": "Technology",
-      "industry": "Computer Hardware",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 7,
-      "ticker": "DUG",
-      "sector": "Equity",
-      "industry": "Trading--Inverse Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 8,
-      "ticker": "DXD",
-      "sector": "Equity",
-      "industry": "Trading--Inverse Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 9,
-      "ticker": "RWM",
-      "sector": "Equity",
-      "industry": "Trading--Inverse Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 10,
-      "ticker": "MSTZ",
-      "sector": "Equity",
-      "industry": "Trading--Inverse Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 11,
-      "ticker": "SMST",
-      "sector": "Real Estate",
-      "industry": "REIT - Industrial",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 12,
-      "ticker": "NCPL",
-      "sector": "Financials",
-      "industry": "Capital Markets",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 13,
-      "ticker": "POAS",
-      "sector": "Healthcare",
-      "industry": "Medical Devices",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 14,
-      "ticker": "CRCD",
-      "sector": "Equity",
-      "industry": "Trading--Inverse Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 15,
       "ticker": "IREZ",
       "sector": "Equity",
       "industry": "Trading--Inverse Equity",
@@ -140,7 +52,23 @@
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 16,
+      "rank": 5,
+      "ticker": "MSTZ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 6,
+      "ticker": "SMST",
+      "sector": "Real Estate",
+      "industry": "REIT - Industrial",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 7,
       "ticker": "AAOZ",
       "sector": "Equity",
       "industry": "Trading--Inverse Equity",
@@ -148,39 +76,7 @@
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 17,
-      "ticker": "BITO",
-      "sector": "Currency",
-      "industry": "Digital Assets",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 18,
-      "ticker": "NVD",
-      "sector": "Equity",
-      "industry": "Trading--Inverse Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 19,
-      "ticker": "NVDQ",
-      "sector": "Equity",
-      "industry": "Trading--Inverse Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 20,
-      "ticker": "PLBL",
-      "sector": "Consumer Discretionary",
-      "industry": "Department Stores",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 21,
+      "rank": 8,
       "ticker": "NBIZ",
       "sector": "Equity",
       "industry": "Trading--Inverse Equity",
@@ -188,23 +84,31 @@
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 22,
-      "ticker": "BMNZ",
+      "rank": 9,
+      "ticker": "NVD",
       "sector": "Equity",
       "industry": "Trading--Inverse Equity",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 23,
-      "ticker": "NUAI",
-      "sector": "Technology",
-      "industry": "Software - Infrastructure",
+      "rank": 10,
+      "ticker": "NVDQ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
       "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
+      "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 24,
+      "rank": 11,
+      "ticker": "CRCD",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 12,
       "ticker": "SNDQ",
       "sector": "Equity",
       "industry": "Trading--Inverse Equity",
@@ -212,63 +116,23 @@
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 25,
-      "ticker": "BRBR",
-      "sector": "Consumer Staples",
-      "industry": "Packaged Foods",
+      "rank": 13,
+      "ticker": "BMNZ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
       "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
+      "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 26,
-      "ticker": "VTSI",
+      "rank": 14,
+      "ticker": "BGIN",
       "sector": "Technology",
-      "industry": "Software - Application",
+      "industry": "Computer Hardware",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis company profile"
     },
     {
-      "rank": 27,
-      "ticker": "ETHD",
-      "sector": "Currency",
-      "industry": "Trading--Miscellaneous",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 28,
-      "ticker": "SBIT",
-      "sector": "Currency",
-      "industry": "Trading--Miscellaneous",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 29,
-      "ticker": "BTCZ",
-      "sector": "Currency",
-      "industry": "Trading--Miscellaneous",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 30,
-      "ticker": "NVDS",
-      "sector": "Equity",
-      "industry": "Trading--Inverse Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 31,
-      "ticker": "RGTZ",
-      "sector": "Equity",
-      "industry": "Trading--Inverse Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 32,
+      "rank": 15,
       "ticker": "UVIX",
       "sector": "Alternatives",
       "industry": "Trading--Leveraged Equity",
@@ -276,135 +140,31 @@
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 33,
-      "ticker": "SLS",
-      "sector": "Healthcare",
-      "industry": "Biotechnology",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 34,
-      "ticker": "SKYA",
-      "sector": "Technology",
-      "industry": "Software - Infrastructure",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 35,
-      "ticker": "SMCZ",
+      "rank": 16,
+      "ticker": "RGTZ",
       "sector": "Equity",
       "industry": "Trading--Inverse Equity",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 36,
-      "ticker": "GDXD",
+      "rank": 17,
+      "ticker": "NVDS",
       "sector": "Equity",
-      "industry": "Trading--Inverse Commodities",
+      "industry": "Trading--Inverse Equity",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 37,
-      "ticker": "ZSL",
-      "sector": "Commodity",
-      "industry": "Trading--Inverse Commodities",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 38,
-      "ticker": "UVXY",
-      "sector": "Alternatives",
+      "rank": 18,
+      "ticker": "ETHD",
+      "sector": "Currency",
       "industry": "Trading--Miscellaneous",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
-      "rank": 39,
-      "ticker": "FISN",
-      "sector": "Industrials",
-      "industry": "Specialty Industrial Machinery",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 40,
-      "ticker": "INSM",
-      "sector": "Healthcare",
-      "industry": "Biotechnology",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 41,
-      "ticker": "CLRO",
-      "sector": "Technology",
-      "industry": "Communication Equipment",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 42,
-      "ticker": "FUN",
-      "sector": "Consumer Discretionary",
-      "industry": "Leisure",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 43,
-      "ticker": "LFTO",
-      "sector": "Communication Services",
-      "industry": "Advertising Agencies",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 44,
-      "ticker": "IONZ",
-      "sector": "Equity",
-      "industry": "Trading--Inverse Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 45,
-      "ticker": "JDST",
-      "sector": "Equity",
-      "industry": "Trading--Inverse Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 46,
-      "ticker": "APPX",
-      "sector": "Equity",
-      "industry": "Trading--Leveraged Equity",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 47,
-      "ticker": "AXTQ",
-      "sector": "Equity",
-      "industry": "Unclassified",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis ETF profile"
-    },
-    {
-      "rank": 48,
-      "ticker": "TLS",
-      "sector": "Technology",
-      "industry": "Software - Infrastructure",
-      "classificationStatus": "verified",
-      "classificationSource": "StockAnalysis company profile"
-    },
-    {
-      "rank": 49,
+      "rank": 19,
       "ticker": "LITZ",
       "sector": "Equity",
       "industry": "Trading--Inverse Equity",
@@ -412,10 +172,250 @@
       "classificationSource": "StockAnalysis ETF profile"
     },
     {
+      "rank": 20,
+      "ticker": "UVXY",
+      "sector": "Alternatives",
+      "industry": "Trading--Miscellaneous",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 21,
+      "ticker": "AXTQ",
+      "sector": "Equity",
+      "industry": "Unclassified",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 22,
+      "ticker": "SSG",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 23,
+      "ticker": "SMCZ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 24,
+      "ticker": "PLBL",
+      "sector": "Consumer Discretionary",
+      "industry": "Department Stores",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 25,
+      "ticker": "SBIT",
+      "sector": "Currency",
+      "industry": "Trading--Miscellaneous",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 26,
+      "ticker": "BTCZ",
+      "sector": "Currency",
+      "industry": "Trading--Miscellaneous",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 27,
+      "ticker": "SOXS",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 28,
+      "ticker": "GDXD",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Commodities",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 29,
+      "ticker": "IONZ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 30,
+      "ticker": "MUZ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 31,
+      "ticker": "TECS",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 32,
+      "ticker": "ZSL",
+      "sector": "Commodity",
+      "industry": "Trading--Inverse Commodities",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 33,
+      "ticker": "BEZ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 34,
+      "ticker": "SKDD",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 35,
+      "ticker": "RAMZ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 36,
+      "ticker": "NVDD",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 37,
+      "ticker": "HIBS",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 38,
+      "ticker": "BRBR",
+      "sector": "Consumer Staples",
+      "industry": "Packaged Foods",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 39,
+      "ticker": "FNGD",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 40,
+      "ticker": "JDST",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 41,
+      "ticker": "PLTZ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 42,
+      "ticker": "VXX",
+      "sector": "Alternatives",
+      "industry": "Trading--Miscellaneous",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 43,
+      "ticker": "VIXY",
+      "sector": "Alternatives",
+      "industry": "Trading--Miscellaneous",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 44,
+      "ticker": "EDZ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 45,
+      "ticker": "VTSI",
+      "sector": "Technology",
+      "industry": "Software - Application",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 46,
+      "ticker": "SQQQ",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 47,
+      "ticker": "BGS",
+      "sector": "Consumer Staples",
+      "industry": "Packaged Foods",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis company profile"
+    },
+    {
+      "rank": 48,
+      "ticker": "DUST",
+      "sector": "Equity",
+      "industry": "Trading--Inverse Equity",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
+      "rank": 49,
+      "ticker": "WNTR",
+      "sector": "Equity",
+      "industry": "Derivative Income",
+      "classificationStatus": "verified",
+      "classificationSource": "StockAnalysis ETF profile"
+    },
+    {
       "rank": 50,
-      "ticker": "SJT",
-      "sector": "Energy",
-      "industry": "Oil & Gas Exploration & Production",
+      "ticker": "NUAI",
+      "sector": "Technology",
+      "industry": "Software - Infrastructure",
       "classificationStatus": "verified",
       "classificationSource": "StockAnalysis company profile"
     }
