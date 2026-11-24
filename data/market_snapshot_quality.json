@@ -56,9 +56,9 @@
     "BTC": {
       "interval": "2h",
       "latestDate": "2026-11-24",
-      "barCount": 5,
+      "barCount": 8,
       "firstTimestamp": "2026-11-24T00:00:00Z",
-      "lastTimestamp": "2026-11-24T08:00:00Z",
+      "lastTimestamp": "2026-11-24T14:00:00Z",
       "incompleteCount": 1
     }
   },
