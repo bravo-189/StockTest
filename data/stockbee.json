@@ -3,7 +3,7 @@
     "rowCount": 128,
     "latestDate": "2026-11-24",
     "sourceStatus": "loaded",
-    "fetchedAt": "2026-11-25T08:16:41Z",
+    "fetchedAt": "2026-11-25T11:10:22Z",
     "historyWindow": "6mo",
     "lookbackDays": 183
   },
@@ -123,12 +123,12 @@
   "rows": [
     {
       "date": "2026-11-24",
-      "up": 367,
-      "down": 232,
+      "up": 369,
+      "down": 240,
       "ratio5": 0.58,
       "ratio10": 0.52,
-      "t2108": 35.38,
-      "sp500": 7203.48,
+      "t2108": 35.56,
+      "sp500": 7201.09,
       "up25Quarter": 679,
       "down25Quarter": 1634,
       "up25Month": 107,
