@@ -1,26 +1,26 @@
 {
   "schemaVersion": "1.0",
   "status": "ok",
-  "refreshMode": "btc-2hourly",
-  "attemptedAt": "2026-11-25T21:35:39Z",
-  "lastCompletedAt": "2026-11-25T21:35:39Z",
-  "lastFullSuccessAt": "2026-11-25T11:10:22Z",
+  "refreshMode": "daily-close",
+  "attemptedAt": "2026-11-26T04:05:55Z",
+  "lastCompletedAt": "2026-11-26T04:05:55Z",
+  "lastFullSuccessAt": "2026-11-26T04:05:55Z",
   "sources": {
     "market": {
       "status": "loaded",
-      "latestDate": "2026-11-25",
+      "latestDate": "2026-11-26",
       "loadedCount": 76,
       "requiredCount": 76,
       "missingCount": 0
     },
     "stockbee": {
       "status": "loaded",
-      "latestDate": "2026-11-24",
-      "rowCount": 128
+      "latestDate": "2026-11-25",
+      "rowCount": 129
     },
     "stockbeeMomentum": {
       "status": "loaded",
-      "latestDate": "2026-11-24",
+      "latestDate": "2026-11-25",
       "rowCount": 50,
       "isStale": false,
       "classificationVerifiedCount": 50,
